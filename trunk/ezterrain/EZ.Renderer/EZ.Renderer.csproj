@@ -69,6 +69,12 @@
       <DependentUpon>RendererControl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\EZ.Core\EZ.Core.csproj">
+      <Project>{D7FAB394-FFF4-46E7-B947-C8703BCE5163}</Project>
+      <Name>EZ.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
