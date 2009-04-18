@@ -9,7 +9,7 @@ namespace EZ.Core
 	{
 		public static readonly FrameStamp Zero = new FrameStamp(0, 0, 0);
 
-		public FrameStamp(uint frameNumber, float totalTime, float deltaTime)
+		public FrameStamp(uint frameNumber, double totalTime, double deltaTime)
 		{
 			FrameNumber = frameNumber;
 			TotalTime = totalTime;
@@ -18,8 +18,8 @@ namespace EZ.Core
 
 		public uint FrameNumber;
 
-		public float TotalTime;
+		public double TotalTime;
 
-		public float DeltaTime;
+		public double DeltaTime;
 	}
 }
