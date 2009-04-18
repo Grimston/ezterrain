@@ -15,5 +15,10 @@ namespace Ez.Application
 		{
 			InitializeComponent();
 		}
+
+		private void refreshTimer_Tick(object sender, EventArgs e)
+		{
+			rendererControl.Refresh();
+		}
 	}
 }
