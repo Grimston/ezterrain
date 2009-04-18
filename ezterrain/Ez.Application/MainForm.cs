@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using EZ.Renderer;
 
 namespace Ez.Application
 {
@@ -14,6 +15,8 @@ namespace Ez.Application
 		public MainForm()
 		{
 			InitializeComponent();
+
+			rendererControl.Renderables.Add(new FPSDisplay());
 		}
 
 		private void refreshTimer_Tick(object sender, EventArgs e)

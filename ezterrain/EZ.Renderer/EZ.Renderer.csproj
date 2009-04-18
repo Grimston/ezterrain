@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FPSDisplay.cs" />
     <Compile Include="RendererControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
