@@ -8,15 +8,32 @@ using System.Text;
 using System.Windows.Forms;
 using OpenTK;
 using OpenTK.Graphics;
+using System.Diagnostics;
+using EZ.Core;
 
 namespace EZ.Renderer
 {
 	public partial class RendererControl : GLControl
 	{
+		private Stopwatch lapWatch;
+		private Stopwatch globalWatch;
+		private Camera camera;
+		private uint frameNumber;
+
 		public RendererControl()
 		{
 			InitializeComponent();
+
+			lapWatch = new Stopwatch();
+			globalWatch = new Stopwatch();
+			camera = new Camera();
+
+			frameNumber = 0;
+
+			Renderables = new List<IRenderable>();
 		}
+
+		public List<IRenderable> Renderables { get; private set; }
 
 		#region Load
 		protected bool Loaded { get; private set; }
@@ -47,27 +64,93 @@ namespace EZ.Renderer
 		}
 		#endregion
 
-		protected override void OnResize(EventArgs e)
+		protected override void OnPaint(PaintEventArgs e)
 		{
-			base.OnResize(e);
-
-			if (Loaded && Width > 0 && Height > 0)
-			{
-				GL.MatrixMode(MatrixMode.Projection);
-				GL.LoadIdentity();
-				GL.Viewport(0, 0, Width, Height);
-			}
+			Render();
 		}
 
-		protected override void OnPaint(PaintEventArgs e)
+		#region Render
+		private void Render()
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
+			UpdateProjection();
+
+			#region Modelview
 			GL.MatrixMode(MatrixMode.Modelview);
 			GL.LoadIdentity();
 
+			Glu.LookAt(camera.Position,
+					   camera.Position + camera.Attitude.Direction,
+					   camera.Attitude.Up);
+			#endregion
+
+			Render(GetRenderInfo());
 
 			SwapBuffers();
 		}
+
+		private void Render(RenderInfo renderInfo)
+		{
+			foreach (IRenderable renderable in Renderables)
+			{
+				if (!renderable.Initialized)
+				{
+					renderable.Initialize();
+				}
+			}
+
+			IEnumerable<IRenderable> renderList = Renderables.Where(r => r.Update(renderInfo));
+
+			foreach (IRenderable renderable in renderList)
+			{
+				renderable.Render(renderInfo);
+			}
+		} 
+		#endregion
+
+		#region Projection
+		private void UpdateProjection()
+		{
+			if (Width > 0 && Height > 0)
+			{
+				GL.MatrixMode(MatrixMode.Projection);
+				GL.LoadIdentity();
+
+				Glu.Perspective(camera.Perspective.Angle,
+								Width / (double)Height,
+								camera.Perspective.Near,
+								camera.Perspective.Far);
+
+				GL.Viewport(0, 0, Width, Height);
+			}
+		} 
+		#endregion
+
+		#region RenderInfo
+		private RenderInfo GetRenderInfo()
+		{
+			FrameStamp frameStamp = GetFrameStamp();
+
+			RenderInfo renderInfo = new RenderInfo(new ViewerInfo(camera), frameStamp);
+			return renderInfo;
+		}
+
+		private FrameStamp GetFrameStamp()
+		{
+			lapWatch.Stop();
+			globalWatch.Stop();
+
+			FrameStamp frameStamp = new FrameStamp(frameNumber++,
+												   globalWatch.Elapsed.TotalSeconds,
+												   lapWatch.Elapsed.TotalSeconds);
+
+			lapWatch.Reset();
+			lapWatch.Start();
+			globalWatch.Start();
+
+			return frameStamp;
+		} 
+		#endregion
 	}
 }
