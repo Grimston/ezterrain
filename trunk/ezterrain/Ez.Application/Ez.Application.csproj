@@ -87,6 +87,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\EZ.Core\EZ.Core.csproj">
+      <Project>{D7FAB394-FFF4-46E7-B947-C8703BCE5163}</Project>
+      <Name>EZ.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\EZ.Renderer\EZ.Renderer.csproj">
       <Project>{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}</Project>
       <Name>EZ.Renderer</Name>
