@@ -15,6 +15,10 @@ namespace EZ.Core
 			this.perspective = perspective;
 		}
 
+		public ViewerInfo(Camera camera)
+			: this(camera.Attitude, camera.Position, camera.Perspective)
+		{ }
+
 		private Attitude attitude;
 		public Attitude Attitude
 		{
