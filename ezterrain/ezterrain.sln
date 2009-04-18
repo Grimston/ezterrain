@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.9.7", "0.9.7", "{925FE421
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZ.Renderer", "EZ.Renderer\EZ.Renderer.csproj", "{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZ.Core", "EZ.Core\EZ.Core.csproj", "{D7FAB394-FFF4-46E7-B947-C8703BCE5163}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -35,6 +37,10 @@ Global
 		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
