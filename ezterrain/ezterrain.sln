@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ez.Application", "Ez.Application\Ez.Application.csproj", "{81549EDA-69A4-4A98-8C2E-E0368317D4AD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OpenTK", "OpenTK", "{83787E57-3DBE-4B06-A1A8-73A34BA93A15}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.9.7", "0.9.7", "{925FE421-1D6B-49A0-8756-0378EA331AE7}"
+	ProjectSection(SolutionItems) = preProject
+		OpenTK\0.9.7\OpenTK.dll = OpenTK\0.9.7\OpenTK.dll
+		OpenTK\0.9.7\OpenTK.dll.config = OpenTK\0.9.7\OpenTK.dll.config
+		OpenTK\0.9.7\OpenTK.Utilities.dll = OpenTK\0.9.7\OpenTK.Utilities.dll
+		OpenTK\0.9.7\OpenTK.Utilities.dll.config = OpenTK\0.9.7\OpenTK.Utilities.dll.config
+		OpenTK\0.9.7\OpenTK.Utilities.xml = OpenTK\0.9.7\OpenTK.Utilities.xml
+		OpenTK\0.9.7\OpenTK.xml = OpenTK\0.9.7\OpenTK.xml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{925FE421-1D6B-49A0-8756-0378EA331AE7} = {83787E57-3DBE-4B06-A1A8-73A34BA93A15}
+	EndGlobalSection
+EndGlobal
