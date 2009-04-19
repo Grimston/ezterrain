@@ -59,6 +59,7 @@
     <Compile Include="IRenderable.cs" />
     <Compile Include="Perspective.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Range.cs" />
     <Compile Include="RenderInfo.cs" />
     <Compile Include="ViewerInfo.cs" />
   </ItemGroup>
