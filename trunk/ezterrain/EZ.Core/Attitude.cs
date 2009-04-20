@@ -20,9 +20,14 @@ namespace EZ.Core
 		public Vector3 Up;
 		public Vector3 Direction;
 
+		public Vector3 Side
+		{
+			get { return Vector3.Cross(Direction, Up); }
+		}
+
 		public Matrix4 ToRotation()
 		{
-			Vector3 side = Vector3.Cross(Direction, Up);
+			Vector3 side = this.Side;
 			Vector3 up = Vector3.Cross(side, Direction);
 
 			Matrix4 lookMatrix = new Matrix4(new Vector4(side, 0), 
