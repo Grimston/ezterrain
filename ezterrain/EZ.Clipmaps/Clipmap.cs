@@ -81,6 +81,7 @@ namespace Ez.Clipmaps
 
 		public void Render(RenderInfo info)
 		{
+			GL.EnableClientState(EnableCap.VertexArray);
 			//draw vertex buffers
 			GL.BindBuffer(BufferTarget.ArrayBuffer,
 						  vertexBuffer);
