@@ -10,6 +10,7 @@ using OpenTK;
 using OpenTK.Graphics;
 using System.Diagnostics;
 using EZ.Core;
+using OpenTK.Math;
 
 namespace EZ.Renderer
 {
@@ -19,6 +20,7 @@ namespace EZ.Renderer
 		private Stopwatch globalWatch;
 		private Camera camera;
 		private uint frameNumber;
+		private ObjectDisplay objects;
 
 		public RendererControl()
 		{
@@ -31,6 +33,11 @@ namespace EZ.Renderer
 			frameNumber = 0;
 
 			Renderables = new List<IRenderable>();
+
+			objects = new ObjectDisplay();
+			objects.Color = ForeColor;
+			objects.Location = new PointF(0, 50);
+			Renderables.Add(objects);
 		}
 
 		public List<IRenderable> Renderables { get; private set; }
@@ -69,6 +76,53 @@ namespace EZ.Renderer
 			Render();
 		}
 
+		#region Input Handling
+		private Point mousePosition;
+
+		protected override void OnMouseDown(MouseEventArgs e)
+		{
+			base.OnMouseDown(e);
+
+			mousePosition = e.Location;
+		}
+
+		protected override void OnMouseMove(MouseEventArgs e)
+		{
+			base.OnMouseMove(e);
+
+			int dx = e.Location.X - mousePosition.X;
+			int dy = e.Location.Y - mousePosition.Y;
+
+			if (e.Button == MouseButtons.Right)
+			{
+				camera.Position += camera.Attitude.Side * dx;
+				camera.Position += camera.Attitude.Up * dy;
+			}
+			else if (e.Button == MouseButtons.Left)
+			{
+				Matrix4 pitch = Matrix4.Rotate(camera.Attitude.Side,
+											   (float)Math.PI * dx / Height);
+				camera.Attitude = new Attitude(Vector3.TransformVector(camera.Attitude.Direction, pitch),
+											   Vector3.TransformVector(camera.Attitude.Up, pitch));
+			}
+
+			mousePosition = e.Location;
+		}
+
+		protected override void OnKeyPress(KeyPressEventArgs e)
+		{
+			base.OnKeyPress(e);
+			if (e.KeyChar == 'w' || e.KeyChar == 'W')
+			{
+				camera.Position += camera.Attitude.Direction;
+			}
+			else if (e.KeyChar == 's' || e.KeyChar == 'S')
+			{
+				camera.Position -= camera.Attitude.Direction;
+			}
+		}
+		#endregion
+
 		#region Render
 		private void Render()
 		{
@@ -84,6 +138,11 @@ namespace EZ.Renderer
 					   camera.Position + camera.Attitude.Direction,
 					   camera.Attitude.Up);
 			#endregion
+
+			objects.Objects["Camera Position"] = camera.Position;
+			objects.Objects["Camera Direction"] = camera.Attitude.Direction;
+			objects.Objects["Camera Up"] = camera.Attitude.Up;
+			objects.Objects["Camera Side"] = camera.Attitude.Side;
 
 			Render(GetRenderInfo());
 
@@ -106,7 +165,7 @@ namespace EZ.Renderer
 			{
 				renderable.Render(renderInfo);
 			}
-		} 
+		}
 		#endregion
 
 		#region Projection
@@ -124,7 +183,7 @@ namespace EZ.Renderer
 
 				GL.Viewport(0, 0, Width, Height);
 			}
-		} 
+		}
 		#endregion
 
 		#region RenderInfo
@@ -150,7 +209,7 @@ namespace EZ.Renderer
 			globalWatch.Start();
 
 			return frameStamp;
-		} 
+		}
 		#endregion
 	}
 }
