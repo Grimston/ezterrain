@@ -54,7 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Disposable.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Shader.cs" />
     <Compile Include="VertexBuffer.cs" />
     <Compile Include="VertexBufferObject.cs" />
     <Compile Include="VertexPointerInfo.cs" />
