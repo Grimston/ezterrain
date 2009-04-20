@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using EZ.Renderer;
+using Ez.Clipmaps;
 
 namespace Ez.Application
 {
@@ -17,6 +18,7 @@ namespace Ez.Application
 			InitializeComponent();
 
 			rendererControl.Renderables.Add(new FPSDisplay());
+			rendererControl.Renderables.Add(new Clipmap());
 		}
 
 		private void refreshTimer_Tick(object sender, EventArgs e)
