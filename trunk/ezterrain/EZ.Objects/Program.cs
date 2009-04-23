@@ -15,6 +15,11 @@ namespace EZ.Objects
 		private Shader vertexShader;
 		private Shader fragmentShader;
 
+		public void Bind()
+		{
+			GL.UseProgram(Handle);
+		}
+
 		public void Initialize(Shader vertexShader, Shader fragmentShader)
 		{
 			if (!Initialized)
