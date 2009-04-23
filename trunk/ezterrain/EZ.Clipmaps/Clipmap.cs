@@ -44,6 +44,7 @@ namespace Ez.Clipmaps
 		private List<uint> indices;
 		private uint sideVertexCount;
 		private Texture texture;
+		private Program program;
 
 		int vertexBuffer;
 		int indexBuffer;
@@ -54,6 +55,7 @@ namespace Ez.Clipmaps
 			indices = new List<uint>();
 			sideVertexCount = 10;
 			texture = new Texture("noise.bmp");
+			program = new Program();
 		}
 
 		public bool Initialized { get; private set; }
@@ -61,6 +63,9 @@ namespace Ez.Clipmaps
 		public void Initialize()
 		{
 			texture.Initialize();
+
+			program.Initialize(Shader.FromFile(ShaderType.VertexShader, "clipmap.vert"),
+							   Shader.FromFile(ShaderType.FragmentShader, "clipmap.frag"));
 
 			vertices.Clear();
 			indices.Clear();
@@ -120,7 +125,7 @@ namespace Ez.Clipmaps
 		public void Render(RenderInfo info)
 		{
 			texture.Bind();
-
+			program.Bind();
 			GL.EnableClientState(EnableCap.VertexArray);
 			GL.EnableClientState(EnableCap.TextureCoordArray);
 			//draw vertex buffers

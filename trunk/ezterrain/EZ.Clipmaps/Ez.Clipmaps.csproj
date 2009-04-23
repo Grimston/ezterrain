@@ -70,7 +70,18 @@
   <ItemGroup>
     <Content Include="..\Resources\Images\noise.bmp">
       <Link>noise.bmp</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Programs\clipmap.frag">
+      <Link>clipmap.frag</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\Resources\Programs\clipmap.vert">
+      <Link>clipmap.vert</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
