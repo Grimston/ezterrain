@@ -12,7 +12,7 @@ namespace Ez.Clipmaps
 {
 	public class Clipmap : IRenderable
 	{
-		[StructLayout(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Sequential)]
 		public struct Vertex
 		{
 			public Vertex(Vector3 position)
@@ -27,10 +27,17 @@ namespace Ez.Clipmaps
 				this.TexCoord = texCoord;
 			}
 
-			[FieldOffset(0)]
 			public Vector3 Position;
-			[FieldOffset(12)]
 			public Vector2 TexCoord;
+
+			public override string ToString()
+			{
+				return string.Format("P{0}T{1}", Position, TexCoord);
+			}
+
+			public static readonly int SizeInBytes = Marshal.SizeOf(typeof(Vertex));
+			public static readonly int PositionOffset = 0;
+			public static readonly int TexCoordOffset = PositionOffset + Vector3.SizeInBytes;
 		}
 
 		private List<Vertex> vertices;
@@ -119,9 +126,13 @@ namespace Ez.Clipmaps
 			//draw vertex buffers
 			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
 
-			GL.TexCoordPointer(2, TexCoordPointerType.Float, 20, (IntPtr)12);
+			GL.TexCoordPointer(2, TexCoordPointerType.Float, 
+							   Vertex.SizeInBytes,
+							   (IntPtr)Vertex.TexCoordOffset);
 
-			GL.VertexPointer(3, VertexPointerType.Float, 20, IntPtr.Zero);
+			GL.VertexPointer(3, VertexPointerType.Float,
+							 Vertex.SizeInBytes,
+							 (IntPtr)Vertex.PositionOffset);
 
 			GL.DrawElements(BeginMode.Triangles,
 							indices.Count,
