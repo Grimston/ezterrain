@@ -54,7 +54,7 @@ namespace Ez.Clipmaps
 			vertices = new List<Vertex>();
 			indices = new List<uint>();
 			sideVertexCount = 10;
-			texture = new Texture("noise.bmp");
+			texture = new Texture(ResourceManager.GetImagePath("noise.bmp"));
 			program = new Program();
 		}
 
@@ -64,8 +64,10 @@ namespace Ez.Clipmaps
 		{
 			texture.Initialize();
 
-			program.Initialize(Shader.FromFile(ShaderType.VertexShader, "clipmap.vert"),
-							   Shader.FromFile(ShaderType.FragmentShader, "clipmap.frag"));
+			program.Initialize(Shader.FromFile(ShaderType.VertexShader, ResourceManager.GetProgramPath("clipmap.vert")),
+							   Shader.FromFile(ShaderType.FragmentShader, ResourceManager.GetProgramPath("clipmap.frag")));
+
+			new Uniform(program, "noise").SetValue(0);			
 
 			vertices.Clear();
 			indices.Clear();
