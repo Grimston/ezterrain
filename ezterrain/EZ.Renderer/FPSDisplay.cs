@@ -55,6 +55,9 @@ namespace EZ.Renderer
 
 		public void Render(RenderInfo info)
 		{
+			GL.Disable(EnableCap.Texture2D);
+			GL.UseProgram(0);
+
 			textPrinter.Begin();
 
 			double spf = accumTime / timeBuffer.Count;
