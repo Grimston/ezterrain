@@ -55,7 +55,7 @@ namespace EZ.Objects
 
 		protected override void Dispose(bool nongc)
 		{
-			if (nongc)
+			if (nongc && Initialized)
 			{
 				GL.DeleteShader(Handle);
 

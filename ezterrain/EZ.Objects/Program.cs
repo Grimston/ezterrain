@@ -45,10 +45,8 @@ namespace EZ.Objects
 
 		protected override void Dispose(bool nongc)
 		{
-			if (nongc)
+			if (nongc && Initialized)
 			{
-				if (Initialized)
-				{
 					GL.DetachShader(Handle, vertexShader.Handle);
 					GL.DetachShader(Handle, fragmentShader.Handle);
 
@@ -62,7 +60,6 @@ namespace EZ.Objects
 
 					Handle = 0;
 					Initialized = false;
-				}
 			}
 		}
 	}
