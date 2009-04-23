@@ -78,12 +78,16 @@ namespace EZ.Renderer
 
 		#region Input Handling
 		private Point mousePosition;
+		private Attitude cameraAttitude;
+		private Vector3 cameraPosition;
 
 		protected override void OnMouseDown(MouseEventArgs e)
 		{
 			base.OnMouseDown(e);
 
 			mousePosition = e.Location;
+			cameraAttitude = camera.Attitude;
+			cameraPosition = camera.Position;
 		}
 
 		protected override void OnMouseMove(MouseEventArgs e)
@@ -95,18 +99,21 @@ namespace EZ.Renderer
 
 			if (e.Button == MouseButtons.Right)
 			{
-				camera.Position += camera.Attitude.Side * dx;
-				camera.Position += camera.Attitude.Up * dy;
+				camera.Position = cameraPosition + camera.Attitude.Side * dx + camera.Attitude.Up * dy;
 			}
 			else if (e.Button == MouseButtons.Left)
 			{
-				Matrix4 pitch = Matrix4.Rotate(camera.Attitude.Side,
-											   (float)Math.PI * dx / Height);
-				camera.Attitude = new Attitude(Vector3.TransformVector(camera.Attitude.Direction, pitch),
-											   Vector3.TransformVector(camera.Attitude.Up, pitch));
-			}
+				Matrix4 pitch = Matrix4.Rotate(cameraAttitude.Side,
+											   -(float)Math.PI * dy / Height);
 
-			mousePosition = e.Location;
+				Matrix4 yaw = Matrix4.Rotate(cameraAttitude.Up,
+											   -(float)Math.PI * dx / Width);
+
+				Matrix4 rotate = yaw * pitch;
+
+				camera.Attitude = new Attitude(Vector3.TransformVector(cameraAttitude.Direction, rotate),
+											   Vector3.TransformVector(cameraAttitude.Up, rotate));
+			}
 		}
 
 		protected override void OnKeyPress(KeyPressEventArgs e)
@@ -119,6 +126,14 @@ namespace EZ.Renderer
 			else if (e.KeyChar == 's' || e.KeyChar == 'S')
 			{
 				camera.Position -= camera.Attitude.Direction;
+			}
+			else if (e.KeyChar == 'd' || e.KeyChar == 'D')
+			{
+				camera.Position += camera.Attitude.Side;
+			}
+			else if (e.KeyChar == 'a' || e.KeyChar == 'A')
+			{
+				camera.Position -= camera.Attitude.Side;
 			}
 		}
 		#endregion
@@ -139,10 +154,10 @@ namespace EZ.Renderer
 					   camera.Attitude.Up);
 			#endregion
 
-			objects.Objects["Camera Position"] = camera.Position;
-			objects.Objects["Camera Direction"] = camera.Attitude.Direction;
-			objects.Objects["Camera Up"] = camera.Attitude.Up;
-			objects.Objects["Camera Side"] = camera.Attitude.Side;
+			objects.Objects["Camera Position"] = camera.Position.ToString(2);
+			objects.Objects["Camera Direction"] = camera.Attitude.Direction.ToString(2);
+			objects.Objects["Camera Up"] = camera.Attitude.Up.ToString(2);
+			objects.Objects["Camera Side"] = camera.Attitude.Side.ToString(2);
 
 			Render(GetRenderInfo());
 

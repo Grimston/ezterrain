@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Attitude.cs" />
     <Compile Include="Camera.cs" />
+    <Compile Include="CoreExtensions.cs" />
     <Compile Include="FrameStamp.cs" />
     <Compile Include="IRenderable.cs" />
     <Compile Include="Perspective.cs" />
