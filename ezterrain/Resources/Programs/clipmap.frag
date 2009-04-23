@@ -1,5 +1,8 @@
+uniform float time;
+uniform int color;
+varying float bias;
 
 void main()
 {
-	gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+	gl_FragColor = bias * vec4(1.0, 0.0, 0.0, 1.0);
 }
