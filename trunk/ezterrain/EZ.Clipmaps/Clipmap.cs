@@ -5,36 +5,67 @@ using System.Text;
 using EZ.Core;
 using OpenTK.Math;
 using OpenTK.Graphics;
+using EZ.Objects;
+using System.Runtime.InteropServices;
 
 namespace Ez.Clipmaps
 {
 	public class Clipmap : IRenderable
 	{
-		private List<Vector3> vertices;
+		[StructLayout(LayoutKind.Explicit)]
+		public struct Vertex
+		{
+			public Vertex(Vector3 position)
+			{
+				this.Position = position;
+				this.TexCoord = position.Xy;
+			}
+
+			public Vertex(Vector3 position, Vector2 texCoord)
+			{
+				this.Position = position;
+				this.TexCoord = texCoord;
+			}
+
+			[FieldOffset(0)]
+			public Vector3 Position;
+			[FieldOffset(12)]
+			public Vector2 TexCoord;
+		}
+
+		private List<Vertex> vertices;
 		private List<uint> indices;
 		private uint sideVertexCount;
+		private Texture texture;
+
 		int vertexBuffer;
 		int indexBuffer;
 
 		public Clipmap()
 		{
-			vertices = new List<Vector3>();
+			vertices = new List<Vertex>();
 			indices = new List<uint>();
 			sideVertexCount = 10;
+			texture = new Texture("noise.bmp");
 		}
 
 		public bool Initialized { get; private set; }
 
 		public void Initialize()
 		{
+			texture.Initialize();
+
 			vertices.Clear();
 			indices.Clear();
+
+			float textureScale = 1.0f / (sideVertexCount - 1);
 
 			for (int i = 0; i < sideVertexCount; i++)
 			{
 				for (int j = 0; j < sideVertexCount; j++)
 				{
-					vertices.Add(new Vector3(i, j, 0));
+					Vertex vertex = new Vertex(new Vector3(i, j, 0), new Vector2(i, j) * textureScale);
+					vertices.Add(vertex);
 				}
 			}
 
@@ -57,7 +88,7 @@ namespace Ez.Clipmaps
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
 			GL.BufferData(BufferTarget.ArrayBuffer,
-						  (IntPtr)(vertices.Count * 12/*size of a vertex*/),
+						  (IntPtr)(vertices.Count * 20/*size of a vertex*/),
 						  vertices.ToArray(),
 						  BufferUsageHint.StaticDraw);
 
@@ -81,18 +112,20 @@ namespace Ez.Clipmaps
 
 		public void Render(RenderInfo info)
 		{
+			texture.Bind();
+
 			GL.EnableClientState(EnableCap.VertexArray);
+			GL.EnableClientState(EnableCap.TextureCoordArray);
 			//draw vertex buffers
-			GL.BindBuffer(BufferTarget.ArrayBuffer,
-						  vertexBuffer);
+			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
 
-			GL.VertexPointer(3/*component count*/, 
-							 VertexPointerType.Float, 
-							 0, 0);
+			GL.TexCoordPointer(2, TexCoordPointerType.Float, 20, (IntPtr)12);
 
-			GL.DrawElements(BeginMode.Triangles, 
-							indices.Count, 
-							DrawElementsType.UnsignedInt, 
+			GL.VertexPointer(3, VertexPointerType.Float, 20, IntPtr.Zero);
+
+			GL.DrawElements(BeginMode.Triangles,
+							indices.Count,
+							DrawElementsType.UnsignedInt,
 							IntPtr.Zero);
 		}
 	}
