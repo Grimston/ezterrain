@@ -23,6 +23,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EZ.Objects", "EZ.Objects\EZ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ez.Clipmaps", "EZ.Clipmaps\Ez.Clipmaps.csproj", "{69A87966-16BB-4C3F-99CE-5F42006CB55D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{4F017636-2B2B-41D1-9F4A-2E60B62047CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{12068613-2EB7-46F1-833E-2888AEA76A92}"
+	ProjectSection(SolutionItems) = preProject
+		Resources\Images\noise.bmp = Resources\Images\noise.bmp
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -59,5 +66,6 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{925FE421-1D6B-49A0-8756-0378EA331AE7} = {83787E57-3DBE-4B06-A1A8-73A34BA93A15}
+		{12068613-2EB7-46F1-833E-2888AEA76A92} = {4F017636-2B2B-41D1-9F4A-2E60B62047CF}
 	EndGlobalSection
 EndGlobal

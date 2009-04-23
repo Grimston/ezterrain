@@ -68,8 +68,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="noise.bmp">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\Resources\Images\noise.bmp">
+      <Link>noise.bmp</Link>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
