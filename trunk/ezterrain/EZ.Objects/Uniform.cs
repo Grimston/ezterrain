@@ -10,19 +10,28 @@ namespace EZ.Objects
 	{
 		public Uniform(Program program, string name)
 		{
-			Location = GL.GetUniformLocation(program.Handle, name);
+			this.Program = program;
+			this.Name = name;
 		}
 
-		public int Location { get; private set; }
+		public string Name { get; private set; }
+
+		public Program Program { get; private set; }
 
 		public void SetValue(int value)
 		{
-			GL.Uniform1(Location, value);
+			GL.Uniform1(GetLocation(), value);
 		}
 
 		public void SetValue(float value)
 		{
-			GL.Uniform1(Location, value);
+			GL.Uniform1(GetLocation(), value);
+		}
+
+		private int GetLocation()
+		{
+			Program.Bind();
+			return GL.GetUniformLocation(Program.Handle, Name);
 		}
 	}
 }
