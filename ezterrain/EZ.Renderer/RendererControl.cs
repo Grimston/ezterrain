@@ -142,7 +142,7 @@ namespace EZ.Renderer
 		private void Render()
 		{
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
-
+			GL.Enable(EnableCap.DepthTest);
 			UpdateProjection();
 
 			#region Modelview
