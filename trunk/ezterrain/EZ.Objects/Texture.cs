@@ -65,6 +65,12 @@ namespace EZ.Objects
 			GL.BindTexture(Target, Handle);
 		}
 
+		public void Unbind()
+		{
+			GL.BindTexture(TextureTarget.Texture2D, 0);
+			GL.Disable(EnableCap.Texture2D);
+		}
+
 		public void UploadData(bool bind, bool buildMipMaps)
 		{
 			if (bind)
