@@ -57,6 +57,7 @@ namespace EZ.Renderer
 		{
 			GL.Disable(EnableCap.Texture2D);
 			GL.UseProgram(0);
+			GL.PolygonMode(MaterialFace.Front, PolygonMode.Fill);
 
 			textPrinter.Begin();
 
