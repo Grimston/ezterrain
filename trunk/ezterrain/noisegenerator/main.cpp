@@ -6,6 +6,8 @@
 
 using namespace noise;
 
+#define MAX_LEVEL (6)
+
 std::string GetName(int level, int i, int j)
 {
 	std::stringstream stream;
@@ -14,100 +16,55 @@ std::string GetName(int level, int i, int j)
 	return stream.str();
 }
 
+void Build(utils::NoiseMapBuilderPlane& builder, 
+		   utils::RendererImage& renderer,
+		   utils::WriterBMP& writer,
+		   int level,
+		   int i, int j)
+{
+	int step = 1 << level;
+
+	if(i % step == 0 && j % step == 0)
+	{
+		std::string name = GetName(level, i, j);
+		std::cout << name << std::endl;
+
+		builder.SetBounds(i, i + step, j, j + step);
+		builder.Build();
+
+		renderer.Render();
+
+		writer.SetDestFilename(name);
+		writer.WriteDestFile();
+	}
+}
+
 int main (int argc, char** argv)
 {
-	module::Perlin myModule;
-	myModule.SetOctaveCount(module::PERLIN_MAX_OCTAVE);
-	utils::NoiseMap heightMap;
+	module::Perlin source;
+	source.SetOctaveCount(module::PERLIN_MAX_OCTAVE);
 
-	utils::NoiseMapBuilderPlane heightMapBuilder;
-	heightMapBuilder.SetSourceModule (myModule);
-	heightMapBuilder.SetDestNoiseMap (heightMap);
-	heightMapBuilder.SetDestSize (257, 257);
-	heightMapBuilder.SetBounds (2.0, 6.0, 1.0, 5.0);
-	//heightMapBuilder.Build ();
+	utils::NoiseMap map;
+	utils::NoiseMapBuilderPlane builder;
+	builder.SetDestSize(257, 257);
+	builder.SetSourceModule (source);
+	builder.SetDestNoiseMap (map);
 
 	utils::RendererImage renderer;
 	utils::Image image;
-	renderer.SetSourceNoiseMap (heightMap);
+	renderer.SetSourceNoiseMap (map);
 	renderer.SetDestImage (image);
-	//renderer.Render();
 
 	utils::WriterBMP writer;
 	writer.SetSourceImage (image);
-	//writer.SetDestFilename ("../../tutorial.bmp");
-	//writer.WriteDestFile ();
-
-	for(int i = 0; i < 64; i++)
+	
+	for(int i = 0; i < (1 << MAX_LEVEL); i++)
 	{
-		for(int j = 0; j < 64; j++)
+		for(int j = 0; j < (1 << MAX_LEVEL); j++)
 		{
-			std::cout << i << "-" << j << std::endl;
-			std::string name = GetName(0, i, j);
-			heightMapBuilder.SetBounds(i, i+1, j, j+1);
-			heightMapBuilder.Build();
-			renderer.Render();
-			writer.SetDestFilename(name);
-			writer.WriteDestFile();
-
-			if(i%2 == 0 && j%2 == 0)
+			for(int level = 0; level <= MAX_LEVEL; level++)
 			{
-				std::string name = GetName(1, i, j);
-				heightMapBuilder.SetBounds(i, i+2, j, j+2);
-				heightMapBuilder.Build();
-				renderer.Render();
-				writer.SetDestFilename(name);
-				writer.WriteDestFile();
-			}
-
-			if(i%4 == 0 && j%4 == 0)
-			{
-				std::string name = GetName(2, i, j);
-				heightMapBuilder.SetBounds(i, i+4, j, j+4);
-				heightMapBuilder.Build();
-				renderer.Render();
-				writer.SetDestFilename(name);
-				writer.WriteDestFile();
-			}
-
-			if(i%8 == 0 && j%8 == 0)
-			{
-				std::string name = GetName(3, i, j);
-				heightMapBuilder.SetBounds(i, i+8, j, j+8);
-				heightMapBuilder.Build();
-				renderer.Render();
-				writer.SetDestFilename(name);
-				writer.WriteDestFile();
-			}
-
-			if(i%16 == 0 && j%16 == 0)
-			{
-				std::string name = GetName(4, i, j);
-				heightMapBuilder.SetBounds(i, i+16, j, j+16);
-				heightMapBuilder.Build();
-				renderer.Render();
-				writer.SetDestFilename(name);
-				writer.WriteDestFile();
-			}
-
-			if(i%32 == 0 && j%32 == 0)
-			{
-				std::string name = GetName(5, i, j);
-				heightMapBuilder.SetBounds(i, i+32, j, j+32);
-				heightMapBuilder.Build();
-				renderer.Render();
-				writer.SetDestFilename(name);
-				writer.WriteDestFile();
-			}
-
-			if(i%64 == 0 && j%64 == 0)
-			{
-				std::string name = GetName(6, i, j);
-				heightMapBuilder.SetBounds(i, i+64, j, j+64);
-				heightMapBuilder.Build();
-				renderer.Render();
-				writer.SetDestFilename(name);
-				writer.WriteDestFile();
+				Build(builder, renderer, writer, level, i, j);
 			}
 		}
 	}
