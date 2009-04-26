@@ -20,9 +20,9 @@ namespace Ez.Clipmaps
 		int vertexBuffer;
 		int indexBuffer;
 
-		public Clipmap()
+		public Clipmap(uint sideVertexCount)
 		{
-			sideVertexCount = 17;
+			this.sideVertexCount = sideVertexCount;
 			texture = new Texture(ResourceManager.GetImagePath("noise.bmp"));
 			program = new Program();
 		}
@@ -39,6 +39,7 @@ namespace Ez.Clipmaps
 			new Uniform(program, "noise").SetValue(0);
 			new Uniform(program, "texScale").SetValue(1.0f / (sideVertexCount - 1));
 			new Uniform(program, "texOffset").SetValue(0.0f);
+			new Uniform(program, "heightScale").SetValue((float)Math.Log(sideVertexCount, 2));
 
 			VertexP[] vertices = Grid.GetVertexArray(sideVertexCount);
 
