@@ -20,6 +20,11 @@ namespace EZ.Objects
 			GL.UseProgram(Handle);
 		}
 
+		public void Unbind()
+		{
+			GL.UseProgram(0);
+		}
+
 		public void Initialize(Shader vertexShader, Shader fragmentShader)
 		{
 			if (!Initialized)
