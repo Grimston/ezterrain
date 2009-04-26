@@ -80,20 +80,20 @@ namespace EZ.Objects
 
 			Rectangle rect = new Rectangle(0, 0, Bitmap.Width, Bitmap.Height);
 			BitmapData data = Bitmap.LockBits(rect, ImageLockMode.ReadOnly,
-											  System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+											  System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
 			if (buildMipMaps)
 			{
-				Glu.Build2DMipmap(TextureTarget.Texture2D,
-								  (int)PixelInternalFormat.Rgba,
+				Glu.Build2DMipmap(Target,
+								  (int)PixelInternalFormat.Rgb,
 								  data.Width, data.Height,
-								  OpenTK.Graphics.PixelFormat.AbgrExt, PixelType.UnsignedByte,
+								  OpenTK.Graphics.PixelFormat.Bgr, PixelType.UnsignedByte,
 								  data.Scan0);
 			}
 			else
 			{
-				GL.TexImage2D(Target, 0, PixelInternalFormat.Rgba, data.Width, data.Height, 0,
-							  OpenTK.Graphics.PixelFormat.AbgrExt, PixelType.UnsignedByte, data.Scan0);
+				GL.TexImage2D(Target, 0, PixelInternalFormat.Rgb, data.Width, data.Height, 0,
+							  OpenTK.Graphics.PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
 			}
 
 			Bitmap.UnlockBits(data);
