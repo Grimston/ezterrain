@@ -36,6 +36,83 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Programs", "Programs", "{55
 		Resources\Programs\clipmap.vert = Resources\Programs\clipmap.vert
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libnoise", "libnoise", "{0B725295-00A7-4ABB-881E-94F0237E3518}"
+	ProjectSection(SolutionItems) = preProject
+		libnoise\COPYING.txt = libnoise\COPYING.txt
+		libnoise\noiseutils.cpp = libnoise\noiseutils.cpp
+		libnoise\noiseutils.h = libnoise\noiseutils.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "bin", "bin", "{35BD321C-E3FE-4011-BF12-590672975EF8}"
+	ProjectSection(SolutionItems) = preProject
+		libnoise\bin\libnoise.dll = libnoise\bin\libnoise.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{0E660150-5F03-4A87-B95B-89AA4DD72FDA}"
+	ProjectSection(SolutionItems) = preProject
+		libnoise\lib\libnoise.lib = libnoise\lib\libnoise.lib
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "include", "include", "{2B9722F2-3971-4E0F-BA32-53213C8CF293}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "noise", "noise", "{E8DE86F6-AD12-4CF6-AB1E-E76BB584CD69}"
+	ProjectSection(SolutionItems) = preProject
+		libnoise\include\noise\basictypes.h = libnoise\include\noise\basictypes.h
+		libnoise\include\noise\exception.h = libnoise\include\noise\exception.h
+		libnoise\include\noise\interp.h = libnoise\include\noise\interp.h
+		libnoise\include\noise\latlon.h = libnoise\include\noise\latlon.h
+		libnoise\include\noise\mathconsts.h = libnoise\include\noise\mathconsts.h
+		libnoise\include\noise\misc.h = libnoise\include\noise\misc.h
+		libnoise\include\noise\noise.h = libnoise\include\noise\noise.h
+		libnoise\include\noise\noisegen.h = libnoise\include\noise\noisegen.h
+		libnoise\include\noise\vectortable.h = libnoise\include\noise\vectortable.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "model", "model", "{4DEDCA62-7B96-44F7-A3F4-95473EDCDEBF}"
+	ProjectSection(SolutionItems) = preProject
+		libnoise\include\noise\model\cylinder.h = libnoise\include\noise\model\cylinder.h
+		libnoise\include\noise\model\line.h = libnoise\include\noise\model\line.h
+		libnoise\include\noise\model\model.h = libnoise\include\noise\model\model.h
+		libnoise\include\noise\model\plane.h = libnoise\include\noise\model\plane.h
+		libnoise\include\noise\model\sphere.h = libnoise\include\noise\model\sphere.h
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "module", "module", "{E49096FC-1002-4324-9F9E-14404AA8811F}"
+	ProjectSection(SolutionItems) = preProject
+		libnoise\include\noise\module\abs.h = libnoise\include\noise\module\abs.h
+		libnoise\include\noise\module\add.h = libnoise\include\noise\module\add.h
+		libnoise\include\noise\module\billow.h = libnoise\include\noise\module\billow.h
+		libnoise\include\noise\module\blend.h = libnoise\include\noise\module\blend.h
+		libnoise\include\noise\module\cache.h = libnoise\include\noise\module\cache.h
+		libnoise\include\noise\module\checkerboard.h = libnoise\include\noise\module\checkerboard.h
+		libnoise\include\noise\module\clamp.h = libnoise\include\noise\module\clamp.h
+		libnoise\include\noise\module\const.h = libnoise\include\noise\module\const.h
+		libnoise\include\noise\module\curve.h = libnoise\include\noise\module\curve.h
+		libnoise\include\noise\module\cylinders.h = libnoise\include\noise\module\cylinders.h
+		libnoise\include\noise\module\displace.h = libnoise\include\noise\module\displace.h
+		libnoise\include\noise\module\exponent.h = libnoise\include\noise\module\exponent.h
+		libnoise\include\noise\module\invert.h = libnoise\include\noise\module\invert.h
+		libnoise\include\noise\module\max.h = libnoise\include\noise\module\max.h
+		libnoise\include\noise\module\min.h = libnoise\include\noise\module\min.h
+		libnoise\include\noise\module\module.h = libnoise\include\noise\module\module.h
+		libnoise\include\noise\module\modulebase.h = libnoise\include\noise\module\modulebase.h
+		libnoise\include\noise\module\multiply.h = libnoise\include\noise\module\multiply.h
+		libnoise\include\noise\module\perlin.h = libnoise\include\noise\module\perlin.h
+		libnoise\include\noise\module\power.h = libnoise\include\noise\module\power.h
+		libnoise\include\noise\module\ridgedmulti.h = libnoise\include\noise\module\ridgedmulti.h
+		libnoise\include\noise\module\rotatepoint.h = libnoise\include\noise\module\rotatepoint.h
+		libnoise\include\noise\module\scalebias.h = libnoise\include\noise\module\scalebias.h
+		libnoise\include\noise\module\scalepoint.h = libnoise\include\noise\module\scalepoint.h
+		libnoise\include\noise\module\select.h = libnoise\include\noise\module\select.h
+		libnoise\include\noise\module\spheres.h = libnoise\include\noise\module\spheres.h
+		libnoise\include\noise\module\terrace.h = libnoise\include\noise\module\terrace.h
+		libnoise\include\noise\module\translatepoint.h = libnoise\include\noise\module\translatepoint.h
+		libnoise\include\noise\module\turbulence.h = libnoise\include\noise\module\turbulence.h
+		libnoise\include\noise\module\voronoi.h = libnoise\include\noise\module\voronoi.h
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "noisegenerator", "noisegenerator\noisegenerator.vcproj", "{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -43,29 +120,73 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|Win32 = Debug|Win32
 		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{81549EDA-69A4-4A98-8C2E-E0368317D4AD}.Release|Win32.ActiveCfg = Release|Any CPU
 		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8C67DC3A-EEC2-479F-97FC-DE43D5815DE6}.Release|Win32.ActiveCfg = Release|Any CPU
 		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{D7FAB394-FFF4-46E7-B947-C8703BCE5163}.Release|Win32.ActiveCfg = Release|Any CPU
 		{4FD0151A-530F-4854-9462-2A78C2108157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4FD0151A-530F-4854-9462-2A78C2108157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FD0151A-530F-4854-9462-2A78C2108157}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4FD0151A-530F-4854-9462-2A78C2108157}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4FD0151A-530F-4854-9462-2A78C2108157}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{4FD0151A-530F-4854-9462-2A78C2108157}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FD0151A-530F-4854-9462-2A78C2108157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FD0151A-530F-4854-9462-2A78C2108157}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4FD0151A-530F-4854-9462-2A78C2108157}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4FD0151A-530F-4854-9462-2A78C2108157}.Release|Win32.ActiveCfg = Release|Any CPU
 		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{69A87966-16BB-4C3F-99CE-5F42006CB55D}.Release|Win32.ActiveCfg = Release|Any CPU
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Debug|Win32.Build.0 = Debug|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Release|Any CPU.ActiveCfg = Release|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Release|Win32.ActiveCfg = Release|Win32
+		{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -74,5 +195,11 @@ Global
 		{925FE421-1D6B-49A0-8756-0378EA331AE7} = {83787E57-3DBE-4B06-A1A8-73A34BA93A15}
 		{12068613-2EB7-46F1-833E-2888AEA76A92} = {4F017636-2B2B-41D1-9F4A-2E60B62047CF}
 		{5524A1AF-0CF7-40D0-874D-50EA01896744} = {4F017636-2B2B-41D1-9F4A-2E60B62047CF}
+		{35BD321C-E3FE-4011-BF12-590672975EF8} = {0B725295-00A7-4ABB-881E-94F0237E3518}
+		{0E660150-5F03-4A87-B95B-89AA4DD72FDA} = {0B725295-00A7-4ABB-881E-94F0237E3518}
+		{2B9722F2-3971-4E0F-BA32-53213C8CF293} = {0B725295-00A7-4ABB-881E-94F0237E3518}
+		{E8DE86F6-AD12-4CF6-AB1E-E76BB584CD69} = {2B9722F2-3971-4E0F-BA32-53213C8CF293}
+		{4DEDCA62-7B96-44F7-A3F4-95473EDCDEBF} = {E8DE86F6-AD12-4CF6-AB1E-E76BB584CD69}
+		{E49096FC-1002-4324-9F9E-14404AA8811F} = {E8DE86F6-AD12-4CF6-AB1E-E76BB584CD69}
 	EndGlobalSection
 EndGlobal
