@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
 using OpenTK.Math;
+using EZ.Core;
 
 namespace Ez.Clipmaps
 {
@@ -27,7 +28,7 @@ namespace Ez.Clipmaps
 
 		public override string ToString()
 		{
-			return string.Format("P{0}T{1}", Position, TexCoord);
+			return string.Format("P{0}T{1}", Position.ToString(2), TexCoord.ToString(2));
 		}
 
 		public static readonly int SizeInBytes = Marshal.SizeOf(typeof(VertexPT));
