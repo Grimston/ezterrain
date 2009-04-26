@@ -6,8 +6,6 @@
 
 using namespace noise;
 
-#define MAX_LEVEL (6)
-
 std::string GetName(int level, int i, int j)
 {
 	std::stringstream stream;
@@ -39,35 +37,66 @@ void Build(utils::NoiseMapBuilderPlane& builder,
 	}
 }
 
-int main (int argc, char** argv)
+void Build(utils::NoiseMapBuilderPlane& builder, 
+		   utils::RendererImage& renderer,
+		   utils::WriterBMP& writer,
+		   int maxLevel)
 {
-	module::Perlin source;
-	source.SetOctaveCount(module::PERLIN_MAX_OCTAVE);
-
-	utils::NoiseMap map;
-	utils::NoiseMapBuilderPlane builder;
-	builder.SetDestSize(257, 257);
-	builder.SetSourceModule (source);
-	builder.SetDestNoiseMap (map);
-
-	utils::RendererImage renderer;
-	utils::Image image;
-	renderer.SetSourceNoiseMap (map);
-	renderer.SetDestImage (image);
-
-	utils::WriterBMP writer;
-	writer.SetSourceImage (image);
-	
-	for(int i = 0; i < (1 << MAX_LEVEL); i++)
+	for(int i = 0; i < (1 << maxLevel); i++)
 	{
-		for(int j = 0; j < (1 << MAX_LEVEL); j++)
+		for(int j = 0; j < (1 << maxLevel); j++)
 		{
-			for(int level = 0; level <= MAX_LEVEL; level++)
+			for(int level = 0; level <= maxLevel; level++)
 			{
 				Build(builder, renderer, writer, level, i, j);
 			}
 		}
 	}
+}
+
+int main (int argc, char** argv)
+{
+	module::RidgedMulti mountainTerrain;
+
+	module::Billow baseFlatTerrain;
+	baseFlatTerrain.SetFrequency (2.0);
+
+	module::ScaleBias flatTerrain;
+	flatTerrain.SetSourceModule (0, baseFlatTerrain);
+	flatTerrain.SetScale (0.125);
+	flatTerrain.SetBias (-0.75);
+
+	module::Perlin terrainType;
+	terrainType.SetFrequency (0.5);
+	terrainType.SetPersistence (0.25);
+
+	module::Select terrainSelector;
+	terrainSelector.SetSourceModule (0, flatTerrain);
+	terrainSelector.SetSourceModule (1, mountainTerrain);
+	terrainSelector.SetControlModule (terrainType);
+	terrainSelector.SetBounds (0.0, 1000.0);
+	terrainSelector.SetEdgeFalloff (0.125);
+
+	module::Turbulence finalTerrain;
+	finalTerrain.SetSourceModule (0, terrainSelector);
+	finalTerrain.SetFrequency (4.0);
+	finalTerrain.SetPower (0.125);
+
+	utils::NoiseMap heightMap;
+	utils::NoiseMapBuilderPlane heightMapBuilder;
+	heightMapBuilder.SetSourceModule (finalTerrain);
+	heightMapBuilder.SetDestNoiseMap (heightMap);
+	heightMapBuilder.SetDestSize (257, 257);
+
+	utils::RendererImage renderer;
+	utils::Image image;
+	renderer.SetSourceNoiseMap (heightMap);
+	renderer.SetDestImage (image);
+
+	utils::WriterBMP writer;
+	writer.SetSourceImage (image);
+
+	Build(heightMapBuilder, renderer, writer, 6);
 
 	return 0;
 }
