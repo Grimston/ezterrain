@@ -1,14 +1,8 @@
-uniform float time;
-uniform sampler2D noise;
-
-varying float bias;
+uniform float texScale;
+uniform float texOffset;
 
 void main()
 {
-	vec4 vertex = gl_Vertex;
-	bias = tex2D(noise, gl_TexCoord[0].st);
-	
-	vertex.z = bias;
-	
-	gl_Position = gl_ModelViewProjectionMatrix * vertex;
+	gl_TexCoord[0] = (gl_Vertex + texOffset) * texScale;
+	gl_Position = ftransform();
 }

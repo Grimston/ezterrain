@@ -1,8 +1,6 @@
-uniform float time;
-uniform int color;
-varying float bias;
+uniform sampler2D noise;
 
 void main()
 {
-	gl_FragColor = bias * vec4(1.0, 0.0, 0.0, 1.0);
+	gl_FragColor = gl_TexCoord[0];texture2D(noise, gl_TexCoord[0].st);
 }
