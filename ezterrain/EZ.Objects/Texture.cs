@@ -5,6 +5,7 @@ using System.Text;
 using OpenTK.Graphics;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 
 namespace EZ.Objects
 {
@@ -12,6 +13,10 @@ namespace EZ.Objects
 	{
 		public Texture(string fileName)
 			: this(new Bitmap(fileName))
+		{ }
+
+		public Texture(Stream stream)
+			: this(new Bitmap(stream))
 		{ }
 
 		public Texture(Bitmap bitmap)
