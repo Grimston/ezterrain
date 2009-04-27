@@ -4,6 +4,9 @@ uniform float texScale;
 uniform float texOffset;
 uniform float heightScale;
 
+uniform float vertexOffset;
+uniform float vertexScale;
+
 varying vec3 normal;
 
 vec4 calcTexCoord(vec4 vertex)
@@ -18,32 +21,32 @@ float getHeight(vec4 texCoord)
 
 void main()
 {
-	vec4 vertex = gl_Vertex;
+	vec4 vertex = (gl_Vertex + vertexOffset) * vertexScale;
 
 	gl_TexCoord[0] = calcTexCoord(vertex);
 	vertex.z = getHeight(gl_TexCoord[0]);
 	
-	vec4 komsu1 = gl_Vertex;
+	vec4 komsu1 = vertex;
 	//TODO: check bounds
-	komsu1.x = komsu1.x + 1;
+	komsu1.x = komsu1.x + vertexScale;
 	komsu1.z = getHeight(calcTexCoord(komsu1));
 	vec3 delta1 = normalize((komsu1 - vertex).xyz);
 	
-	vec4 komsu2 = gl_Vertex;
+	vec4 komsu2 = vertex;
 	//TODO: check bounds
-	komsu2.y = komsu2.y + 1;
+	komsu2.y = komsu2.y + vertexScale;
 	komsu2.z = getHeight(calcTexCoord(komsu2));
 	vec3 delta2 = normalize((komsu2 - vertex).xyz);
 	
-	vec4 komsu3 = gl_Vertex;
+	vec4 komsu3 = vertex;
 	//TODO: check bounds
-	komsu3.x = komsu3.x - 1;
+	komsu3.x = komsu3.x - vertexScale;
 	komsu3.z = getHeight(calcTexCoord(komsu3));
 	vec3 delta3 = normalize((komsu3 - vertex).xyz);
 	
-	vec4 komsu4 = gl_Vertex;
+	vec4 komsu4 = vertex;
 	//TODO: check bounds
-	komsu4.y = komsu4.y - 1;
+	komsu4.y = komsu4.y - vertexScale;
 	komsu4.z = getHeight(calcTexCoord(komsu4));
 	vec3 delta4 = normalize((komsu4 - vertex).xyz);
 
