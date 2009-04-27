@@ -98,14 +98,33 @@ namespace Ez.Clipmaps
 			texture.Bind();
 			program.Bind();
 
-			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
-
 			GL.EnableClientState(EnableCap.VertexArray);
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
 			GL.VertexPointer(3, VertexPointerType.Float,
 							 0,
 							 (IntPtr)VertexP.PositionOffset);
+
+			texScale.SetValue(1.0f / (sideVertexCount - 1));
+			texOffset.SetValue(0.5f);
+			vertexOffset.SetValue(0.0f);
+			vertexScale.SetValue(1.0f);
+
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, fullGridIndexBuffer);
+			GL.DrawElements(BeginMode.Triangles,
+							fullGridIndices.Length,
+							DrawElementsType.UnsignedInt,
+							IntPtr.Zero);
+
+			vertexScale.SetValue(2.0f);
+
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, hollowGridIndexBuffer);
+			GL.DrawElements(BeginMode.Triangles,
+							hollowGridIndices.Length,
+							DrawElementsType.UnsignedInt,
+							IntPtr.Zero);
+
+			vertexScale.SetValue(4.0f);
 
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, hollowGridIndexBuffer);
 			GL.DrawElements(BeginMode.Triangles,

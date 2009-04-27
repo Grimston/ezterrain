@@ -9,6 +9,9 @@ uniform float vertexScale;
 
 varying vec3 normal;
 
+varying float red;
+varying float blue;
+
 vec4 calcTexCoord(vec4 vertex)
 {
 	return (vertex + texOffset) * texScale;
@@ -21,6 +24,9 @@ float getHeight(vec4 texCoord)
 
 void main()
 {
+	red = mod(gl_Vertex.x, 2.0);
+	blue = mod(gl_Vertex.y, 2.0);
+	 
 	vec4 vertex = (gl_Vertex + vertexOffset) * vertexScale;
 
 	gl_TexCoord[0] = calcTexCoord(vertex);
