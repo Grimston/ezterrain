@@ -19,6 +19,8 @@ namespace Ez.Clipmaps
 		private Program program;
 		private Uniform texScale;
 		private Uniform texOffset;
+		private Uniform vertexScale;
+		private Uniform vertexOffset;
 
 		int vertexBuffer;
 		int fullGridIndexBuffer;
@@ -31,6 +33,8 @@ namespace Ez.Clipmaps
 			program = new Program();
 			texScale = new Uniform(program, "texScale");
 			texOffset = new Uniform(program, "texOffset");
+			vertexScale = new Uniform(program, "vertexScale");
+			vertexOffset = new Uniform(program, "vertexOffset");
 		}
 
 		public bool Initialized { get; private set; }
@@ -46,6 +50,8 @@ namespace Ez.Clipmaps
 			new Uniform(program, "heightScale").SetValue((float)Math.Log(sideVertexCount, 1.2));
 			texScale.SetValue(1.0f / (sideVertexCount - 1));
 			texOffset.SetValue(0.0f);
+			vertexOffset.SetValue(0.0f);
+			vertexScale.SetValue(1.0f);
 
 			VertexP[] vertices = Grid.GetCenteredVertexArray(sideVertexCount);
 
