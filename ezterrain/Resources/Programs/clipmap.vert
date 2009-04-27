@@ -25,6 +25,7 @@ void main()
 
 	gl_TexCoord[0] = calcTexCoord(vertex);
 	vertex.z = getHeight(gl_TexCoord[0]);
+	vertex.w = 1.0;
 	
 	vec4 komsu1 = vertex;
 	//TODO: check bounds
