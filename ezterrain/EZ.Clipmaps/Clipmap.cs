@@ -13,18 +13,24 @@ namespace Ez.Clipmaps
 	public class Clipmap : IRenderable
 	{
 		private uint sideVertexCount;
-		uint[] indices;
+		uint[] hollowGridIndices;
+		uint[] fullGridIndices;
 		private Texture texture;
 		private Program program;
+		private Uniform texScale;
+		private Uniform texOffset;
 
 		int vertexBuffer;
-		int indexBuffer;
+		int fullGridIndexBuffer;
+		int hollowGridIndexBuffer;
 
 		public Clipmap(uint sideVertexCount)
 		{
 			this.sideVertexCount = sideVertexCount;
 			texture = new Texture(ResourceManager.GetImagePath("noise.bmp"));
 			program = new Program();
+			texScale = new Uniform(program, "texScale");
+			texOffset = new Uniform(program, "texOffset");
 		}
 
 		public bool Initialized { get; private set; }
@@ -37,16 +43,19 @@ namespace Ez.Clipmaps
 							   Shader.FromFile(ShaderType.FragmentShader, ResourceManager.GetProgramPath("clipmap.frag")));
 
 			new Uniform(program, "noise").SetValue(0);
-			new Uniform(program, "texScale").SetValue(1.0f / (sideVertexCount - 1));
-			new Uniform(program, "texOffset").SetValue(0.0f);
-			new Uniform(program, "heightScale").SetValue((float)Math.Log(sideVertexCount, 2));
+			new Uniform(program, "heightScale").SetValue((float)Math.Log(sideVertexCount, 1.2));
+			texScale.SetValue(1.0f / (sideVertexCount - 1));
+			texOffset.SetValue(0.0f);
 
-			VertexP[] vertices = Grid.GetVertexArray(sideVertexCount);
+			VertexP[] vertices = Grid.GetCenteredVertexArray(sideVertexCount);
 
-			indices = Grid.GetIndexArray(sideVertexCount, 0);
+			//indices = Grid.GetIndexArray(sideVertexCount, 0);
+			this.hollowGridIndices = Grid.GetHollowGridIndexArray(sideVertexCount);
+			this.fullGridIndices = Grid.GetFullGridIndexArray(sideVertexCount);
 
 			GL.GenBuffers(1, out vertexBuffer);
-			GL.GenBuffers(1, out indexBuffer);
+			GL.GenBuffers(1, out fullGridIndexBuffer);
+			GL.GenBuffers(1, out hollowGridIndexBuffer);
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
 			GL.BufferData(BufferTarget.ArrayBuffer,
@@ -54,10 +63,16 @@ namespace Ez.Clipmaps
 						  vertices,
 						  BufferUsageHint.StaticDraw);
 
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, indexBuffer);
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, fullGridIndexBuffer);
 			GL.BufferData(BufferTarget.ElementArrayBuffer,
-						  new IntPtr(indices.Length * 4/*size of an index*/),
-						  indices,
+						  new IntPtr(fullGridIndices.Length * 4/*size of an index*/),
+						  fullGridIndices,
+						  BufferUsageHint.StaticDraw);
+
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, hollowGridIndexBuffer);
+			GL.BufferData(BufferTarget.ElementArrayBuffer,
+						  new IntPtr(hollowGridIndices.Length * 4/*size of an index*/),
+						  hollowGridIndices,
 						  BufferUsageHint.StaticDraw);
 
 			//construct meshes
@@ -77,17 +92,18 @@ namespace Ez.Clipmaps
 			texture.Bind();
 			program.Bind();
 
+			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+
 			GL.EnableClientState(EnableCap.VertexArray);
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, indexBuffer);
-
 			GL.VertexPointer(3, VertexPointerType.Float,
 							 0,
 							 (IntPtr)VertexP.PositionOffset);
 
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, hollowGridIndexBuffer);
 			GL.DrawElements(BeginMode.Triangles,
-							indices.Length,
+							hollowGridIndices.Length,
 							DrawElementsType.UnsignedInt,
 							IntPtr.Zero);
 
