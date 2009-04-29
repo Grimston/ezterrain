@@ -9,6 +9,7 @@ uniform float level;
 uniform vec3 eye;
 
 varying vec3 normal;
+varying float bias;
 
 //varying float red;
 //varying float blue;
@@ -18,9 +19,19 @@ vec4 calcTexCoord(vec4 vertex)
 	return (vertex + texOffset) * texScale;
 }
 
+float getBias(vec4 texCoord)
+{
+	return tex2D(noise, texCoord.st).r;
+}
+
+float getHeight(float bias)
+{
+	return heightScale * bias;
+}
+
 float getHeight(vec4 texCoord)
 {
-	return heightScale * tex2D(noise, texCoord.st).r;
+	return getHeight(getBias(texCoord));
 }
 
 void main()
@@ -33,7 +44,8 @@ void main()
 	vec4 vertex = (gl_Vertex  * vertexScale) + vec4(eye.x, eye.y, 0.0, 0.0);
 
 	gl_TexCoord[0] = calcTexCoord(vertex);
-	vertex.z = getHeight(gl_TexCoord[0]);
+	bias = getBias(gl_TexCoord[0]);
+	vertex.z = getHeight(bias);
 	vertex.w = 1.0;
 	
 	vec4 komsu1 = vertex;
