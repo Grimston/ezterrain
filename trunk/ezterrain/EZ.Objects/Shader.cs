@@ -49,6 +49,22 @@ namespace EZ.Objects
 
 				GL.CompileShader(Handle);
 
+				int status;
+				GL.GetShader(Handle, ShaderParameter.CompileStatus, out status);
+
+				if (status == 0)
+				{
+					string info;
+					GL.GetShaderInfoLog(Handle, out info);
+
+					string message = string.Format("{0} cannot be compiled:{1}{2}",
+													Type, Environment.NewLine, info);
+
+					System.Diagnostics.Debug.WriteLine(message);
+
+					throw new GraphicsException(message);
+				}
+
 				Initialized = true;
 			}
 		}
