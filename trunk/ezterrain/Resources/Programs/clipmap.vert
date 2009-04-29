@@ -4,8 +4,7 @@ uniform float texScale;
 uniform float texOffset;
 uniform float heightScale;
 
-uniform float vertexOffset;
-uniform float vertexScale;
+uniform float level;
 
 uniform vec3 eye;
 
@@ -28,8 +27,10 @@ void main()
 {
 	//red = mod(gl_Vertex.x, 2.0);
 	//blue = mod(gl_Vertex.y, 2.0);
-	 
-	vec4 vertex = (gl_Vertex + vertexOffset) * vertexScale + vec4(eye.x, eye.y, 0.0, 0.0);
+	
+	float vertexScale = pow(2.0, level);
+	
+	vec4 vertex = (gl_Vertex  * vertexScale) + vec4(eye.x, eye.y, 0.0, 0.0);
 
 	gl_TexCoord[0] = calcTexCoord(vertex);
 	vertex.z = getHeight(gl_TexCoord[0]);
