@@ -11,19 +11,22 @@ namespace EZ.Objects
 {
 	public class Texture : Disposable
 	{
-		public Texture(string fileName)
-			: this(new Bitmap(fileName))
+		public Texture(TextureUnit unit, string fileName)
+			: this(unit, new Bitmap(fileName))
 		{ }
 
-		public Texture(Stream stream)
-			: this(new Bitmap(stream))
+		public Texture(TextureUnit unit, Stream stream)
+			: this(unit, new Bitmap(stream))
 		{ }
 
-		public Texture(Bitmap bitmap)
+		public Texture(TextureUnit unit, Bitmap bitmap)
 		{
+			this.Unit = unit;
 			this.Bitmap = bitmap;
 			this.Target = TextureTarget.Texture2D;
 		}
+
+		public TextureUnit Unit { get; set; }
 
 		public Bitmap Bitmap { get; private set; }
 
@@ -67,11 +70,13 @@ namespace EZ.Objects
 		public void Bind()
 		{
 			GL.Enable(EnableCap.Texture2D);
+			GL.ActiveTexture(Unit);
 			GL.BindTexture(Target, Handle);
 		}
 
 		public void Unbind()
 		{
+			GL.ActiveTexture(Unit);
 			GL.BindTexture(TextureTarget.Texture2D, 0);
 			GL.Disable(EnableCap.Texture2D);
 		}
