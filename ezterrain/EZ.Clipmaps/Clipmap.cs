@@ -21,6 +21,7 @@ namespace Ez.Clipmaps
 		private Uniform texOffset;
 		private Uniform vertexScale;
 		private Uniform vertexOffset;
+		private Uniform eye;
 
 		int vertexBuffer;
 		int fullGridIndexBuffer;
@@ -35,6 +36,7 @@ namespace Ez.Clipmaps
 			texOffset = new Uniform(program, "texOffset");
 			vertexScale = new Uniform(program, "vertexScale");
 			vertexOffset = new Uniform(program, "vertexOffset");
+			eye = new Uniform(program, "eye");
 		}
 
 		public bool Initialized { get; private set; }
@@ -97,6 +99,8 @@ namespace Ez.Clipmaps
 		{
 			texture.Bind();
 			program.Bind();
+
+			eye.SetValue(info.Viewer.Position);
 
 			GL.EnableClientState(EnableCap.VertexArray);
 
