@@ -48,6 +48,9 @@ namespace Ez.Clipmaps
 
 			new Uniform(program, "noise").SetValue(0);
 			new Uniform(program, "heightScale").SetValue((float)Math.Log(sideVertexCount, 1.2));
+			Vector3 light = new Vector3(0, 0, 1);
+			light.Normalize();
+			new Uniform(program, "lightDirection").SetValue(light);
 			texScale.SetValue(1.0f / (sideVertexCount - 1));
 			texOffset.SetValue(0.0f);
 			meshLevel.SetValue(0.0f);

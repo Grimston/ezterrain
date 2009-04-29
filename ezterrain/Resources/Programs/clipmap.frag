@@ -1,4 +1,5 @@
 uniform sampler2D noise;
+uniform vec3 lightDirection;
 
 varying vec3 normal;
 
@@ -7,5 +8,5 @@ varying vec3 normal;
 
 void main()
 {
-	gl_FragColor = dot(normal, vec3(0, 0, 1)) * texture2D(noise, gl_TexCoord[0].st);// * vec4(red, 1.0, blue, 1.0);
+	gl_FragColor = dot(normal, lightDirection) * texture2D(noise, gl_TexCoord[0].st);// * vec4(red, 1.0, blue, 1.0);
 }
