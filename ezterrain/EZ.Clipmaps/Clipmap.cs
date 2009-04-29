@@ -16,6 +16,7 @@ namespace Ez.Clipmaps
 		uint[] hollowGridIndices;
 		uint[] fullGridIndices;
 		private Texture texture;
+		private Texture gradient;
 		private Program program;
 		private Uniform texScale;
 		private Uniform texOffset;
@@ -29,7 +30,8 @@ namespace Ez.Clipmaps
 		public Clipmap(uint sideVertexCount)
 		{
 			this.sideVertexCount = sideVertexCount;
-			texture = new Texture(ResourceManager.GetImagePath("noise.bmp"));
+			texture = new Texture(TextureUnit.Texture0, ResourceManager.GetImagePath("noise.bmp"));
+			gradient = new Texture(TextureUnit.Texture1, ResourceManager.GetImagePath("gradient.bmp"));
 			program = new Program();
 			texScale = new Uniform(program, "texScale");
 			texOffset = new Uniform(program, "texOffset");
@@ -42,11 +44,13 @@ namespace Ez.Clipmaps
 		public void Initialize()
 		{
 			texture.Initialize();
+			gradient.Initialize();
 
 			program.Initialize(Shader.FromFile(ShaderType.VertexShader, ResourceManager.GetProgramPath("clipmap.vert")),
 							   Shader.FromFile(ShaderType.FragmentShader, ResourceManager.GetProgramPath("clipmap.frag")));
 
 			new Uniform(program, "noise").SetValue(0);
+			new Uniform(program, "gradient").SetValue(1);
 			new Uniform(program, "heightScale").SetValue((float)Math.Log(sideVertexCount, 1.2));
 			Vector3 light = new Vector3(0, 0, 1);
 			light.Normalize();
@@ -98,7 +102,9 @@ namespace Ez.Clipmaps
 
 		public void Render(RenderInfo info)
 		{
+			gradient.Bind();
 			texture.Bind();
+
 			program.Bind();
 
 			eye.SetValue(info.Viewer.Position);
@@ -138,6 +144,7 @@ namespace Ez.Clipmaps
 			GL.DisableClientState(EnableCap.VertexArray);
 
 			program.Unbind();
+			gradient.Unbind();
 			texture.Unbind();
 		}
 	}

@@ -27,6 +27,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Resources", "Resources", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{12068613-2EB7-46F1-833E-2888AEA76A92}"
 	ProjectSection(SolutionItems) = preProject
+		Resources\Images\gradient.bmp = Resources\Images\gradient.bmp
 		Resources\Images\noise.bmp = Resources\Images\noise.bmp
 	EndProjectSection
 EndProject
