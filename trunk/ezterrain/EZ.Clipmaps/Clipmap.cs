@@ -19,8 +19,7 @@ namespace Ez.Clipmaps
 		private Program program;
 		private Uniform texScale;
 		private Uniform texOffset;
-		private Uniform vertexScale;
-		private Uniform vertexOffset;
+		private Uniform meshLevel;
 		private Uniform eye;
 
 		int vertexBuffer;
@@ -34,8 +33,7 @@ namespace Ez.Clipmaps
 			program = new Program();
 			texScale = new Uniform(program, "texScale");
 			texOffset = new Uniform(program, "texOffset");
-			vertexScale = new Uniform(program, "vertexScale");
-			vertexOffset = new Uniform(program, "vertexOffset");
+			meshLevel = new Uniform(program, "level");
 			eye = new Uniform(program, "eye");
 		}
 
@@ -52,8 +50,8 @@ namespace Ez.Clipmaps
 			new Uniform(program, "heightScale").SetValue((float)Math.Log(sideVertexCount, 1.2));
 			texScale.SetValue(1.0f / (sideVertexCount - 1));
 			texOffset.SetValue(0.0f);
-			vertexOffset.SetValue(0.0f);
-			vertexScale.SetValue(1.0f);
+			meshLevel.SetValue(0.0f);
+			
 
 			VertexP[] vertices = Grid.GetCenteredVertexArray(sideVertexCount);
 
@@ -102,6 +100,8 @@ namespace Ez.Clipmaps
 
 			eye.SetValue(info.Viewer.Position);
 
+			int distanceScale = (int)(Math.Sqrt(Math.Abs(info.Viewer.Position.Z)) / 16);
+
 			GL.EnableClientState(EnableCap.VertexArray);
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, vertexBuffer);
@@ -111,30 +111,23 @@ namespace Ez.Clipmaps
 
 			texScale.SetValue(1.0f / (sideVertexCount - 1));
 			texOffset.SetValue(0.5f);
-			vertexOffset.SetValue(0.0f);
-			vertexScale.SetValue(1.0f);
 
+			meshLevel.SetValue(0.0f + distanceScale);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, fullGridIndexBuffer);
 			GL.DrawElements(BeginMode.Triangles,
 							fullGridIndices.Length,
 							DrawElementsType.UnsignedInt,
 							IntPtr.Zero);
 
-			vertexScale.SetValue(2.0f);
-
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, hollowGridIndexBuffer);
-			GL.DrawElements(BeginMode.Triangles,
-							hollowGridIndices.Length,
-							DrawElementsType.UnsignedInt,
-							IntPtr.Zero);
-
-			vertexScale.SetValue(4.0f);
-
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, hollowGridIndexBuffer);
-			GL.DrawElements(BeginMode.Triangles,
-							hollowGridIndices.Length,
-							DrawElementsType.UnsignedInt,
-							IntPtr.Zero);
+			for (float i = 1.0f; i < 3.0f; i++)
+			{
+				meshLevel.SetValue(i + distanceScale);
+				GL.DrawElements(BeginMode.Triangles,
+								hollowGridIndices.Length,
+								DrawElementsType.UnsignedInt,
+								IntPtr.Zero);
+			}
 
 			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
