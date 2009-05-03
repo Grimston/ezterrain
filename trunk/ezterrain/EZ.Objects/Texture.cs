@@ -77,7 +77,7 @@ namespace EZ.Objects
 		public void Unbind()
 		{
 			GL.ActiveTexture(Unit);
-			GL.BindTexture(TextureTarget.Texture2D, 0);
+			GL.BindTexture(Target, 0);
 			GL.Disable(EnableCap.Texture2D);
 		}
 
