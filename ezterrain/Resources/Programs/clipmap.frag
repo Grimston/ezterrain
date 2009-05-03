@@ -6,7 +6,9 @@ uniform vec3 lightDirection;
 in vec3 normal;
 in float bias;
 
+out vec4 fragColor;
+
 void main()
 {
-	gl_FragColor = dot(normal, lightDirection) * texture2D(gradient, vec2(bias, 0.0));
+	fragColor = dot(normal, lightDirection) * texture2D(gradient, vec2(bias, 0.0));
 }
