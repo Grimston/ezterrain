@@ -10,9 +10,10 @@ uniform float level;
 
 uniform vec3 eye;
 
+in vec4 glVertex;
+
 out vec3 normal;
 out float bias;
-
 
 vec4 calcTexCoord(vec4 vertex)
 {
@@ -38,10 +39,10 @@ void main()
 {	
 	float vertexScale = pow(2.0, level);
 	
-	vec4 vertex = (gl_Vertex  * vertexScale) + vec4(eye.x, eye.y, 0.0, 0.0);
+	vec4 vertex = (glVertex  * vertexScale) + vec4(eye.x, eye.y, 0.0, 0.0);
 
-	gl_TexCoord[0] = calcTexCoord(vertex);
-	bias = getBias(gl_TexCoord[0]);
+	vec4 texCoord = calcTexCoord(vertex);
+	bias = getBias(texCoord);
 	vertex.z = getHeight(bias);
 	vertex.w = 1.0;
 	
