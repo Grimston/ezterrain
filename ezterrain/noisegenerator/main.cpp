@@ -14,6 +14,14 @@ std::string GetName(int level, int i, int j)
 	return stream.str();
 }
 
+std::string GetName(int level)
+{
+	std::stringstream stream;
+	stream <<"../../Resources/Images/l"<<level<<".bmp";
+
+	return stream.str();
+}
+
 void Build(utils::NoiseMapBuilderPlane& builder, 
 		   utils::RendererImage& renderer,
 		   utils::WriterBMP& writer,
@@ -40,9 +48,32 @@ void Build(utils::NoiseMapBuilderPlane& builder,
 void Build(utils::NoiseMapBuilderPlane& builder, 
 		   utils::RendererImage& renderer,
 		   utils::WriterBMP& writer,
+		   int level,
 		   int maxLevel)
 {
-	for(int i = 0; i < (1 << maxLevel); i++)
+	int step = 1 << maxLevel;
+
+	int size = ((1 << 8) << (maxLevel - level)) + 1;
+
+	std::string name = GetName(level);
+	std::cout << name << std::endl;
+
+	builder.SetDestSize(size, size);
+	builder.SetBounds(0, step, 0, step);
+	builder.Build();
+
+	renderer.Render();
+
+	writer.SetDestFilename(name);
+	writer.WriteDestFile();
+}
+
+void Build(utils::NoiseMapBuilderPlane& builder, 
+		   utils::RendererImage& renderer,
+		   utils::WriterBMP& writer,
+		   int maxLevel)
+{
+	/*for(int i = 0; i < (1 << maxLevel); i++)
 	{
 		for(int j = 0; j < (1 << maxLevel); j++)
 		{
@@ -51,6 +82,12 @@ void Build(utils::NoiseMapBuilderPlane& builder,
 				Build(builder, renderer, writer, level, i, j);
 			}
 		}
+	}*/
+
+
+	for(int i = 0; i <= maxLevel; i++)
+	{
+		Build(builder, renderer, writer, i, maxLevel);
 	}
 }
 
@@ -96,7 +133,7 @@ int main (int argc, char** argv)
 	utils::WriterBMP writer;
 	writer.SetSourceImage (image);
 
-	Build(heightMapBuilder, renderer, writer, 6);
+	Build(heightMapBuilder, renderer, writer, 4);
 
 	return 0;
 }
