@@ -1,3 +1,5 @@
+#version 130
+
 uniform sampler2D noise;
 
 uniform float texScale;
@@ -8,11 +10,9 @@ uniform float level;
 
 uniform vec3 eye;
 
-varying vec3 normal;
-varying float bias;
+out vec3 normal;
+out float bias;
 
-//varying float red;
-//varying float blue;
 
 vec4 calcTexCoord(vec4 vertex)
 {
@@ -21,7 +21,7 @@ vec4 calcTexCoord(vec4 vertex)
 
 float getBias(vec4 texCoord)
 {
-	return tex2D(noise, texCoord.st).r;
+	return texture2D(noise, texCoord.st).r;
 }
 
 float getHeight(float bias)
@@ -35,10 +35,7 @@ float getHeight(vec4 texCoord)
 }
 
 void main()
-{
-	//red = mod(gl_Vertex.x, 2.0);
-	//blue = mod(gl_Vertex.y, 2.0);
-	
+{	
 	float vertexScale = pow(2.0, level);
 	
 	vec4 vertex = (gl_Vertex  * vertexScale) + vec4(eye.x, eye.y, 0.0, 0.0);
