@@ -52,16 +52,17 @@ namespace EZ.Objects
 				int status;
 				GL.GetShader(Handle, ShaderParameter.CompileStatus, out status);
 
+				string info;
+				GL.GetShaderInfoLog(Handle, out info);
+
+				string message = string.IsNullOrEmpty(info)? 
+										string.Format("{0} compiled succesfully", Type)
+										: string.Format("{0} compile result:{1}{2}", Type, Environment.NewLine, info);
+
+				System.Diagnostics.Debug.WriteLine(message);
+
 				if (status == 0)
 				{
-					string info;
-					GL.GetShaderInfoLog(Handle, out info);
-
-					string message = string.Format("{0} cannot be compiled:{1}{2}",
-													Type, Environment.NewLine, info);
-
-					System.Diagnostics.Debug.WriteLine(message);
-
 					throw new GraphicsException(message);
 				}
 
