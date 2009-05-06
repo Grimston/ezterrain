@@ -15,7 +15,7 @@ namespace Ez.Clipmaps
 		private uint sideVertexCount;
 		uint[] hollowGridIndices;
 		uint[] fullGridIndices;
-		private Texture texture;
+		private List<Pair<Texture, Uniform>> texuniPairs;
 		private Texture gradient;
 		private Program program;
 		private Uniform texScale;
@@ -30,27 +30,41 @@ namespace Ez.Clipmaps
 		public Clipmap(uint sideVertexCount)
 		{
 			this.sideVertexCount = sideVertexCount;
-			texture = new Texture(TextureUnit.Texture0, ResourceManager.GetImagePath("noise.bmp"));
-			gradient = new Texture(TextureUnit.Texture1, ResourceManager.GetImagePath("gradient.bmp"));
+			gradient = new Texture(TextureUnit.Texture0, ResourceManager.GetImagePath("gradient.bmp"));
 			program = new Program();
+			ConstructTexUniPairs();
 			texScale = new Uniform(program, "texScale");
 			texOffset = new Uniform(program, "texOffset");
 			meshLevel = new Uniform(program, "level");
 			eye = new Uniform(program, "eye");
 		}
 
+		private void ConstructTexUniPairs()
+		{
+			texuniPairs = new List<Pair<Texture, Uniform>>();
+
+			string name = "noise";
+
+			for (int i = 0; i < 4; i++)
+			{
+				Texture texture = new Texture(TextureUnit.Texture1 + i, ResourceManager.GetImagePath("noise.bmp"));
+				Uniform uniform = new Uniform(program, name + i);
+
+				texuniPairs.Add(new Pair<Texture, Uniform>(texture, uniform));
+			}
+		}
+
 		public bool Initialized { get; private set; }
 
 		public void Initialize()
 		{
-			texture.Initialize();
+			texuniPairs.ForEach(pair => pair.Value1.Initialize());
 			gradient.Initialize();
 
 			program.Initialize(Shader.FromFile(ShaderType.VertexShader, ResourceManager.GetProgramPath("clipmap.vert")),
 							   Shader.FromFile(ShaderType.FragmentShader, ResourceManager.GetProgramPath("clipmap.frag")));
 
-			new Uniform(program, "noise").SetValue(0);
-			new Uniform(program, "gradient").SetValue(1);
+			new Uniform(program, "gradient").SetValue(0);
 			new Uniform(program, "heightScale").SetValue((float)Math.Log(sideVertexCount, 1.2));
 			Vector3 light = new Vector3(0, 0, 1);
 			light.Normalize();
@@ -103,9 +117,9 @@ namespace Ez.Clipmaps
 		public void Render(RenderInfo info)
 		{
 			gradient.Bind();
-			texture.Bind();
-
 			program.Bind();
+
+			texuniPairs.ForEach((pair) => { pair.Value1.Bind(); pair.Value2.SetValue(pair.Value1.UnitIndex); });
 
 			eye.SetValue(info.Viewer.Position);
 
@@ -145,7 +159,7 @@ namespace Ez.Clipmaps
 
 			program.Unbind();
 			gradient.Unbind();
-			texture.Unbind();
+			texuniPairs.ForEach((pair) => pair.Value1.Unbind());
 		}
 	}
 }

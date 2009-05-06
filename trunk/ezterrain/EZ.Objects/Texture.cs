@@ -28,6 +28,11 @@ namespace EZ.Objects
 
 		public TextureUnit Unit { get; set; }
 
+		public int UnitIndex
+		{
+			get { return (int)this.Unit - (int)TextureUnit.Texture0; }
+		}
+
 		public Bitmap Bitmap { get; private set; }
 
 		public bool Initialized { get; private set; }
@@ -86,7 +91,7 @@ namespace EZ.Objects
 
 			GL.TexImage2D(Target, 0, PixelInternalFormat.Rgb, data.Width, data.Height, 0,
 							  OpenTK.Graphics.PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
-			
+
 			Bitmap.UnlockBits(data);
 		}
 

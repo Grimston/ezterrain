@@ -1,6 +1,9 @@
 #version 130
 
-uniform sampler2D noise;
+uniform sampler2D noise0;
+uniform sampler2D noise1;
+uniform sampler2D noise2;
+uniform sampler2D noise3;
 
 uniform float texScale;
 uniform float texOffset;
@@ -22,7 +25,22 @@ vec4 calcTexCoord(vec4 vertex)
 
 float getBias(vec4 texCoord)
 {
-	return texture2D(noise, texCoord.st).r;
+	if(level >= 3.0)
+	{
+		return texture2D(noise3, texCoord.st).r;
+	}
+	else if(level >= 2.0)
+	{
+		return texture2D(noise2, texCoord.st).r;
+	}
+	else if(level >= 1.0)
+	{
+		return texture2D(noise1, texCoord.st).r;
+	}
+	else
+	{
+		return texture2D(noise0, texCoord.st).r;
+	}
 }
 
 float getHeight(float bias)
