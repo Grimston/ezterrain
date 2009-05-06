@@ -49,19 +49,11 @@ namespace EZ.Objects
 
 				if (Bitmap != null)
 				{
-					UploadData(false, mipMapCount > 0);
+					UploadData(false);
 				}
 
 				GL.TexParameter(Target, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-
-				if (mipMapCount == 0)
-				{// if no MipMaps are present, use linear Filter
-					GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-				}
-				else
-				{// MipMaps are present, use trilinear Filter
-					GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
-				}
+				GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
 
 				Initialized = true;
 			}
@@ -81,7 +73,7 @@ namespace EZ.Objects
 			GL.Disable(EnableCap.Texture2D);
 		}
 
-		public void UploadData(bool bind, bool buildMipMaps)
+		public void UploadData(bool bind)
 		{
 			if (bind)
 			{
@@ -92,20 +84,9 @@ namespace EZ.Objects
 			BitmapData data = Bitmap.LockBits(rect, ImageLockMode.ReadOnly,
 											  System.Drawing.Imaging.PixelFormat.Format24bppRgb);
 
-			if (buildMipMaps)
-			{
-				Glu.Build2DMipmap(Target,
-								  (int)PixelInternalFormat.Rgb,
-								  data.Width, data.Height,
-								  OpenTK.Graphics.PixelFormat.Bgr, PixelType.UnsignedByte,
-								  data.Scan0);
-			}
-			else
-			{
-				GL.TexImage2D(Target, 0, PixelInternalFormat.Rgb, data.Width, data.Height, 0,
+			GL.TexImage2D(Target, 0, PixelInternalFormat.Rgb, data.Width, data.Height, 0,
 							  OpenTK.Graphics.PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
-			}
-
+			
 			Bitmap.UnlockBits(data);
 		}
 
