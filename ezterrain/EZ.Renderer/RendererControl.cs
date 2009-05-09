@@ -135,6 +135,14 @@ namespace EZ.Renderer
 			{
 				camera.Position -= camera.Attitude.Side;
 			}
+			else if (e.KeyChar == 'u' || e.KeyChar == 'U')
+			{
+				camera.Position += camera.Attitude.Up;
+			}
+			else if (e.KeyChar == 'j' || e.KeyChar == 'J')
+			{
+				camera.Position -= camera.Attitude.Up;
+			}
 		}
 		#endregion
 
