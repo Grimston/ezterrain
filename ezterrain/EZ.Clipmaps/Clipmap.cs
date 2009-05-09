@@ -180,8 +180,8 @@ namespace Ez.Clipmaps
 				float offsetScale = (float)(1 << (MaxLevel - i));
 				float eyeScale = (float)(1 << i);
 
-				Rectangle rect = new Rectangle(i == MaxLevel ? 0 : (int)Math.Round(128 * offsetScale + eye.X / (sideVertexCount - 1) / eyeScale - 128),
-												i == MaxLevel ? 0 : (int)Math.Round(128 * offsetScale + eye.Y / (sideVertexCount - 1) / eyeScale - 128),
+				Rectangle rect = new Rectangle(i == MaxLevel ? 0 : (int)Math.Round(128 * offsetScale + 256 * eye.X / (sideVertexCount - 1) / eyeScale - 128),
+												i == MaxLevel ? 0 : (int)Math.Round(128 * offsetScale + 256 * eye.Y / (sideVertexCount - 1) / eyeScale - 128),
 												257,
 												257);
 
