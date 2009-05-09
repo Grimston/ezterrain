@@ -20,7 +20,7 @@ out float bias;
 
 vec4 calcTexCoord(vec4 vertex)
 {
-	return (vertex + texOffset) * texScale;
+	return (vertex) * texScale + texOffset;
 }
 
 float getBias(vec4 texCoord)
