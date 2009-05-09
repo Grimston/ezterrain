@@ -4,6 +4,7 @@ uniform sampler2D noise0;
 uniform sampler2D noise1;
 uniform sampler2D noise2;
 uniform sampler2D noise3;
+uniform sampler2D noise4;
 
 uniform float texScale;
 uniform float texOffset;
@@ -25,21 +26,29 @@ vec4 calcTexCoord(vec4 vertex)
 
 float getBias(vec4 texCoord)
 {
-	if(level >= 3.0)
+	if(level == 4.0)
+	{
+		return texture2D(noise4, texCoord.st).r;
+	}
+	else if(level == 3.0)
 	{
 		return texture2D(noise3, texCoord.st).r;
 	}
-	else if(level >= 2.0)
+	else if(level == 2.0)
 	{
 		return texture2D(noise2, texCoord.st).r;
 	}
-	else if(level >= 1.0)
+	else if(level == 1.0)
 	{
 		return texture2D(noise1, texCoord.st).r;
 	}
-	else
+	else if(level == 0.0)
 	{
 		return texture2D(noise0, texCoord.st).r;
+	}
+	else
+	{
+		return 0.0;
 	}
 }
 
@@ -57,9 +66,10 @@ void main()
 {	
 	float vertexScale = pow(2.0, level);
 	
-	vec4 vertex = (glVertex  * vertexScale) + vec4(eye.x, eye.y, 0.0, 0.0);
+	vec4 vertex = (glVertex  * vertexScale);
 
 	vec4 texCoord = calcTexCoord(vertex);
+	
 	bias = getBias(texCoord);
 	vertex.z = getHeight(bias);
 	vertex.w = 1.0;
@@ -93,6 +103,8 @@ void main()
 	vec3 normal3 = cross(delta3, delta4);
 	vec3 normal4 = cross(delta4, delta1);
 	normal = (normal1 + normal2 + normal3 + normal4) / 4.0;
+
+	vertex.xy += eye.xy;
 	
 	gl_Position = gl_ModelViewProjectionMatrix * vertex;
 }
