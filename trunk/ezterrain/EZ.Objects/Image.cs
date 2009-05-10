@@ -59,24 +59,29 @@ namespace EZ.Objects
 
 		public void Update(Rectangle rect, byte[] data)
 		{
-			int copySize = rect.Width * GetComponentCount();
+			int copySize = rect.Width * ComponentCount;
 
 			for (int i = rect.Top; i < rect.Bottom; i++)
 			{
 				Buffer.BlockCopy(data, i * copySize,
-								 this.data, (i * Size.Width + rect.Left) * GetComponentCount(),
+								 this.data, (i * Size.Width + rect.Left) * ComponentCount,
 								 copySize);
 			}
 		}
 
 		public int GetTotalSize()
 		{
-			return GetComponentCount() * Size.Width * Size.Height;
+			return ComponentCount * Size.Width * Size.Height;
 		}
 
-		public int GetComponentCount()
+		public int ComponentCount
 		{
-			switch (PixelFormat)
+			get { return GetComponentCount(PixelFormat); }
+		}
+
+		public static int GetComponentCount(PixelFormat pixelFormat)
+		{
+			switch (pixelFormat)
 			{
 				case PixelFormat.AbgrExt:
 				case PixelFormat.Bgra:
@@ -117,7 +122,7 @@ namespace EZ.Objects
 				case PixelFormat.StencilIndex:
 					return 1;
 				default:
-					throw new InvalidEnumArgumentException(PixelFormat.ToString());
+					throw new InvalidEnumArgumentException(pixelFormat.ToString());
 			}
 		}
 	}
