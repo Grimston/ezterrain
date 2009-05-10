@@ -125,5 +125,42 @@ namespace EZ.Objects
 					throw new InvalidEnumArgumentException(pixelFormat.ToString());
 			}
 		}
+
+		public static int GetComponentCount(System.Drawing.Imaging.PixelFormat pixelFormat)
+		{
+			switch (pixelFormat)
+			{
+				case System.Drawing.Imaging.PixelFormat.Alpha:
+				case System.Drawing.Imaging.PixelFormat.PAlpha:
+				case System.Drawing.Imaging.PixelFormat.Format8bppIndexed:
+					return 1;
+				case System.Drawing.Imaging.PixelFormat.Format16bppGrayScale:
+				case System.Drawing.Imaging.PixelFormat.Format16bppRgb555:
+				case System.Drawing.Imaging.PixelFormat.Format16bppRgb565:
+				case System.Drawing.Imaging.PixelFormat.Format16bppArgb1555:
+					return 2;
+				case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+					return 3;
+				case System.Drawing.Imaging.PixelFormat.Canonical:
+				case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+				case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
+				case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
+					return 4;
+				case System.Drawing.Imaging.PixelFormat.Format48bppRgb:
+					return 6;
+				case System.Drawing.Imaging.PixelFormat.Format64bppArgb:
+				case System.Drawing.Imaging.PixelFormat.Format64bppPArgb:
+					return 8;
+				case System.Drawing.Imaging.PixelFormat.Format1bppIndexed:
+				case System.Drawing.Imaging.PixelFormat.Extended:
+				case System.Drawing.Imaging.PixelFormat.Format4bppIndexed:
+				case System.Drawing.Imaging.PixelFormat.Gdi:
+				case System.Drawing.Imaging.PixelFormat.Indexed:
+				case System.Drawing.Imaging.PixelFormat.Max:
+				case System.Drawing.Imaging.PixelFormat.Undefined:
+				default:
+					throw new InvalidEnumArgumentException(pixelFormat.ToString());
+			}
+		}
 	}
 }
