@@ -20,6 +20,11 @@ namespace EZ.Objects
 			Dispose(true);
 		}
 
-		protected abstract void Dispose(bool nongc);
+		public bool Disposed { get; private set; }
+
+		protected virtual void Dispose(bool nongc)
+		{
+			Disposed = true;
+		}
 	}
 }
