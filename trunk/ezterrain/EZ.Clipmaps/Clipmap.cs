@@ -19,9 +19,9 @@ namespace Ez.Clipmaps
 		private uint sideVertexCount;
 		uint[] hollowGridIndices;
 		uint[] fullGridIndices;
-		private List<Pair<Texture, Uniform>> texuniPairs;
+		private List<Pair<Texture2D, Uniform>> texuniPairs;
 		private List<Bitmap> images;
-		private Texture gradient;
+		private Texture2D gradient;
 		private Program program;
 		private Uniform texScale;
 		private Uniform texOffset;
@@ -35,7 +35,7 @@ namespace Ez.Clipmaps
 		public Clipmap(uint sideVertexCount)
 		{
 			this.sideVertexCount = sideVertexCount;
-			gradient = new Texture(TextureUnit.Texture0, ResourceManager.GetImagePath("gradient.bmp"));
+			gradient = new Texture2D(TextureUnit.Texture0, ResourceManager.GetImagePath("gradient.bmp"));
 			program = new Program();
 			ConstructTexUniPairs();
 			texScale = new Uniform(program, "texScale");
@@ -46,17 +46,17 @@ namespace Ez.Clipmaps
 
 		private void ConstructTexUniPairs()
 		{
-			texuniPairs = new List<Pair<Texture, Uniform>>();
+			texuniPairs = new List<Pair<Texture2D, Uniform>>();
 			images = new List<Bitmap>();
 
 			string name = "noise";
 
 			for (int i = 0; i <= MaxLevel; i++)
 			{
-				Texture texture = new Texture(TextureUnit.Texture1 + i, new Bitmap(257, 257));
+				Texture2D texture = new Texture2D(TextureUnit.Texture1 + i, new Bitmap(257, 257, System.Drawing.Imaging.PixelFormat.Format24bppRgb));
 				Uniform uniform = new Uniform(program, name + i);
 
-				texuniPairs.Add(new Pair<Texture, Uniform>(texture, uniform));
+				texuniPairs.Add(new Pair<Texture2D, Uniform>(texture, uniform));
 				images.Add(new Bitmap(ResourceManager.GetImagePath(string.Format("l{0}.bmp", i))));
 			}
 		}
@@ -116,6 +116,9 @@ namespace Ez.Clipmaps
 		public bool Update(RenderInfo info)
 		{
 			//TODO: update texture coordinates
+			UpdateTextures(info.Viewer.Position);
+			gradient.Update();
+			texuniPairs.ForEach(pair => pair.Value1.Update());
 
 			//always render
 			return true;
@@ -123,8 +126,6 @@ namespace Ez.Clipmaps
 
 		public void Render(RenderInfo info)
 		{
-			UpdateTextures(info.Viewer.Position);
-
 			gradient.Bind();
 			program.Bind();
 
@@ -186,7 +187,8 @@ namespace Ez.Clipmaps
 												257);
 
 				BitmapData imageData = images[i].LockBits(rect, ImageLockMode.ReadOnly, images[i].PixelFormat);
-				BitmapData textureData = texuniPairs[i].Value1.Bitmap.LockBits(new Rectangle(0, 0, 257, 257), ImageLockMode.WriteOnly, images[i].PixelFormat);
+				Rectangle textureBounds = new Rectangle(0, 0, 257, 257);
+				BitmapData textureData = texuniPairs[i].Value1.Bitmap.LockBits(textureBounds, ImageLockMode.WriteOnly, images[i].PixelFormat);
 
 				for (int j = 0; j < 257; j++)
 				{
@@ -199,7 +201,7 @@ namespace Ez.Clipmaps
 				texuniPairs[i].Value1.Bitmap.UnlockBits(textureData);
 				images[i].UnlockBits(imageData);
 
-				texuniPairs[i].Value1.UploadData(true);
+				texuniPairs[i].Value1.DirtyRegions.Add(textureBounds);
 			}
 		}
 

@@ -9,103 +9,92 @@ using System.IO;
 
 namespace EZ.Objects
 {
-	public class Texture : Disposable
+	public abstract class Texture : Disposable
 	{
-		public Texture(TextureUnit unit, string fileName)
-			: this(unit, new Bitmap(fileName))
+		public Texture(string fileName)
+			: this(new Bitmap(fileName))
 		{ }
 
-		public Texture(TextureUnit unit, Stream stream)
-			: this(unit, new Bitmap(stream))
+		public Texture(Stream stream)
+			: this(new Bitmap(stream))
 		{ }
 
-		public Texture(TextureUnit unit, Bitmap bitmap)
+		public Texture(Bitmap bitmap)
 		{
-			this.Unit = unit;
 			this.Bitmap = bitmap;
-			this.Target = TextureTarget.Texture2D;
-		}
-
-		public TextureUnit Unit { get; set; }
-
-		public int UnitIndex
-		{
-			get { return (int)this.Unit - (int)TextureUnit.Texture0; }
+			this.MagFilter = TextureMagFilter.Linear;
+			this.MinFilter = TextureMinFilter.Nearest;
+			this.WrapS = TextureWrapMode.ClampToEdge;
+			this.WrapT = TextureWrapMode.ClampToEdge;
+			this.DirtyRegions = new List<Rectangle>();
 		}
 
 		public Bitmap Bitmap { get; private set; }
 
-		public bool Initialized { get; private set; }
+		public bool Initialized { get; protected set; }
 
-		public int Handle { get; private set; }
+		public abstract TextureTarget Target { get; }
 
-		public TextureTarget Target { get; set; }
+		public TextureMagFilter MagFilter { get; set; }
 
-		public void Initialize()
+		public TextureMinFilter MinFilter { get; set; }
+
+		public TextureWrapMode WrapS { get; set; }
+
+		public TextureWrapMode WrapT { get; set; }
+
+		public abstract void Initialize();
+
+		public Rectangle Bounds
 		{
-			if (!Initialized)
+			get
 			{
-				Handle = GL.GenTexture();
-
-				Bind();
-
-				int mipMapCount;
-				GL.GetTexParameter(Target, GetTextureParameter.TextureMaxLevel, out mipMapCount);
-
-				if (Bitmap != null)
-				{
-					UploadData(false);
-				}
-
-				GL.TexParameter(Target, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-				GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-				GL.TexParameter(Target, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-				GL.TexParameter(Target, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-
-				Initialized = true;
+				return new Rectangle(0, 0, Bitmap.Width, Bitmap.Height);
 			}
 		}
 
-		public void Bind()
+		public ICollection<Rectangle> DirtyRegions { get; private set; }
+
+		public virtual void Update()
 		{
-			GL.Enable(EnableCap.Texture2D);
-			GL.ActiveTexture(Unit);
-			GL.BindTexture(Target, Handle);
+			GL.TexParameter(Target, TextureParameterName.TextureMagFilter, (int)MagFilter);
+			GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)MinFilter);
+			GL.TexParameter(Target, TextureParameterName.TextureWrapS, (int)WrapS);
+			GL.TexParameter(Target, TextureParameterName.TextureWrapT, (int)WrapT);
+
+			ClearDirtyRegions();
 		}
 
-		public void Unbind()
+		private void ClearDirtyRegions()
 		{
-			GL.ActiveTexture(Unit);
-			GL.BindTexture(Target, 0);
-			GL.Disable(EnableCap.Texture2D);
-		}
-
-		public void UploadData(bool bind)
-		{
-			if (bind)
+			foreach (Rectangle dirtyRegion in DirtyRegions)
 			{
-				Bind();
+				Upload(dirtyRegion);
 			}
 
-			Rectangle rect = new Rectangle(0, 0, Bitmap.Width, Bitmap.Height);
-			BitmapData data = Bitmap.LockBits(rect, ImageLockMode.ReadOnly,
-											  System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+			DirtyRegions.Clear();
+		}
 
-			GL.TexImage2D(Target, 0, PixelInternalFormat.Rgb, data.Width, data.Height, 0,
-							  OpenTK.Graphics.PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
+
+		private void Upload(Rectangle dirtyRegion)
+		{
+			BitmapData data = Bitmap.LockBits(dirtyRegion, ImageLockMode.ReadOnly, Bitmap.PixelFormat);
+
+			Upload(data);
 
 			Bitmap.UnlockBits(data);
 		}
 
+		protected abstract void Upload(BitmapData data);
+
 		protected override void Dispose(bool nongc)
 		{
-			if (nongc && Initialized)
+			if (nongc)
 			{
-				GL.DeleteTexture(Handle);
-
-				Initialized = false;
-				Handle = 0;
+				Bitmap.Dispose();
 			}
+
+			base.Dispose(nongc);
 		}
 	}
 }
