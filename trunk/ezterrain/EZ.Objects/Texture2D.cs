@@ -28,6 +28,11 @@ namespace EZ.Objects
 			get { return TextureTarget.Texture2D; }
 		}
 
+		protected override EnableCap? EnableCap
+		{
+			get { return OpenTK.Graphics.EnableCap.Texture2D; }
+		}
+
 		protected override void Upload(BitmapData data)
 		{
 			if (data.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)

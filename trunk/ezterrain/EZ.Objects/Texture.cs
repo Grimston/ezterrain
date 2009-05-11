@@ -22,26 +22,12 @@ namespace EZ.Objects
 		public Texture(Bitmap bitmap)
 		{
 			this.Bitmap = bitmap;
-			this.MagFilter = TextureMagFilter.Linear;
-			this.MinFilter = TextureMinFilter.Nearest;
-			this.WrapS = TextureWrapMode.ClampToEdge;
-			this.WrapT = TextureWrapMode.ClampToEdge;
 			this.DirtyRegions = new List<Rectangle>();
 		}
 
 		public Bitmap Bitmap { get; private set; }
 
 		public bool Initialized { get; protected set; }
-
-		public abstract TextureTarget Target { get; }
-
-		public TextureMagFilter MagFilter { get; set; }
-
-		public TextureMinFilter MinFilter { get; set; }
-
-		public TextureWrapMode WrapS { get; set; }
-
-		public TextureWrapMode WrapT { get; set; }
 
 		public abstract void Initialize();
 
@@ -57,11 +43,6 @@ namespace EZ.Objects
 
 		public virtual void Update()
 		{
-			GL.TexParameter(Target, TextureParameterName.TextureMagFilter, (int)MagFilter);
-			GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)MinFilter);
-			GL.TexParameter(Target, TextureParameterName.TextureWrapS, (int)WrapS);
-			GL.TexParameter(Target, TextureParameterName.TextureWrapT, (int)WrapT);
-
 			ClearDirtyRegions();
 		}
 
