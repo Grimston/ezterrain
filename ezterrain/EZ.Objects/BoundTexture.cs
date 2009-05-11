@@ -13,20 +13,39 @@ namespace EZ.Objects
 		public BoundTexture(TextureUnit unit, string fileName)
 			: base(fileName)
 		{
-			this.Unit = unit;
+			Initialize(unit);
 		}
 
 		public BoundTexture(TextureUnit unit, Stream stream)
 			: base(stream)
 		{
-			this.Unit = unit;
+			Initialize(unit);
 		}
 
 		public BoundTexture(TextureUnit unit, Bitmap bitmap)
 			: base(bitmap)
 		{
-			this.Unit = unit;
+			Initialize(unit);
 		}
+
+		private void Initialize(TextureUnit unit)
+		{
+			this.Unit = unit;
+			this.MagFilter = TextureMagFilter.Linear;
+			this.MinFilter = TextureMinFilter.Nearest;
+			this.WrapS = TextureWrapMode.ClampToEdge;
+			this.WrapT = TextureWrapMode.ClampToEdge;
+		}
+
+		public abstract TextureTarget Target { get; }
+
+		public TextureMagFilter MagFilter { get; set; }
+
+		public TextureMinFilter MinFilter { get; set; }
+
+		public TextureWrapMode WrapS { get; set; }
+
+		public TextureWrapMode WrapT { get; set; }
 
 		public TextureUnit Unit { get; set; }
 
@@ -49,17 +68,41 @@ namespace EZ.Objects
 			}
 		}
 
-
 		public override void Update()
 		{
 			Bind();
 
+			GL.TexParameter(Target, TextureParameterName.TextureMagFilter, (int)MagFilter);
+			GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)MinFilter);
+			GL.TexParameter(Target, TextureParameterName.TextureWrapS, (int)WrapS);
+			GL.TexParameter(Target, TextureParameterName.TextureWrapT, (int)WrapT);
+
 			base.Update();
+		}
+
+		protected virtual EnableCap? EnableCap { get { return null; } }
+
+		private void Enable()
+		{
+			EnableCap? enableCap = this.EnableCap;
+			if (enableCap.HasValue)
+			{
+				GL.Enable(enableCap.Value);
+			}
+		}
+
+		private void Disable()
+		{
+			EnableCap? enableCap = this.EnableCap;
+			if (enableCap.HasValue)
+			{
+				GL.Disable(enableCap.Value);
+			}
 		}
 
 		public void Bind()
 		{
-			GL.Enable(EnableCap.Texture2D);
+			Enable();
 			GL.ActiveTexture(Unit);
 			GL.BindTexture(Target, Handle);
 		}
@@ -68,7 +111,7 @@ namespace EZ.Objects
 		{
 			GL.ActiveTexture(Unit);
 			GL.BindTexture(Target, 0);
-			GL.Disable(EnableCap.Texture2D);
+			Disable();
 		}
 
 		protected override void Dispose(bool nongc)

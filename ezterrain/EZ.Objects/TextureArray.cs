@@ -9,130 +9,55 @@ using System.IO;
 
 namespace EZ.Objects
 {
-	public class TextureArray : Disposable
+	public class TextureArray : BoundTexture
 	{
-		public TextureArray(TextureUnit unit)
-		{
-			this.Unit = unit;
-			this.Target = TextureTarget.Texture2DArray;
-		}
+		private static Bitmap DefaultBitmap { get { return new Bitmap(0, 0); } }
 
-		public TextureArray(TextureUnit unit, Bitmap[] images)
-			: this(unit)
+		public TextureArray(TextureUnit unit, Size size, Bitmap[] images)
+			: base(unit, DefaultBitmap)
 		{
+			this.Size = size;
 			LoadImages(images);
 		}
 
-		public void LoadImages(IEnumerable<string> files)
+		public void LoadImages(Bitmap[] images)
 		{
-			LoadImages(files.Select(file => new Bitmap(file)));
-		}
+			this.Images = new TextureArrayElement[images.Length];
 
-		public void LoadImages(IEnumerable<Bitmap> images)
-		{
-			this.Images = images.ToArray();
-		}
-
-		public TextureUnit Unit { get; set; }
-
-		public bool Initialized { get; private set; }
-
-		public int Handle { get; private set; }
-
-		public TextureTarget Target { get; private set; }
-
-		public Bitmap[] Images { get; private set; }
-
-		public void Initialize()
-		{
-			if (!Initialized)
+			for (int i = 0; i < this.Images.Length; i++)
 			{
-				Handle = GL.GenTexture();
-
-				Bind();
-
-				GL.TexParameter(Target, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-				GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-				GL.TexParameter(Target, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
-				GL.TexParameter(Target, TextureParameterName.TextureWrapT, (int)TextureWrapMode.ClampToEdge);
-				GL.TexParameter(Target, TextureParameterName.GenerateMipmapSgis, (int)All.False);
-
-				GL.TexImage3D(Target, 0, PixelInternalFormat.Rgb,
-								257, 257, 6, 0, OpenTK.Graphics.PixelFormat.Bgr,
-								PixelType.UnsignedByte, IntPtr.Zero);
-
-				if (Images != null)
-				{
-					UploadData(false);
-				}
-
-				Initialized = true;
+				this.Images[i] = new TextureArrayElement(i, images[i]);
 			}
 		}
 
-		public void Bind()
+		public Size Size { get; private set; }
+
+		public TextureArrayElement[] Images { get; private set; }
+
+		public override TextureTarget Target
 		{
-			GL.Enable(EnableCap.Texture3DExt);
-			GL.ActiveTexture(Unit);
-			GL.BindTexture(Target, Handle);
+			get { return TextureTarget.Texture2DArray; }
 		}
 
-		public void Unbind()
+		protected override EnableCap? EnableCap
 		{
-			GL.ActiveTexture(Unit);
-			GL.BindTexture(Target, 0);
-			GL.Disable(EnableCap.Texture3DExt);
+			get { return OpenTK.Graphics.EnableCap.Texture3DExt; }
 		}
 
-		public void UploadData(bool bind, int imageIndex, Rectangle region)
+		public override void Initialize()
 		{
-			if (bind)
-			{
-				Bind();
-			}
+			base.Initialize();
 
-			Bitmap image = Images[imageIndex];
+			Bind();
 
-			BitmapData data = image.LockBits(region, ImageLockMode.ReadOnly,
-											 System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-
-			GL.TexSubImage3D(TextureTarget.Texture2DArray, 0,
-							 0, 0, 0,
-							 data.Width, data.Height, 1,
-							 OpenTK.Graphics.PixelFormat.Bgr,
-							 PixelType.UnsignedByte,
-							 data.Scan0);
-
-			image.UnlockBits(data);
+			GL.TexImage3D(Target, 0, PixelInternalFormat.Rgb,
+							Size.Width, Size.Height, 6, 0, OpenTK.Graphics.PixelFormat.Bgr,
+							PixelType.UnsignedByte, IntPtr.Zero);
 		}
 
-		public void UploadData(bool bind, int imageIndex)
+		protected override void Upload(BitmapData data)
 		{
-			UploadData(bind, imageIndex, new Rectangle(0, 0, Images[imageIndex].Width, Images[imageIndex].Height));
-		}
-
-		public void UploadData(bool bind)
-		{
-			if (bind)
-			{
-				Bind();
-			}
-
-			for (int i = 0; i < Images.Length; i++)
-			{
-				UploadData(false, i);
-			}
-		}
-
-		protected override void Dispose(bool nongc)
-		{
-			if (nongc && Initialized)
-			{
-				GL.DeleteTexture(Handle);
-
-				Initialized = false;
-				Handle = 0;
-			}
+			Array.ForEach(Images, image => Update());
 		}
 	}
 }

@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Drawing;
+using System.Drawing.Imaging;
+using OpenTK.Graphics;
+
+namespace EZ.Objects
+{
+	public class TextureArrayElement : Texture, IComparable<TextureArrayElement>
+	{
+		internal TextureArrayElement(int index, string fileName)
+			: base(fileName)
+		{ this.Index = index; }
+
+		internal TextureArrayElement(int index, Stream stream)
+			: base(stream)
+		{ this.Index = index; }
+
+		internal TextureArrayElement(int index, Bitmap bitmap)
+			: base(bitmap)
+		{ this.Index = index; }
+
+		public int Index { get; private set; }
+
+		public override void Initialize()
+		{
+			if (!Initialized)
+			{
+				DirtyRegions.Add(Bounds);
+				Initialized = true;
+			}
+		}
+
+		protected override void Upload(BitmapData data)
+		{
+			if (data.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
+			{
+				if (Image.GetComponentCount(data.PixelFormat) == data.Stride / data.Width)
+				{
+					GL.TexSubImage3D(TextureTarget.Texture2DArray, 0,
+										 0, 0, Index,
+										 data.Width, data.Height, 1,
+										 OpenTK.Graphics.PixelFormat.Bgr,
+										 PixelType.UnsignedByte,
+										 data.Scan0);
+				}
+			}
+		}
+
+		#region IComparable<TextureArrayElement> Members
+
+		public int CompareTo(TextureArrayElement other)
+		{
+			return Index.CompareTo(other.Index);
+		}
+
+		#endregion
+	}
+}
