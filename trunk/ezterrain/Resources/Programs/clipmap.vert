@@ -1,4 +1,4 @@
-#version 130
+//#version 130
 
 uniform sampler2D noise0;
 uniform sampler2D noise1;
@@ -16,8 +16,8 @@ uniform vec3 eye;
 
 in vec4 glVertex;
 
-out vec3 normal;
-out float bias;
+varying vec3 normal;
+varying float bias;
 
 vec4 calcTexCoord(vec4 vertex)
 {
