@@ -1,10 +1,7 @@
 //#version 130
+#extension GL_EXT_gpu_shader4 : enable
 
-uniform sampler2D noise0;
-uniform sampler2D noise1;
-uniform sampler2D noise2;
-uniform sampler2D noise3;
-uniform sampler2D noise4;
+uniform sampler2DArray noiseArray;
 
 uniform float texScale;
 uniform float texOffset;
@@ -26,30 +23,7 @@ vec4 calcTexCoord(vec4 vertex)
 
 float getBias(vec4 texCoord)
 {
-	if(level == 4.0)
-	{
-		return texture2D(noise4, texCoord.st).r;
-	}
-	else if(level == 3.0)
-	{
-		return texture2D(noise3, texCoord.st).r;
-	}
-	else if(level == 2.0)
-	{
-		return texture2D(noise2, texCoord.st).r;
-	}
-	else if(level == 1.0)
-	{
-		return texture2D(noise1, texCoord.st).r;
-	}
-	else if(level == 0.0)
-	{
-		return texture2D(noise0, texCoord.st).r;
-	}
-	else
-	{
-		return 0.0;
-	}
+	return texture2DArray(noiseArray, vec3(texCoord.st, level)).r;
 }
 
 float getHeight(float bias)
