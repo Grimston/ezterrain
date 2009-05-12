@@ -11,7 +11,7 @@ namespace EZ.Objects
 {
 	public class TextureArray : BoundTexture
 	{
-		private static Bitmap DefaultBitmap { get { return new Bitmap(0, 0); } }
+		private static Bitmap DefaultBitmap { get { return new Bitmap(1, 1); } }
 
 		public TextureArray(TextureUnit unit, Size size, Bitmap[] images)
 			: base(unit, DefaultBitmap)
@@ -55,9 +55,19 @@ namespace EZ.Objects
 							PixelType.UnsignedByte, IntPtr.Zero);
 		}
 
+		public override void Update()
+		{
+			if (DirtyRegions.Count == 0 && Images.Any(image => image.DirtyRegions.Count > 0))
+			{
+				DirtyRegions.Add(Bounds);
+			}
+
+			base.Update();
+		}
+
 		protected override void Upload(BitmapData data)
 		{
-			Array.ForEach(Images, image => Update());
+			Array.ForEach(Images, image => image.Update());
 		}
 	}
 }
