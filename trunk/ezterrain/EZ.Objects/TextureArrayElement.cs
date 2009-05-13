@@ -34,7 +34,7 @@ namespace EZ.Objects
 			}
 		}
 
-		protected override void Upload(BitmapData data)
+		protected override void Upload(Rectangle region, BitmapData data)
 		{
 			if (data.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
 			{
@@ -46,6 +46,18 @@ namespace EZ.Objects
 										 OpenTK.Graphics.PixelFormat.Bgr,
 										 PixelType.UnsignedByte,
 										 data.Scan0);
+				}
+				else
+				{
+					for (int i = 0; i < data.Height; i++)
+					{
+						GL.TexSubImage3D(TextureTarget.Texture2DArray, 0,
+										 region.X, region.Y + i, Index,
+										 data.Width, 1, 1,
+										 OpenTK.Graphics.PixelFormat.Bgr,
+										 PixelType.UnsignedByte,
+										 new IntPtr(data.Scan0.ToInt32() + (i * data.Stride)));
+					}
 				}
 			}
 		}

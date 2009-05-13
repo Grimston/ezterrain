@@ -61,12 +61,12 @@ namespace EZ.Objects
 		{
 			BitmapData data = Bitmap.LockBits(dirtyRegion, ImageLockMode.ReadOnly, Bitmap.PixelFormat);
 
-			Upload(data);
+			Upload(dirtyRegion, data);
 
 			Bitmap.UnlockBits(data);
 		}
 
-		protected abstract void Upload(BitmapData data);
+		protected abstract void Upload(Rectangle region, BitmapData data);
 
 		protected override void Dispose(bool nongc)
 		{

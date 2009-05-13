@@ -65,7 +65,7 @@ namespace EZ.Objects
 			base.Update();
 		}
 
-		protected override void Upload(BitmapData data)
+		protected override void Upload(Rectangle region, BitmapData data)
 		{
 			Array.ForEach(Images, image => image.Update());
 		}
