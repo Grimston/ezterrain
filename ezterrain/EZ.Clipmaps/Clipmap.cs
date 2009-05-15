@@ -75,7 +75,7 @@ namespace Ez.Clipmaps
 			light.Normalize();
 			new Uniform(program, "lightDirection").SetValue(light);
 			texScale.SetValue(1.0f / (sideVertexCount - 1));
-			texOffset.SetValue(0.0f);
+			texOffset.SetValue(0.5f, 0.5f);
 			meshLevel.SetValue(0.0f);
 
 
@@ -139,8 +139,8 @@ namespace Ez.Clipmaps
 							 0,
 							 (IntPtr)VertexP.PositionOffset);
 
-			texScale.SetValue(1.0f / (sideVertexCount - 1));
-			texOffset.SetValue(0.5f);
+			texScale.SetValue(1.0f / (sideVertexCount - 1) /(1<<distanceScale));
+			texOffset.SetValue(0.5f, 0.5f);
 
 			meshLevel.SetValue(0.0f + distanceScale);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, fullGridIndexBuffer);

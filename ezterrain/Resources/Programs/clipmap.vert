@@ -4,7 +4,7 @@
 uniform sampler2DArray noiseArray;
 
 uniform float texScale;
-uniform float texOffset;
+uniform vec2 texOffset;
 uniform float heightScale;
 
 uniform float level;
@@ -20,7 +20,7 @@ varying float bias;
 
 vec4 calcTexCoord(vec4 vertex, float texScale)
 {
-	return (vertex) * texScale + texOffset;
+	return vertex * texScale + vec4(texOffset, 0.0, 0.0);
 }
 
 vec4 calcTexCoord(vec4 vertex)
