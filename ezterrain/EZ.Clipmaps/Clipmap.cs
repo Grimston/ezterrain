@@ -139,7 +139,7 @@ namespace Ez.Clipmaps
 							 0,
 							 (IntPtr)VertexP.PositionOffset);
 
-			texScale.SetValue(1.0f / (sideVertexCount - 1) /(1<<distanceScale));
+			texScale.SetValue(1.0f / (sideVertexCount - 1) / (1 << distanceScale));
 			texOffset.SetValue(0.5f, 0.5f);
 
 			meshLevel.SetValue(0.0f + distanceScale);
@@ -175,15 +175,16 @@ namespace Ez.Clipmaps
 		{
 			for (int i = 0; i <= MaxLevel; i++)
 			{
-				float offsetScale = (float)(1 << (MaxLevel - i));
-				float eyeScale = (float)(1 << i);
+				double offsetScale = (float)(1 << (MaxLevel - i - 1));
+				double eyeScale = 1 / (float)(1 << i);
 
-				Rectangle rect = new Rectangle(i == MaxLevel ? 0 : (int)Math.Round(128 * offsetScale + 256 * eye.X / (sideVertexCount - 1) / eyeScale - 128),
-												i == MaxLevel ? 0 : (int)Math.Round(128 * offsetScale + 256 * eye.Y / (sideVertexCount - 1) / eyeScale - 128),
-												257,
-												257);
+				Vector2d offset = i == MaxLevel ? Vector2d.Zero 
+												: new Vector2d(Math.Round(256 * (offsetScale - 0.5) + eye.X * eyeScale),
+															   Math.Round(256 * (offsetScale - 0.5) + eye.Y * eyeScale));
 
+				Rectangle rect = new Rectangle((int)offset.X, (int)offset.Y, 257, 257);
 				BitmapData imageData = images[i].LockBits(rect, ImageLockMode.ReadOnly, images[i].PixelFormat);
+
 				Rectangle textureBounds = new Rectangle(0, 0, 257, 257);
 				BitmapData textureData = textureArray.Images[i].Bitmap.LockBits(textureBounds, ImageLockMode.WriteOnly, images[i].PixelFormat);
 
