@@ -35,9 +35,19 @@ namespace EZ.Objects
 			GL.Uniform1(GetLocation(), value);
 		}
 
+		public void SetValue(float value1, float value2)
+		{
+			GL.Uniform2(GetLocation(), value1, value2);
+		}
+
+		public void SetValue(float value1, float value2, float value3)
+		{
+			GL.Uniform3(GetLocation(), value1, value2, value3);
+		}
+
 		public void SetValue(Vector3 value)
 		{
-			GL.Uniform3(GetLocation(), value.X, value.Y, value.Z);
+			SetValue(value.X, value.Y, value.Z);
 		}
 	}
 }
