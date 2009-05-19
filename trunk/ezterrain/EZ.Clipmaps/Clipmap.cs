@@ -42,6 +42,7 @@ namespace Ez.Clipmaps
 			texOffset = new Uniform(program, "texOffset");
 			meshLevel = new Uniform(program, "level");
 			eye = new Uniform(program, "eye");
+			lastEye = new Vector3(float.NaN,float.NaN,float.NaN);
 		}
 
 		private void ConstructTexUniPairs()
@@ -56,6 +57,8 @@ namespace Ez.Clipmaps
 			}
 
 			textureArray = new TextureArray(TextureUnit.Texture1, new Size(257, 257), arrayImages);
+			textureArray.WrapS = TextureWrapMode.Repeat;
+			textureArray.WrapT = TextureWrapMode.Repeat;
 		}
 
 		public bool Initialized { get; private set; }
@@ -122,15 +125,40 @@ namespace Ez.Clipmaps
 			return true;
 		}
 
+		private Vector3 lastEye;
+
 		public void Render(RenderInfo info)
+		{
+			BeginRender(info);
+
+			int distanceScale = (int)(Math.Sqrt(Math.Abs(info.Viewer.Position.Z)) / 16);
+
+			Vector2 offset = new Vector2(0.0f, 0.0f) + info.Viewer.Position.Xy / (sideVertexCount - 1);
+
+			texOffset.SetValue(offset.X, offset.Y);
+
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, fullGridIndexBuffer);
+			Draw(distanceScale, fullGridIndices);
+
+			GL.BindBuffer(BufferTarget.ElementArrayBuffer, hollowGridIndexBuffer);
+			for (float i = 1.0f; i <= MaxLevel; i++)
+			{
+				float level = i + distanceScale;
+				Draw(level, hollowGridIndices);
+			}
+
+			EndRender();
+
+			lastEye = info.Viewer.Position;
+		}
+
+		private void BeginRender(RenderInfo info)
 		{
 			gradient.Bind();
 			textureArray.Bind();
 			program.Bind();
 
 			eye.SetValue(info.Viewer.Position);
-
-			int distanceScale = (int)(Math.Sqrt(Math.Abs(info.Viewer.Position.Z)) / 16);
 
 			GL.EnableClientState(EnableCap.VertexArray);
 
@@ -139,28 +167,10 @@ namespace Ez.Clipmaps
 							 0,
 							 (IntPtr)VertexP.PositionOffset);
 
-			texScale.SetValue(1.0f / (sideVertexCount - 1) / (1 << distanceScale));
-			texOffset.SetValue(0.5f, 0.5f);
+		}
 
-			meshLevel.SetValue(0.0f + distanceScale);
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, fullGridIndexBuffer);
-			GL.DrawElements(BeginMode.Triangles,
-							fullGridIndices.Length,
-							DrawElementsType.UnsignedInt,
-							IntPtr.Zero);
-
-			GL.BindBuffer(BufferTarget.ElementArrayBuffer, hollowGridIndexBuffer);
-			for (float i = 1.0f; i <= MaxLevel; i++)
-			{
-				float level = i + distanceScale;
-				texScale.SetValue((1.0f / (sideVertexCount - 1)) / (1 << (int)level));
-				meshLevel.SetValue(level);
-				GL.DrawElements(BeginMode.Triangles,
-								hollowGridIndices.Length,
-								DrawElementsType.UnsignedInt,
-								IntPtr.Zero);
-			}
-
+		private void EndRender()
+		{
 			GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
 			GL.BindBuffer(BufferTarget.ElementArrayBuffer, 0);
 
@@ -171,36 +181,122 @@ namespace Ez.Clipmaps
 			textureArray.Unbind();
 		}
 
+		private void Draw(float level, uint[] indices)
+		{
+			texScale.SetValue((1.0f / (sideVertexCount - 1)) / (1 << (int)level));
+			meshLevel.SetValue(level);
+			GL.DrawElements(BeginMode.Triangles,
+							indices.Length,
+							DrawElementsType.UnsignedInt,
+							IntPtr.Zero);
+		}
+
 		private void UpdateTextures(Vector3 eye)
 		{
 			for (int i = 0; i <= MaxLevel; i++)
 			{
-				double offsetScale = (float)(1 << (MaxLevel - i - 1));
-				double eyeScale = 1 / (float)(1 << i);
-
-				Vector2d offset = i == MaxLevel ? Vector2d.Zero 
-												: new Vector2d(Math.Round(256 * (offsetScale - 0.5) + eye.X * eyeScale),
-															   Math.Round(256 * (offsetScale - 0.5) + eye.Y * eyeScale));
-
-				Rectangle rect = new Rectangle((int)offset.X, (int)offset.Y, 257, 257);
-				BitmapData imageData = images[i].LockBits(rect, ImageLockMode.ReadOnly, images[i].PixelFormat);
-
-				Rectangle textureBounds = new Rectangle(0, 0, 257, 257);
-				BitmapData textureData = textureArray.Images[i].Bitmap.LockBits(textureBounds, ImageLockMode.WriteOnly, images[i].PixelFormat);
-
-				for (int j = 0; j < 257; j++)
-				{
-					memcpy((IntPtr)(textureData.Scan0.ToInt32() + j * textureData.Stride),
-							(IntPtr)(imageData.Scan0.ToInt32() + j * imageData.Stride),
-							textureData.Stride);
-				}
-
-
-				textureArray.Images[i].Bitmap.UnlockBits(textureData);
-				images[i].UnlockBits(imageData);
-
-				textureArray.Images[i].DirtyRegions.Add(textureBounds);
+				UpdateTexture(i, lastEye, eye);
 			}
+		}
+
+		private void UpdateTexture(int level, Vector3 lastEye, Vector3 eye)
+		{
+			Bitmap source = images[level];
+			TextureArrayElement target = textureArray.Images[level];
+
+			Vector3 diff = eye - lastEye;
+			if (diff != Vector3.Zero)
+			{
+				UpdateRegion(source, GetSourceRegion(eye, level), target);
+			}
+		}
+
+		private static Rectangle GetSourceRegion(Vector3 eye, int level)
+		{
+			Vector2d offset = GetOffset(eye, level);
+
+			Rectangle rect = new Rectangle((int)offset.X, (int)offset.Y, 257, 257);
+			return rect;
+		}
+
+		private static Vector2d GetOffset(Vector3 eye, int level)
+		{
+			double offsetScale = (float)(1 << (MaxLevel - level - 1));
+			double eyeScale = 1 / (float)(1 << level);
+
+			Vector2d offset = level == MaxLevel ? Vector2d.Zero
+											: new Vector2d(Math.Round(256 * (offsetScale - 0.5) + eye.X * eyeScale),
+														   Math.Round(256 * (offsetScale - 0.5) + eye.Y * eyeScale));
+			return offset;
+		}
+
+
+		private void UpdateRegion(Bitmap source, Rectangle region, TextureArrayElement target)
+		{
+			int xOffset = region.X % target.Bitmap.Width;
+			int yOffset = region.Y % target.Bitmap.Height;
+
+			Rectangle targetRegion = new Rectangle(xOffset, yOffset, region.Width, region.Height);
+
+			if (!target.Bounds.Contains(targetRegion))
+			{
+				UpdateIntersectingRegion(source, region, target, targetRegion);
+			}
+			else
+			{
+				UpdateRegion(source, region, target, targetRegion);
+			}
+		}
+
+		private void UpdateIntersectingRegion(Bitmap source, Rectangle sourceRegion, TextureArrayElement target, Rectangle targetRegion)
+		{
+			Rectangle targetBounds = target.Bounds;
+
+			Rectangle topLeft = new Rectangle(targetRegion.X, targetRegion.Y, targetBounds.Width - targetRegion.X, targetBounds.Height - targetRegion.Y);
+			Rectangle topLeftSource = new Rectangle(0, 0, topLeft.Width, topLeft.Height);
+			topLeftSource.Offset(sourceRegion.Location);
+			UpdateRegion(source, topLeftSource, target, topLeft);
+
+			Rectangle bottomRight = new Rectangle(0, 0, targetRegion.Width - topLeft.Width, targetRegion.Height - topLeft.Height);
+			Rectangle bottomRightSource = new Rectangle(topLeft.Width, topLeft.Height, bottomRight.Width, bottomRight.Height);
+			bottomRightSource.Offset(sourceRegion.Location);
+			UpdateRegion(source, bottomRightSource, target, bottomRight);
+
+			Rectangle topRight = new Rectangle(0, bottomRight.Height, bottomRight.Width, topLeft.Height);
+			Rectangle topRightSource = new Rectangle(topLeft.Width, 0, topRight.Width, topRight.Height);
+			topRightSource.Offset(sourceRegion.Location);
+			UpdateRegion(source, topRightSource, target, topRight);
+
+			Rectangle bottomLeft = new Rectangle(bottomRight.Width, 0, topLeft.Width, bottomRight.Height);
+			Rectangle bottomLeftSource = new Rectangle(0, topLeft.Height, bottomLeft.Width, bottomLeft.Height);
+			bottomLeftSource.Offset(sourceRegion.Location);
+			UpdateRegion(source, bottomLeftSource, target, bottomLeft);
+		}
+
+		private void UpdateRegion(Bitmap source, Rectangle region, TextureArrayElement target, Rectangle targetRegion)
+		{
+			if (region.Width > 0 && region.Height > 0
+				&& targetRegion.Width > 0 && targetRegion.Height > 0)
+			{
+				UpdateRegion(source, region, target.Bitmap, targetRegion);
+				target.DirtyRegions.Add(targetRegion);
+			}
+		}
+
+		private void UpdateRegion(Bitmap source, Rectangle region, Bitmap target, Rectangle targetRegion)
+		{
+			BitmapData sourceData = source.LockBits(region, ImageLockMode.ReadOnly, target.PixelFormat);
+			BitmapData targetData = target.LockBits(targetRegion, ImageLockMode.WriteOnly, target.PixelFormat);
+
+			for (int row = 0; row < targetData.Height; row++)
+			{
+				memcpy((IntPtr)(targetData.Scan0.ToInt32() + row * targetData.Stride),
+						(IntPtr)(sourceData.Scan0.ToInt32() + row * sourceData.Stride),
+						targetData.Stride);
+			}
+
+			target.UnlockBits(targetData);
+			source.UnlockBits(sourceData);
 		}
 
 		[DllImport("msvcrt.dll", SetLastError = false)]
