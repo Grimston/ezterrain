@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using EZ.Renderer;
+using Ez.Clipmaps;
 
 namespace Ez.Application
 {
@@ -13,9 +15,16 @@ namespace Ez.Application
 		[STAThread]
 		static void Main()
 		{
-			System.Windows.Forms.Application.EnableVisualStyles();
-			System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
-			System.Windows.Forms.Application.Run(new MainForm());
+			//System.Windows.Forms.Application.EnableVisualStyles();
+			//System.Windows.Forms.Application.SetCompatibleTextRenderingDefault(false);
+			//System.Windows.Forms.Application.Run(new MainForm());
+
+			using (RendererWindow renderer = new RendererWindow())
+			{
+				renderer.Renderables.Add(new FPSDisplay());
+				renderer.Renderables.Add(new Clipmap(257));
+				renderer.Run();
+			}
 		}
 	}
 }
