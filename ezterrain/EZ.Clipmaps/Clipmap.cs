@@ -221,8 +221,8 @@ namespace Ez.Clipmaps
 
 		private static Vector2d GetOffset(Vector3 eye, int level)
 		{
-			double offsetScale = (float)(1 << (MaxLevel - level - 1));
-			double eyeScale = 1 / (float)(1 << level);
+			double offsetScale = (double)(1 << (MaxLevel - level - 1));
+			double eyeScale = 1 / (double)(1 << level);
 
 			Vector2d offset = level == MaxLevel ? Vector2d.Zero
 											: new Vector2d(Math.Round(256 * (offsetScale - 0.5) + eye.X * eyeScale),
