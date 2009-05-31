@@ -31,13 +31,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OpenTK, Version=0.9.7.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OpenTK, Version=0.9.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\OpenTK\0.9.7\OpenTK.dll</HintPath>
+      <HintPath>..\OpenTK\0.9.8\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="OpenTK.Utilities, Version=0.9.6.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="OpenTK.Utilities, Version=0.9.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\OpenTK\0.9.7\OpenTK.Utilities.dll</HintPath>
+      <HintPath>..\OpenTK\0.9.8\OpenTK.Utilities.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -70,6 +70,7 @@
   <ItemGroup>
     <EmbeddedResource Include="RendererControl.resx">
       <DependentUpon>RendererControl.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
