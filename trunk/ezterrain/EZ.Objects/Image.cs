@@ -95,16 +95,11 @@ namespace EZ.Objects
 				case PixelFormat.Bgr:
 				case PixelFormat.BgrInteger:
 				case PixelFormat.DepthComponent:
-				case PixelFormat.Luminance16Alpha8IccSgix:
-				case PixelFormat.R5G6B5A8IccSgix:
 				case PixelFormat.Rgb:
 				case PixelFormat.RgbInteger:
 				case PixelFormat.Ycrcb444Sgix:
 					return 3;
-				case PixelFormat.Alpha16IccSgix:
-				case PixelFormat.Luminance16IccSgix:
 				case PixelFormat.LuminanceAlpha:
-				case PixelFormat.R5G6B5IccSgix:
 				case PixelFormat.Rg:
 				case PixelFormat.RgInteger:
 				case PixelFormat.Ycrcb422Sgix:

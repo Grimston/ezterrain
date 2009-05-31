@@ -114,6 +114,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "module", "module", "{E49096
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "noisegenerator", "noisegenerator\noisegenerator.vcproj", "{6579B1FE-5AD8-4B8A-84BC-ACC00B74DF62}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "0.9.8", "0.9.8", "{F696469C-F30E-45EE-8BAC-171645698235}"
+	ProjectSection(SolutionItems) = preProject
+		OpenTK\0.9.8\OpenTK.dll = OpenTK\0.9.8\OpenTK.dll
+		OpenTK\0.9.8\OpenTK.dll.config = OpenTK\0.9.8\OpenTK.dll.config
+		OpenTK\0.9.8\OpenTK.Utilities.dll = OpenTK\0.9.8\OpenTK.Utilities.dll
+		OpenTK\0.9.8\OpenTK.Utilities.dll.config = OpenTK\0.9.8\OpenTK.Utilities.dll.config
+		OpenTK\0.9.8\OpenTK.Utilities.xml = OpenTK\0.9.8\OpenTK.Utilities.xml
+		OpenTK\0.9.8\OpenTK.xml = OpenTK\0.9.8\OpenTK.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -194,6 +204,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{925FE421-1D6B-49A0-8756-0378EA331AE7} = {83787E57-3DBE-4B06-A1A8-73A34BA93A15}
+		{F696469C-F30E-45EE-8BAC-171645698235} = {83787E57-3DBE-4B06-A1A8-73A34BA93A15}
 		{12068613-2EB7-46F1-833E-2888AEA76A92} = {4F017636-2B2B-41D1-9F4A-2E60B62047CF}
 		{5524A1AF-0CF7-40D0-874D-50EA01896744} = {4F017636-2B2B-41D1-9F4A-2E60B62047CF}
 		{35BD321C-E3FE-4011-BF12-590672975EF8} = {0B725295-00A7-4ABB-881E-94F0237E3518}
