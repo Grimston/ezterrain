@@ -42,7 +42,7 @@ namespace Ez.Clipmaps
 			texOffset = new Uniform(program, "texOffset");
 			meshLevel = new Uniform(program, "level");
 			eye = new Uniform(program, "eye");
-			lastEye = new Vector3(float.NaN,float.NaN,float.NaN);
+			lastEye = new Vector3(float.NaN, float.NaN, float.NaN);
 		}
 
 		private void ConstructTexUniPairs()
@@ -301,5 +301,45 @@ namespace Ez.Clipmaps
 
 		[DllImport("msvcrt.dll", SetLastError = false)]
 		static extern IntPtr memcpy(IntPtr dest, IntPtr src, int count);
+
+		private void UpdateImage(Bitmap source, Point center, Bitmap target, ref Point lastPoint)
+		{
+			int width = 257;
+
+			Rectangle clipRect = center.GetCenteredRect(width);
+
+			if (lastPoint.X < 0
+				|| Math.Abs(clipRect.X - lastPoint.X) >= width
+				|| Math.Abs(clipRect.Y - lastPoint.Y) >= width)
+			{
+				UpdateImage(source, clipRect, target);
+			}
+			else
+			{
+				foreach (Rectangle rect in BitmapExtensions.Diff(lastPoint, clipRect.Location, clipRect.Size))
+				{
+					UpdateImage(source, rect, target);
+				}
+			}
+
+			lastPoint = clipRect.Location;
+		}
+
+		private void UpdateImage(Bitmap source, Rectangle rect, Bitmap target)
+		{
+			Point destinationOffset = new Point(BitmapExtensions.Repeat(rect.X, target.Width),
+												BitmapExtensions.Repeat(rect.Y, target.Height));
+			source.CopyPartsTo(target, new CopyInfo(rect.Location, destinationOffset, rect.Size));
+		}
+
+		private static double GetScale(int value, int range)
+		{
+			return (double)value / range;
+		}
+
+		private static int GetScaled(double scale, int range)
+		{
+			return (int)Math.Round(scale * range);
+		}
 	}
 }
