@@ -102,8 +102,8 @@ namespace EZ.Objects
 
 		public void Bind()
 		{
-			Enable();
 			GL.ActiveTexture(Unit);
+			Enable();
 			GL.BindTexture(Target, Handle);
 		}
 
