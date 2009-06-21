@@ -55,6 +55,8 @@ namespace EZ.Renderer
 
 		public void Render(RenderInfo info)
 		{
+			GL.ActiveTexture(TextureUnit.Texture0);
+
 			textPrinter.Begin();
 
 			double spf = accumTime / timeBuffer.Count;

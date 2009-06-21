@@ -51,10 +51,7 @@ namespace EZ.Renderer
 		public void Render(RenderInfo info)
 		{
 			GL.ActiveTexture(TextureUnit.Texture0);
-			GL.Disable(EnableCap.Texture2D);
-			GL.UseProgram(0);
-			GL.PolygonMode(MaterialFace.Front, PolygonMode.Fill);
-
+			
 			textPrinter.Begin();
 
 			Font font = Control.DefaultFont;
