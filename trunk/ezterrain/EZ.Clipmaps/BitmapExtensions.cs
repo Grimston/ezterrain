@@ -5,6 +5,7 @@ using System.Text;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Drawing.Imaging;
+using EZ.Objects;
 
 namespace Ez.Clipmaps
 {
@@ -24,6 +25,8 @@ namespace Ez.Clipmaps
 			if (source.GetBounds().Contains(srcRect)
 			 && destination.GetBounds().Contains(dstRect))
 			{
+				int componentCount = 3;
+
 				BitmapData srcData = source.LockBits(srcRect,
 													 ImageLockMode.ReadOnly,
 													 PixelFormat.Format24bppRgb);
@@ -36,7 +39,7 @@ namespace Ez.Clipmaps
 
 				for (int i = 0; i < srcData.Height; i++)
 				{
-					memcpy(dstScan, srcScan, dstData.Stride);
+					memcpy(dstScan, srcScan, dstData.Width * componentCount);
 
 					dstScan = new IntPtr(dstScan.ToInt64() + dstData.Stride);
 					srcScan = new IntPtr(srcScan.ToInt64() + srcData.Stride);
@@ -48,11 +51,12 @@ namespace Ez.Clipmaps
 			}
 		}
 
-		public static void CopyPartsTo(this Bitmap source, Bitmap destination, CopyInfo copyInfo)
+		public static void CopyPartsTo(this Bitmap source, TextureArrayElement destination, CopyInfo copyInfo)
 		{
-			foreach (CopyInfo info in GetCopyInfo(source.Size, destination.Size, copyInfo))
+			foreach (CopyInfo info in GetCopyInfo(source.Size, destination.Bitmap.Size, copyInfo))
 			{
-				source.CopyTo(destination, info);
+				source.CopyTo(destination.Bitmap, info);
+				destination.DirtyRegions.Add(info.DestinationRect);
 			}
 		}
 
@@ -316,7 +320,7 @@ namespace Ez.Clipmaps
 				&& point.Y >= 0;
 		}
 
-		public static Rectangle GetBounds(this Image image)
+		public static Rectangle GetBounds(this System.Drawing.Image image)
 		{
 			return new Rectangle(0, 0, image.Width, image.Height);
 		}
