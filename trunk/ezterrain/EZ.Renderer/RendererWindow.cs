@@ -62,6 +62,11 @@ namespace EZ.Renderer
 
 		public override void OnUpdateFrame(UpdateFrameEventArgs e)
 		{
+			if (Keyboard[Key.Escape])
+			{
+				Exit();
+			}
+
 			if (Keyboard[Key.W])
 			{
 				camera.Position += camera.Attitude.Direction;
