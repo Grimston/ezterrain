@@ -161,13 +161,11 @@ namespace Ez.Clipmaps
 		{
 			float texScaleFactor = (1.0f / (sideVertexCount - 1)) / (1 << level);
 
-			Vector2 clipOffset = eye.Xy * texScaleFactor;
-			clipOffset.X = clipOffset.X - (int)clipOffset.X;
-			clipOffset.Y = clipOffset.Y - (int)clipOffset.Y;
+			Vector2 clipOffset = eye.Xy;
+			clipOffset.X = BitmapExtensions.Repeat(clipOffset.X + sideVertexCount/2, (int)sideVertexCount);
+			clipOffset.Y = BitmapExtensions.Repeat(clipOffset.Y + sideVertexCount / 2, (int)sideVertexCount);
 
-			Vector2 offset = new Vector2(0.5f, 0.5f) + clipOffset;
-			offset.X = offset.X < 0 ? 1 + offset.X : offset.X; 
-			offset.Y = offset.Y < 0 ? 1 + offset.Y : offset.Y;
+			Vector2 offset = clipOffset;
 
 			texScale.SetValue(texScaleFactor);
 			texOffset.SetValue(offset);
