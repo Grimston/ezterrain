@@ -7,6 +7,8 @@ namespace EZ.Core
 {
 	public interface IRenderable
 	{
+		RenderGroup RenderGroup { get; }
+
 		bool Initialized { get; }
 
 		void Initialize();

@@ -32,6 +32,11 @@ namespace EZ.Renderer
 			get { return true; }
 		}
 
+		public RenderGroup RenderGroup
+		{
+			get { return RenderGroup.HUD; }
+		}
+
 		public void Initialize() { }
 
 		public bool Update(RenderInfo info)
