@@ -32,7 +32,7 @@ namespace EZ.Renderer
 
 			frameNumber = 0;
 
-			Renderables = new List<IRenderable>();
+			Renderables = new RenderList();
 
 			objects = new ObjectDisplay();
 			objects.Color = ForeColor;
@@ -40,7 +40,7 @@ namespace EZ.Renderer
 			Renderables.Add(objects);
 		}
 
-		public List<IRenderable> Renderables { get; private set; }
+		public RenderList Renderables { get; private set; }
 
 		#region Load
 		protected bool Loaded { get; private set; }
@@ -167,28 +167,11 @@ namespace EZ.Renderer
 			objects.Objects["Camera Up"] = camera.Attitude.Up.ToString(2);
 			objects.Objects["Camera Side"] = camera.Attitude.Side.ToString(2);
 
-			Render(GetRenderInfo());
+			Renderables.Render(GetRenderInfo());
 
 			SwapBuffers();
 		}
 
-		private void Render(RenderInfo renderInfo)
-		{
-			foreach (IRenderable renderable in Renderables)
-			{
-				if (!renderable.Initialized)
-				{
-					renderable.Initialize();
-				}
-			}
-
-			IEnumerable<IRenderable> renderList = Renderables.Where(r => r.Update(renderInfo));
-
-			foreach (IRenderable renderable in renderList)
-			{
-				renderable.Render(renderInfo);
-			}
-		}
 		#endregion
 
 		#region Projection

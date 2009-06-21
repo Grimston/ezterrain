@@ -68,6 +68,11 @@ namespace Ez.Clipmaps
 
 		public bool Initialized { get; private set; }
 
+		public RenderGroup RenderGroup
+		{
+			get { return RenderGroup.Opaque; }
+		}
+
 		public void Initialize()
 		{
 			textureArray.Initialize();
@@ -162,7 +167,7 @@ namespace Ez.Clipmaps
 			float texScaleFactor = (1.0f / (sideVertexCount - 1)) / (1 << level);
 
 			Vector2 clipOffset = eye.Xy;
-			clipOffset.X = BitmapExtensions.Repeat(clipOffset.X + sideVertexCount/2, (int)sideVertexCount);
+			clipOffset.X = BitmapExtensions.Repeat(clipOffset.X + sideVertexCount / 2, (int)sideVertexCount);
 			clipOffset.Y = BitmapExtensions.Repeat(clipOffset.Y + sideVertexCount / 2, (int)sideVertexCount);
 
 			Vector2 offset = clipOffset;
