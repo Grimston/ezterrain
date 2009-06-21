@@ -20,7 +20,7 @@ varying float bias;
 
 vec4 calcTexCoord(vec4 vertex, float texScale)
 {
-	return vertex * texScale + vec4(texOffset, 0.0, 0.0);
+	return (vertex + vec4(texOffset, 0.0, 0.0)) * texScale;
 }
 
 vec4 calcTexCoord(vec4 vertex)
@@ -34,7 +34,7 @@ float getBias(vec4 vertex)
 
 	float bias = texture2DArray(noiseArray, vec3(texCoord.st, level)).r;
 
-	vec2 mor = texCoord.st - texOffset;
+	vec2 mor = texCoord.st - texOffset * texScale;
 	
 	mor = 2.0 * abs(mor) + vec2(morphRatio);
 	

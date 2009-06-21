@@ -312,6 +312,21 @@ namespace Ez.Clipmaps
 			return index;
 		}
 
+		public static float Repeat(float index, int range)
+		{
+			int integralIndex = (int)index;
+			int repeatedIndex = Repeat(integralIndex, range);
+
+			if (integralIndex == index)
+			{
+				return repeatedIndex;
+			}
+
+			//boundary check
+			return repeatedIndex == (range - 1) ? index - integralIndex 
+												: repeatedIndex + integralIndex;
+		}
+
 		public static bool Contains(this Size bounds, Point point)
 		{
 			return point.X <= bounds.Width
