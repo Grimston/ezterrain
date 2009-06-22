@@ -61,14 +61,21 @@ namespace EZ.Objects
 		{
 			get
 			{
-				T[] data = new T[DirtyRange.Length];
-
-				for (int i = 0; i < data.Length; i++)
+				if (DirtyRange.IsValid)
 				{
-					data[i] = this[DirtyRange.Min + i];
-				}
+					T[] data = new T[DirtyRange.Length];
 
-				return data;
+					for (int i = 0; i < data.Length; i++)
+					{
+						data[i] = this[DirtyRange.Min + i];
+					}
+
+					return data;
+				}
+				else
+				{
+					return new T[0];
+				}
 			}
 		}
 	}

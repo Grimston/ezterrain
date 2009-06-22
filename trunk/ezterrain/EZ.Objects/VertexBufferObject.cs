@@ -66,7 +66,9 @@ namespace EZ.Objects
 
 		public void Upload()
 		{
-			if (Buffer.DirtyRange.Length > 0 && Buffer.Count > 0)
+			if (Buffer.DirtyRange.IsValid
+			 && Buffer.DirtyRange.Length > 0 
+			 && Buffer.Count > 0)
 			{
 				GL.BufferData(BufferTarget,
 							  new IntPtr(Buffer.Count * VertexBuffer<T>.ElementSize),
@@ -76,6 +78,8 @@ namespace EZ.Objects
 								 (IntPtr)(Buffer.DirtyRange.Min * VertexBuffer<T>.ElementSize),
 								 (IntPtr)(Buffer.DirtyRange.Length * VertexBuffer<T>.ElementSize),
 								 Buffer.DirtyData);
+
+				Buffer.DirtyRange = EZ.Core.Range.Invalid;
 			}
 		}
 
