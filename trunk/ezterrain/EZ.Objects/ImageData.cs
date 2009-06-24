@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Runtime.InteropServices;
+using OpenTK.Graphics;
 
 namespace EZ.Objects
 {
@@ -31,7 +32,22 @@ namespace EZ.Objects
 	public abstract class ImageData<TPixel> : ImageData
 		where TPixel : struct, IPixel
 	{
-		public static new int PixelSize = Marshal.SizeOf(typeof(TPixel));
+		public static readonly new int PixelSize = Marshal.SizeOf(typeof(TPixel));
+		public static readonly PixelFormat PixelFormat = GetAttribute<PixelFormatAttribute>(typeof(TPixel)).PixelFormat;
+		public static readonly PixelInternalFormat PixelInternalFormat = GetAttribute<PixelInternalFormatAttribute>(typeof(TPixel)).PixelInternalFormat;
+		public static readonly PixelType PixelType = GetAttribute<PixelTypeAttribute>(typeof(TPixel)).PixelType;
+
+		private static TAttribute GetAttribute<TAttribute>(Type type)
+		{
+			Type attributeType = typeof(TAttribute);
+			foreach (TAttribute attribute
+						in type.GetCustomAttributes(attributeType, false))
+			{
+				return attribute;
+			}
+
+			throw new ArgumentException("Given type should have " + attributeType, "type:" + type);
+		}
 
 		protected ImageData(int width, int height, int depth)
 			: base(PixelSize, width, height, depth)
