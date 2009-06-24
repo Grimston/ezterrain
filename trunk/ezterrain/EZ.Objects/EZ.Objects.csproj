@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoundTexture.cs" />
+    <Compile Include="PixelFormatHelper.cs" />
     <Compile Include="PixelInternalFormatAttribute.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="Image.cs" />

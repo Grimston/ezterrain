@@ -38,7 +38,7 @@ namespace EZ.Objects
 		{
 			if (data.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
 			{
-				if (Image.GetComponentCount(data.PixelFormat) == data.Stride / data.Width)
+				if (data.PixelFormat.GetComponentCount() == data.Stride / data.Width)
 				{
 					GL.TexSubImage3D(TextureTarget.Texture2DArray, 0,
 										 0, 0, Index,

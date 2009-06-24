@@ -37,7 +37,7 @@ namespace EZ.Objects
 		{
 			if (data.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
 			{
-				if (Image.GetComponentCount(data.PixelFormat) == data.Stride / data.Width)
+				if (data.PixelFormat.GetComponentCount() == data.Stride / data.Width)
 				{
 					GL.TexImage2D(Target, 0, PixelInternalFormat.Rgb, data.Width, data.Height, 0,
 									  OpenTK.Graphics.PixelFormat.Bgr, PixelType.UnsignedByte, data.Scan0);
