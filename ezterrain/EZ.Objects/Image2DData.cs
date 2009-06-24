@@ -14,8 +14,13 @@ namespace EZ.Objects
 
 		public TPixel this[int column, int row]
 		{
-			get { return base[(row * Height + column) * PixelSize]; }
-			set { base[(row * Height + column) * PixelSize] = value; }
+			get { return GetPixel(GetIndex(column, row)); }
+			set { SetPixel(GetIndex(column, row), value); }
+		}
+
+		private int GetIndex(int column, int row)
+		{
+			return (row * Width + column) * PixelSize;
 		}
 	}
 }

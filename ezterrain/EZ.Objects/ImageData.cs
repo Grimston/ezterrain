@@ -17,7 +17,7 @@ namespace EZ.Objects
 			this.Depth = depth;
 		}
 
-		protected byte[] Data { get; private set; }
+		public byte[] Data { get; private set; }
 
 		public int PixelSize { get; private set; }
 
@@ -37,17 +37,17 @@ namespace EZ.Objects
 			: base(PixelSize, width, height, depth)
 		{ }
 
-		protected TPixel this[int dataIndex]
+		protected TPixel GetPixel(int dataIndex)
 		{
-			get
-			{
-				TPixel pixel = new TPixel();
-				pixel.CopyFrom(Data, dataIndex);
+			TPixel pixel = new TPixel();
+			pixel.CopyFrom(Data, dataIndex);
 
-				return pixel;
-			}
+			return pixel;
+		}
 
-			set { value.CopyTo(Data, dataIndex); }
+		protected void SetPixel(int dataIndex, TPixel value)
+		{
+			value.CopyTo(Data, dataIndex);
 		}
 	}
 }

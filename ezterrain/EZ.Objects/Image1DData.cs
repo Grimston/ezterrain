@@ -12,10 +12,10 @@ namespace EZ.Objects
 			: base(width, 1, 1)
 		{ }
 
-		public new TPixel this[int column]
+		public TPixel this[int column]
 		{
-			get { return base[column * PixelSize]; }
-			set { base[column * PixelSize] = value; }
+			get { return GetPixel(column * PixelSize); }
+			set { SetPixel(column * PixelSize, value); }
 		}
 	}
 }
