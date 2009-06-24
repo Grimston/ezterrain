@@ -55,10 +55,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoundTexture.cs" />
+    <Compile Include="GlImageImplementations.cs" />
     <Compile Include="PixelFormatHelper.cs" />
     <Compile Include="PixelInternalFormatAttribute.cs" />
     <Compile Include="Disposable.cs" />
-    <Compile Include="Image.cs" />
+    <Compile Include="GlImage.cs" />
     <Compile Include="Image1DData.cs" />
     <Compile Include="Image2DData.cs" />
     <Compile Include="Image3DData.cs" />

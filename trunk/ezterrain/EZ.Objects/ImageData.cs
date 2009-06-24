@@ -11,14 +11,14 @@ namespace EZ.Objects
 	{
 		protected ImageData(int pixelSize, int width, int height, int depth)
 		{
-			Data = new byte[pixelSize * width * height * depth];
+			Buffer = new byte[pixelSize * width * height * depth];
 			this.PixelSize = pixelSize;
 			this.Width = width;
 			this.Height = height;
 			this.Depth = depth;
 		}
 
-		public byte[] Data { get; private set; }
+		public byte[] Buffer { get; private set; }
 
 		public int PixelSize { get; private set; }
 
@@ -33,21 +33,6 @@ namespace EZ.Objects
 		where TPixel : struct, IPixel
 	{
 		public static readonly new int PixelSize = Marshal.SizeOf(typeof(TPixel));
-		public static readonly PixelFormat PixelFormat = GetAttribute<PixelFormatAttribute>(typeof(TPixel)).PixelFormat;
-		public static readonly PixelInternalFormat PixelInternalFormat = GetAttribute<PixelInternalFormatAttribute>(typeof(TPixel)).PixelInternalFormat;
-		public static readonly PixelType PixelType = GetAttribute<PixelTypeAttribute>(typeof(TPixel)).PixelType;
-
-		private static TAttribute GetAttribute<TAttribute>(Type type)
-		{
-			Type attributeType = typeof(TAttribute);
-			foreach (TAttribute attribute
-						in type.GetCustomAttributes(attributeType, false))
-			{
-				return attribute;
-			}
-
-			throw new ArgumentException("Given type should have " + attributeType, "type:" + type);
-		}
 
 		protected ImageData(int width, int height, int depth)
 			: base(PixelSize, width, height, depth)
@@ -56,14 +41,14 @@ namespace EZ.Objects
 		protected TPixel GetPixel(int dataIndex)
 		{
 			TPixel pixel = new TPixel();
-			pixel.CopyFrom(Data, dataIndex);
+			pixel.CopyFrom(Buffer, dataIndex);
 
 			return pixel;
 		}
 
 		protected void SetPixel(int dataIndex, TPixel value)
 		{
-			value.CopyTo(Data, dataIndex);
+			value.CopyTo(Buffer, dataIndex);
 		}
 	}
 }
