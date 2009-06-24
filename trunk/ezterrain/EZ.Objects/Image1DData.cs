@@ -17,5 +17,14 @@ namespace EZ.Objects
 			get { return GetPixel(column * PixelSize); }
 			set { SetPixel(column * PixelSize, value); }
 		}
+
+		public static void Copy(Image1DData<TPixel> src, int srcColumn,
+								Image1DData<TPixel> dst, int dstColumn,
+								int width)
+		{
+			System.Buffer.BlockCopy(src.Buffer, srcColumn * PixelSize,
+									dst.Buffer, dstColumn * PixelSize,
+									width * PixelSize);
+		}
 	}
 }
