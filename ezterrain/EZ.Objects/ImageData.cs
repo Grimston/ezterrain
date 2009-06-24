@@ -50,5 +50,33 @@ namespace EZ.Objects
 		{
 			value.CopyTo(Buffer, dataIndex);
 		}
+
+		public static void Copy(ImageData<TPixel> src, PixelIndex3D srcIndex,
+								ImageData<TPixel> dst, PixelIndex3D dstIndex,
+								Size3D copySize)
+		{
+			int srcRowStride = src.Width * PixelSize;
+			int srcDepthStride = srcRowStride * src.Height;
+			int dstRowStride = dst.Width * PixelSize;
+			int dstDepthStride = dstRowStride * dst.Height;
+
+			for (int depth = 0; depth < copySize.Depth; depth++)
+			{
+				int srcDepth = (srcIndex.Depth + depth) * srcDepthStride;
+				int dstDepth = (dstIndex.Depth + depth) * dstDepthStride;
+
+				for (int row = 0; row < copySize.Height; row++)
+				{
+					int srcOffset = srcDepth + (srcIndex.Row + row) * srcRowStride 
+									+ srcIndex.Column * PixelSize;
+					int dstOffset = dstDepth + (dstIndex.Row + row) * dstRowStride 
+									+ dstIndex.Column * PixelSize;
+
+					System.Buffer.BlockCopy(src.Buffer, srcOffset,
+											dst.Buffer, dstOffset, 
+											copySize.Width * PixelSize);
+				}
+			}
+		}
 	}
 }
