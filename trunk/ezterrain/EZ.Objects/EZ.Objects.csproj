@@ -57,6 +57,11 @@
     <Compile Include="BoundTexture.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="Image.cs" />
+    <Compile Include="Image1DData.cs" />
+    <Compile Include="Image2DData.cs" />
+    <Compile Include="Image3DData.cs" />
+    <Compile Include="ImageData.cs" />
+    <Compile Include="IPixel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shader.cs" />
