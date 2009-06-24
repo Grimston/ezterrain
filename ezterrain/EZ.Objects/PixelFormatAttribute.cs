@@ -7,7 +7,7 @@ using OpenTK.Graphics;
 namespace EZ.Objects
 {
 	[global::System.AttributeUsage(AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
-	sealed class PixelFormatAttribute : Attribute
+	public sealed class PixelFormatAttribute : Attribute
 	{
 		public PixelFormatAttribute(PixelFormat pixelFormat)
 		{
