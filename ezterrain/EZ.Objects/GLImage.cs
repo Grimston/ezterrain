@@ -12,9 +12,18 @@ namespace EZ.Objects
 		where TData : ImageData<TPixel>
 		where TPixel : struct, IPixel
 	{
-		public static readonly PixelFormat PixelFormat = GetAttribute<PixelFormatAttribute>(typeof(TPixel)).PixelFormat;
-		public static readonly PixelInternalFormat PixelInternalFormat = GetAttribute<PixelInternalFormatAttribute>(typeof(TPixel)).PixelInternalFormat;
-		public static readonly PixelType PixelType = GetAttribute<PixelTypeAttribute>(typeof(TPixel)).PixelType;
+		public static readonly PixelFormat PixelFormat;
+		public static readonly PixelInternalFormat PixelInternalFormat;
+		public static readonly PixelType PixelType;
+
+		static GlImage()
+		{
+			GlPixelAttribute pixel = GetAttribute<GlPixelAttribute>(typeof(TPixel));
+
+			PixelInternalFormat = pixel.InternalFormat;
+			PixelFormat = pixel.Format;
+			PixelType = pixel.Type;
+		}
 
 		private static TAttribute GetAttribute<TAttribute>(Type type)
 		{

@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using OpenTK.Graphics;
 
 namespace EZ.Objects
 {
 	#region RGBA
-	[PixelFormat(OpenTK.Graphics.PixelFormat.Rgba)]
-	[PixelInternalFormat(OpenTK.Graphics.PixelInternalFormat.Rgba)]
-	[PixelType(OpenTK.Graphics.PixelType.UnsignedByte)]
+	[GlPixel(PixelInternalFormat.Rgba,PixelFormat.Rgba,PixelType.UnsignedByte)]
 	public struct RGBA : IPixel
 	{
 		public byte R;
@@ -40,9 +39,7 @@ namespace EZ.Objects
 	#endregion
 
 	#region BGRA
-	[PixelFormat(OpenTK.Graphics.PixelFormat.Bgra)]
-	[PixelInternalFormat(OpenTK.Graphics.PixelInternalFormat.Rgba)]
-	[PixelType(OpenTK.Graphics.PixelType.UnsignedByte)]
+	[GlPixel(PixelInternalFormat.Rgba,PixelFormat.Bgra,PixelType.UnsignedByte)]
 	public struct BGRA : IPixel
 	{
 		public byte R;
@@ -74,9 +71,7 @@ namespace EZ.Objects
 	#endregion
 
 	#region RGB
-	[PixelFormat(OpenTK.Graphics.PixelFormat.Rgb)]
-	[PixelInternalFormat(OpenTK.Graphics.PixelInternalFormat.Rgb)]
-	[PixelType(OpenTK.Graphics.PixelType.UnsignedByte)]
+	[GlPixel(PixelInternalFormat.Rgb,PixelFormat.Rgb,PixelType.UnsignedByte)]
 	public struct RGB : IPixel
 	{
 		public byte R;
@@ -105,9 +100,7 @@ namespace EZ.Objects
 	#endregion
 
 	#region BGR
-	[PixelFormat(OpenTK.Graphics.PixelFormat.Bgr)]
-	[PixelInternalFormat(OpenTK.Graphics.PixelInternalFormat.Rgb)]
-	[PixelType(OpenTK.Graphics.PixelType.UnsignedByte)]
+	[GlPixel(PixelInternalFormat.Rgb,PixelFormat.Bgr,PixelType.UnsignedByte)]
 	public struct BGR : IPixel
 	{
 		public byte R;
