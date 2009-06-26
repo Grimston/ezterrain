@@ -56,9 +56,9 @@
   <ItemGroup>
     <Compile Include="BoundTexture.cs" />
     <Compile Include="GlImageImplementations.cs" />
+    <Compile Include="GlPixelAttribute.cs" />
     <Compile Include="PixelFormatHelper.cs" />
     <Compile Include="PixelIndex3D.cs" />
-    <Compile Include="PixelInternalFormatAttribute.cs" />
     <Compile Include="Disposable.cs" />
     <Compile Include="GlImage.cs" />
     <Compile Include="Image1DData.cs" />
@@ -66,9 +66,7 @@
     <Compile Include="Image3DData.cs" />
     <Compile Include="ImageData.cs" />
     <Compile Include="IPixel.cs" />
-    <Compile Include="PixelFormatAttribute.cs" />
     <Compile Include="Pixels.cs" />
-    <Compile Include="PixelTypeAttribute.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PixelIndex2D.cs" />
