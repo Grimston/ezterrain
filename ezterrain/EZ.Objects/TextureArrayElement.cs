@@ -11,17 +11,11 @@ namespace EZ.Objects
 {
 	public class TextureArrayElement : Texture, IComparable<TextureArrayElement>
 	{
-		internal TextureArrayElement(int index, string fileName)
-			: base(fileName)
-		{ this.Index = index; }
-
-		internal TextureArrayElement(int index, Stream stream)
-			: base(stream)
-		{ this.Index = index; }
-
-		internal TextureArrayElement(int index, Bitmap bitmap)
-			: base(bitmap)
-		{ this.Index = index; }
+		internal TextureArrayElement(int index, IImage image)
+			: base(image)
+		{
+			this.Index = index;
+		}
 
 		public int Index { get; private set; }
 
@@ -29,38 +23,38 @@ namespace EZ.Objects
 		{
 			if (!Initialized)
 			{
-				DirtyRegions.Add(Bounds);
+				Image.Dirty();
 				Initialized = true;
 			}
 		}
 
-		protected override void Upload(Rectangle region, BitmapData data)
-		{
-			if (data.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
-			{
-				if (data.PixelFormat.GetComponentCount() == data.Stride / data.Width)
-				{
-					GL.TexSubImage3D(TextureTarget.Texture2DArray, 0,
-										 0, 0, Index,
-										 data.Width, data.Height, 1,
-										 OpenTK.Graphics.PixelFormat.Bgr,
-										 PixelType.UnsignedByte,
-										 data.Scan0);
-				}
-				else
-				{
-					for (int i = 0; i < data.Height; i++)
-					{
-						GL.TexSubImage3D(TextureTarget.Texture2DArray, 0,
-										 region.X, region.Y + i, Index,
-										 data.Width, 1, 1,
-										 OpenTK.Graphics.PixelFormat.Bgr,
-										 PixelType.UnsignedByte,
-										 new IntPtr(data.Scan0.ToInt32() + (i * data.Stride)));
-					}
-				}
-			}
-		}
+		//protected override void Upload(Rectangle region, BitmapData data)
+		//{
+		//    if (data.PixelFormat == System.Drawing.Imaging.PixelFormat.Format24bppRgb)
+		//    {
+		//        if (data.PixelFormat.GetComponentCount() == data.Stride / data.Width)
+		//        {
+		//            GL.TexSubImage3D(TextureTarget.Texture2DArray, 0,
+		//                                 0, 0, Index,
+		//                                 data.Width, data.Height, 1,
+		//                                 OpenTK.Graphics.PixelFormat.Bgr,
+		//                                 PixelType.UnsignedByte,
+		//                                 data.Scan0);
+		//        }
+		//        else
+		//        {
+		//            for (int i = 0; i < data.Height; i++)
+		//            {
+		//                GL.TexSubImage3D(TextureTarget.Texture2DArray, 0,
+		//                                 region.X, region.Y + i, Index,
+		//                                 data.Width, 1, 1,
+		//                                 OpenTK.Graphics.PixelFormat.Bgr,
+		//                                 PixelType.UnsignedByte,
+		//                                 new IntPtr(data.Scan0.ToInt32() + (i * data.Stride)));
+		//            }
+		//        }
+		//    }
+		//}
 
 		#region IComparable<TextureArrayElement> Members
 

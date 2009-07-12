@@ -11,52 +11,35 @@ namespace Ez.Clipmaps
 {
 	public static class BitmapExtensions
 	{
-		[DllImport("ntdll.dll")]
-		public static extern IntPtr memcpy(
-			IntPtr dst,
-			IntPtr src,
-			int count);
-
-		public static void CopyTo(this Bitmap source, Bitmap destination, CopyInfo copyInfo)
+		private static Region3D GetSourceRegion(this CopyInfo copyInfo)
 		{
-			Rectangle srcRect = copyInfo.SourceRect;
-			Rectangle dstRect = copyInfo.DestinationRect;
-
-			if (source.GetBounds().Contains(srcRect)
-			 && destination.GetBounds().Contains(dstRect))
-			{
-				int componentCount = 3;
-
-				BitmapData srcData = source.LockBits(srcRect,
-													 ImageLockMode.ReadOnly,
-													 PixelFormat.Format24bppRgb);
-				IntPtr srcScan = srcData.Scan0;
-
-				BitmapData dstData = destination.LockBits(dstRect,
-														  ImageLockMode.WriteOnly,
-														  PixelFormat.Format24bppRgb);
-				IntPtr dstScan = dstData.Scan0;
-
-				for (int i = 0; i < srcData.Height; i++)
-				{
-					memcpy(dstScan, srcScan, dstData.Width * componentCount);
-
-					dstScan = new IntPtr(dstScan.ToInt64() + dstData.Stride);
-					srcScan = new IntPtr(srcScan.ToInt64() + srcData.Stride);
-				}
-
-
-				destination.UnlockBits(dstData);
-				source.UnlockBits(srcData);
-			}
+			return new Region3D(new Index3D(copyInfo.Source.X, copyInfo.Source.Y, 0),
+								new Size3D(copyInfo.Size.Width, copyInfo.Size.Height, 1));
 		}
 
-		public static void CopyPartsTo(this Bitmap source, TextureArrayElement destination, CopyInfo copyInfo)
+		private static Region3D GetDestinationRegion(this CopyInfo copyInfo)
 		{
-			foreach (CopyInfo info in GetCopyInfo(source.Size, destination.Bitmap.Size, copyInfo))
+			return new Region3D(new Index3D(copyInfo.Destination.X, copyInfo.Destination.Y, 0),
+								new Size3D(copyInfo.Size.Width, copyInfo.Size.Height, 1));
+		}
+
+		public static void CopyTo(this IImage source, IImage destination, CopyInfo copyInfo)
+		{
+			IImageData data = source.GetRegion(copyInfo.GetSourceRegion());
+
+			destination.SetRegion(copyInfo.GetDestinationRegion(), data);
+		}
+
+		public static Size Size(this IImage image)
+		{
+			return new Size(image.Width(), image.Height());
+		}
+
+		public static void CopyPartsTo(this IImage source, TextureArrayElement destination, CopyInfo copyInfo)
+		{
+			foreach (CopyInfo info in GetCopyInfo(source.Size(), destination.Image.Size(), copyInfo))
 			{
-				source.CopyTo(destination.Bitmap, info);
-				destination.DirtyRegions.Add(info.DestinationRect);
+				source.CopyTo(destination.Image, info);
 			}
 		}
 

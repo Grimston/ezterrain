@@ -11,68 +11,27 @@ namespace EZ.Objects
 {
 	public abstract class Texture : Disposable
 	{
-		public Texture(string fileName)
-			: this(new Bitmap(fileName))
-		{ }
-
-		public Texture(Stream stream)
-			: this(new Bitmap(stream))
-		{ }
-
-		public Texture(Bitmap bitmap)
+		protected Texture(IImage image)
 		{
-			this.Bitmap = bitmap;
-			this.DirtyRegions = new List<Rectangle>();
+			this.Image = image;
 		}
 
-		public Bitmap Bitmap { get; private set; }
+		public IImage Image { get; private set; }
 
 		public bool Initialized { get; protected set; }
 
 		public abstract void Initialize();
 
-		public Rectangle Bounds
-		{
-			get
-			{
-				return new Rectangle(0, 0, Bitmap.Width, Bitmap.Height);
-			}
-		}
-
-		public ICollection<Rectangle> DirtyRegions { get; private set; }
-
 		public virtual void Update()
 		{
-			ClearDirtyRegions();
+			Image.Update();
 		}
-
-		private void ClearDirtyRegions()
-		{
-			foreach (Rectangle dirtyRegion in DirtyRegions)
-			{
-				Upload(dirtyRegion);
-			}
-
-			DirtyRegions.Clear();
-		}
-
-
-		private void Upload(Rectangle dirtyRegion)
-		{
-			BitmapData data = Bitmap.LockBits(dirtyRegion, ImageLockMode.ReadOnly, Bitmap.PixelFormat);
-
-			Upload(dirtyRegion, data);
-
-			Bitmap.UnlockBits(data);
-		}
-
-		protected abstract void Upload(Rectangle region, BitmapData data);
 
 		protected override void Dispose(bool nongc)
 		{
 			if (nongc)
 			{
-				Bitmap.Dispose();
+				//Image.Dispose();
 			}
 
 			base.Dispose(nongc);

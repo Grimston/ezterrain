@@ -10,20 +10,8 @@ namespace EZ.Objects
 {
 	public abstract class BoundTexture : Texture
 	{
-		public BoundTexture(TextureUnit unit, string fileName)
-			: base(fileName)
-		{
-			Initialize(unit);
-		}
-
-		public BoundTexture(TextureUnit unit, Stream stream)
-			: base(stream)
-		{
-			Initialize(unit);
-		}
-
-		public BoundTexture(TextureUnit unit, Bitmap bitmap)
-			: base(bitmap)
+		protected BoundTexture(TextureUnit unit, IImage image)
+			: base(image)
 		{
 			Initialize(unit);
 		}
@@ -62,7 +50,7 @@ namespace EZ.Objects
 			{
 				Handle = GL.GenTexture();
 
-				DirtyRegions.Add(Bounds);
+				Image.Dirty();
 
 				Initialized = true;
 			}
