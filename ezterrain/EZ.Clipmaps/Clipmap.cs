@@ -7,8 +7,6 @@ using OpenTK.Math;
 using OpenTK.Graphics;
 using EZ.Objects;
 using System.Runtime.InteropServices;
-using System.Drawing;
-using System.Drawing.Imaging;
 
 namespace Ez.Clipmaps
 {
@@ -17,7 +15,7 @@ namespace Ez.Clipmaps
 		public const int MaxLevel = 4;
 
 		private uint sideVertexCount;
-		private Point textureCenterOffset;
+		private Index3D textureCenterOffset;
 		uint[] hollowGridIndices;
 		uint[] fullGridIndices;
 		private TextureArray textureArray;
@@ -44,8 +42,8 @@ namespace Ez.Clipmaps
 			texOffset = new Uniform(program, "texOffset");
 			meshLevel = new Uniform(program, "level");
 			eye = new Uniform(program, "eye");
-			textureCenterOffset = new Point((int)sideVertexCount / 2,
-											(int)sideVertexCount / 2);
+			textureCenterOffset = new Index3D((int)sideVertexCount / 2,
+											  (int)sideVertexCount / 2, 0);
 		}
 
 		private void ConstructTexUniPairs()
@@ -61,7 +59,7 @@ namespace Ez.Clipmaps
 				lastEyes[i] = new Vector3(float.NaN, float.NaN, float.NaN);
 			}
 
-			textureArray = new TextureArray(TextureUnit.Texture1, new Size(257, 257), arrayImages);
+			textureArray = new TextureArray(TextureUnit.Texture1, new Size2D(257, 257), arrayImages);
 			textureArray.WrapS = TextureWrapMode.Repeat;
 			textureArray.WrapT = TextureWrapMode.Repeat;
 		}
@@ -228,33 +226,33 @@ namespace Ez.Clipmaps
 			bool updateAll = float.IsNaN(lastEye.X);
 
 			float positionScale = 1.0f / (1 << level);
-			Point center = GetEyePoint(eye, positionScale);
-			Rectangle clipRect = center.GetCenteredRect((int)sideVertexCount);
+			Index3D center = GetEyePoint(eye, positionScale);
+			Region3D clipRegion = center.GetCenteredRegion((int)sideVertexCount);
 
 			if (updateAll)
 			{
-				UpdateWhole(level, eye, clipRect);
+				UpdateWhole(level, eye, clipRegion);
 			}
 			else
 			{
-				Point oldCenter = GetEyePoint(lastEye, positionScale);
+				Index3D oldCenter = GetEyePoint(lastEye, positionScale);
 
 				switch (GetUpdateType(center, oldCenter))
 				{
 					case ImageUpdateType.Whole:
-						UpdateWhole(level, eye, clipRect);
+						UpdateWhole(level, eye, clipRegion);
 						break;
 					case ImageUpdateType.Partial:
-						UpdatePartial(level, eye, clipRect, oldCenter);
+						UpdatePartial(level, eye, clipRegion, oldCenter);
 						break;
 				}
 			}
 		}
 
-		private ImageUpdateType GetUpdateType(Point center, Point oldCenter)
+		private ImageUpdateType GetUpdateType(Index3D center, Index3D oldCenter)
 		{
-			Size centerDiff = new Size(Math.Abs(center.X - oldCenter.X),
-										Math.Abs(center.Y - oldCenter.Y));
+			Size3D centerDiff = new Size3D(Math.Abs(center.Column - oldCenter.Column),
+										 Math.Abs(center.Row - oldCenter.Row), 1);
 
 			if (centerDiff.Width >= sideVertexCount
 			 || centerDiff.Height >= sideVertexCount)
@@ -271,38 +269,38 @@ namespace Ez.Clipmaps
 			}
 		}
 
-		private Point GetEyePoint(Vector3 eye, float positionScale)
+		private Index3D GetEyePoint(Vector3 eye, float positionScale)
 		{
-			Point point = new Point((int)Math.Round(eye.X * positionScale),
-									 (int)Math.Round(eye.Y * positionScale));
+			Index3D point = new Index3D((int)Math.Round(eye.X * positionScale),
+									    (int)Math.Round(eye.Y * positionScale), 0);
 			point.Offset(textureCenterOffset);
 
 			return point;
 		}
 
-		private void UpdatePartial(int level, Vector3 eye, Rectangle clipRect, Point oldCenter)
+		private void UpdatePartial(int level, Vector3 eye, Region3D clipRegion, Index3D oldCenter)
 		{
-			Rectangle oldClipRect = oldCenter.GetCenteredRect((int)sideVertexCount);
+			Region3D oldClipRegion = oldCenter.GetCenteredRegion((int)sideVertexCount);
 
-			foreach (Rectangle rect in BitmapExtensions.Diff(oldClipRect.Location, clipRect.Location, clipRect.Size))
+			foreach (Region3D region in BitmapExtensions.Diff(oldClipRegion.Index, clipRegion.Index, clipRegion.Size))
 			{
-				UpdateImage(images[level], textureArray.Images[level], rect);
+				UpdateImage(images[level], textureArray.Images[level], region);
 			}
 
 			lastEyes[level] = eye;
 		}
 
-		private void UpdateWhole(int level, Vector3 eye, Rectangle clipRect)
+		private void UpdateWhole(int level, Vector3 eye, Region3D clipRegion)
 		{
-			UpdateImage(images[level], textureArray.Images[level], clipRect);
+			UpdateImage(images[level], textureArray.Images[level], clipRegion);
 			lastEyes[level] = eye;
 		}
 
-		private void UpdateImage(IImage source, TextureArrayElement target, Rectangle rect)
+		private void UpdateImage(IImage source, TextureArrayElement target, Region3D region)
 		{
-			Point destinationOffset = new Point(BitmapExtensions.Repeat(rect.X, target.Image.Width()),
-												BitmapExtensions.Repeat(rect.Y, target.Image.Height()));
-			source.CopyPartsTo(target, new CopyInfo(rect.Location, destinationOffset, rect.Size));
+			Index3D destinationOffset = new Index3D(BitmapExtensions.Repeat(region.Index.Column, target.Image.Width()),
+													BitmapExtensions.Repeat(region.Index.Row, target.Image.Height()), 0);
+			source.CopyPartsTo(target, new CopyInfo(region.Index, destinationOffset, region.Size));
 		}
 
 		private static double GetScale(int value, int range)

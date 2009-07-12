@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
-using System.Drawing;
-using System.IO;
-using System.Drawing.Imaging;
 
 namespace EZ.Objects
 {

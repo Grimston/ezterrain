@@ -3,17 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 
 namespace EZ.Objects
 {
 	public class TextureArray : BoundTexture
 	{
-		private static Image3D<RGBA> DefaultImage { get { return new Image3D<RGBA>(TextureTarget.Texture2DArray, 1, 1, 1); } }
+		private static readonly IImage DefaultImage = new EmptyImage();
 
-		public TextureArray(TextureUnit unit, Size size, IImage[] images)
+		public TextureArray(TextureUnit unit, Size2D size, IImage[] images)
 			: base(unit, DefaultImage)
 		{
 			this.Size = size;
@@ -30,7 +28,7 @@ namespace EZ.Objects
 			}
 		}
 
-		public Size Size { get; private set; }
+		public Size2D Size { get; private set; }
 
 		public TextureArrayElement[] Images { get; private set; }
 
@@ -57,12 +55,12 @@ namespace EZ.Objects
 
 		public override void Update()
 		{
-			//if (DirtyRegions.Count == 0 && Images.Any(image => image.DirtyRegions.Count > 0))
-			//{
-			//    DirtyRegions.Add(Bounds);
-			//}
-
 			base.Update();
+
+			foreach (TextureArrayElement element in Images)
+			{
+				element.Update();
+			}
 		}
 
 		//protected override void Upload(Rectangle region, BitmapData data)

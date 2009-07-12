@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 using OpenTK.Graphics;
 using System.Runtime.InteropServices;
+using System.Drawing;
 
 namespace EZ.Objects
 {
@@ -27,7 +27,7 @@ namespace EZ.Objects
 		private static Image2D<TPixel> GetImage2D<TPixel>(Bitmap bitmap)
 			where TPixel : struct, IPixel
 		{
-			Image2D<TPixel> image = new Image2D<TPixel>(TextureTarget.Texture2D, bitmap.Width, bitmap.Height);
+			ImageData<TPixel> data = new ImageData<TPixel>(bitmap.Width, bitmap.Height, 1);
 
 			byte[] buffer;
 			int height;
@@ -38,13 +38,11 @@ namespace EZ.Objects
 			{
 				for (int column = 0; column < bitmap.Width; column++)
 				{
-					TPixel pixel = new TPixel();
-					pixel.CopyFrom(buffer, dataIndex + column * ImageData<TPixel>.PixelSize);
-					image.Data.Buffer[column, row, 0] = pixel;
+					data.Buffer[column, row, 0].CopyFrom(buffer, dataIndex + column * ImageData<TPixel>.PixelSize);
 				}
 			}
 
-			return image;
+			return new Image2D<TPixel>(TextureTarget.Texture2D, data);
 		}
 
 		public static IImage GetArrayImage(string fileName, int index)
@@ -64,7 +62,7 @@ namespace EZ.Objects
 		private static IImage GetArrayImage<TPixel>(Bitmap bitmap, int index)
 			where TPixel : struct, IPixel
 		{
-			Array2DImage<TPixel> image = new Array2DImage<TPixel>(index, bitmap.Width, bitmap.Height);
+			ImageData<TPixel> data = new ImageData<TPixel>(bitmap.Width, bitmap.Height, 1);
 
 			byte[] buffer;
 			int height;
@@ -77,11 +75,11 @@ namespace EZ.Objects
 				{
 					TPixel pixel = new TPixel();
 					pixel.CopyFrom(buffer, dataIndex + column * ImageData<TPixel>.PixelSize);
-					image.Data.Buffer[column, row, 0] = pixel;
+					data.Buffer[column, row, 0] = pixel;
 				}
 			}
 
-			return image;
+			return new Array2DImage<TPixel>(index, data);
 		}
 
 		private static void GetBytes(Bitmap bitmap, out byte[] buffer, out int height, out int stride)
@@ -98,17 +96,17 @@ namespace EZ.Objects
 
 		public static int Width(this IImage image)
 		{
-			return image.Data.Size.Width;
+			return image.Size.Width;
 		}
 
 		public static int Height(this IImage image)
 		{
-			return image.Data.Size.Height;
+			return image.Size.Height;
 		}
 
 		public static int Depth(this IImage image)
 		{
-			return image.Data.Size.Depth;
+			return image.Size.Depth;
 		}
 	}
 }
