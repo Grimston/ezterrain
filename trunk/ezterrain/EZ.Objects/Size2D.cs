@@ -5,18 +5,42 @@ using System.Text;
 
 namespace EZ.Objects
 {
-	public struct Size2D
+	public struct Size2D : IEquatable<Size2D>
 	{
 		public Size2D(int width, int height)
 		{
-			this.width = width;
-			this.height = height;
+			this.Width = width;
+			this.Height = height;
 		}
 
-		private int width;
-		public int Width { get { return width; } }
+		public int Width;
 
-		private int height;
-		public int Height { get { return height; } }
+		public int Height;
+
+		public static bool operator ==(Size2D value1, Size2D value2)
+		{
+			return value1.Equals(value2);
+		}
+
+		public static bool operator !=(Size2D value1, Size2D value2)
+		{
+			return !value1.Equals(value2);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is Size2D && Equals((Size2D)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return Width ^ Height;
+		}
+
+		public bool Equals(Size2D other)
+		{
+			return Width == other.Width
+				&& Height == other.Height;
+		}
 	}
 }

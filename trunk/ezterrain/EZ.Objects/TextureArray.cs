@@ -11,16 +11,16 @@ namespace EZ.Objects
 {
 	public class TextureArray : BoundTexture
 	{
-		private static Bitmap DefaultBitmap { get { return new Bitmap(1, 1); } }
+		private static Image3D<RGBA> DefaultImage { get { return new Image3D<RGBA>(TextureTarget.Texture2DArray, 1, 1, 1); } }
 
-		public TextureArray(TextureUnit unit, Size size, Bitmap[] images)
-			: base(unit, DefaultBitmap)
+		public TextureArray(TextureUnit unit, Size size, IImage[] images)
+			: base(unit, DefaultImage)
 		{
 			this.Size = size;
 			LoadImages(images);
 		}
 
-		public void LoadImages(Bitmap[] images)
+		public void LoadImages(IImage[] images)
 		{
 			this.Images = new TextureArrayElement[images.Length];
 
@@ -57,17 +57,17 @@ namespace EZ.Objects
 
 		public override void Update()
 		{
-			if (DirtyRegions.Count == 0 && Images.Any(image => image.DirtyRegions.Count > 0))
-			{
-				DirtyRegions.Add(Bounds);
-			}
+			//if (DirtyRegions.Count == 0 && Images.Any(image => image.DirtyRegions.Count > 0))
+			//{
+			//    DirtyRegions.Add(Bounds);
+			//}
 
 			base.Update();
 		}
 
-		protected override void Upload(Rectangle region, BitmapData data)
-		{
-			Array.ForEach(Images, image => image.Update());
-		}
+		//protected override void Upload(Rectangle region, BitmapData data)
+		//{
+		//    Array.ForEach(Images, image => image.Update());
+		//}
 	}
 }

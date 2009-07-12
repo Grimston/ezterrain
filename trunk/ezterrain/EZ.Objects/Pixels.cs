@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
+using System.Runtime.InteropServices;
 
 namespace EZ.Objects
 {
 	#region RGBA
-	[GlPixel(PixelInternalFormat.Rgba,PixelFormat.Rgba,PixelType.UnsignedByte)]
+	[Pixel(PixelInternalFormat.Rgba,PixelFormat.Rgba,PixelType.UnsignedByte)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct RGBA : IPixel
 	{
 		public byte R;
@@ -39,12 +41,13 @@ namespace EZ.Objects
 	#endregion
 
 	#region BGRA
-	[GlPixel(PixelInternalFormat.Rgba,PixelFormat.Bgra,PixelType.UnsignedByte)]
+	[Pixel(PixelInternalFormat.Rgba,PixelFormat.Bgra,PixelType.UnsignedByte)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct BGRA : IPixel
 	{
-		public byte R;
-		public byte G;
 		public byte B;
+		public byte G;
+		public byte R;
 		public byte A;
 
 
@@ -71,7 +74,8 @@ namespace EZ.Objects
 	#endregion
 
 	#region RGB
-	[GlPixel(PixelInternalFormat.Rgb,PixelFormat.Rgb,PixelType.UnsignedByte)]
+	[Pixel(PixelInternalFormat.Rgb,PixelFormat.Rgb,PixelType.UnsignedByte)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct RGB : IPixel
 	{
 		public byte R;
@@ -100,12 +104,13 @@ namespace EZ.Objects
 	#endregion
 
 	#region BGR
-	[GlPixel(PixelInternalFormat.Rgb,PixelFormat.Bgr,PixelType.UnsignedByte)]
+	[Pixel(PixelInternalFormat.Rgb,PixelFormat.Bgr,PixelType.UnsignedByte)]
+	[StructLayout(LayoutKind.Sequential)]
 	public struct BGR : IPixel
 	{
-		public byte R;
-		public byte G;
 		public byte B;
+		public byte G;
+		public byte R;
 
 
 		#region IPixel Members

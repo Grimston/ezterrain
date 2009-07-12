@@ -22,7 +22,7 @@ namespace Ez.Clipmaps
 		uint[] fullGridIndices;
 		private TextureArray textureArray;
 		private Vector3[] lastEyes;
-		private Bitmap[] images;
+		private IImage[] images;
 		private Texture2D gradient;
 		private Program program;
 		private Uniform texScale;
@@ -37,7 +37,7 @@ namespace Ez.Clipmaps
 		public Clipmap(uint sideVertexCount)
 		{
 			this.sideVertexCount = sideVertexCount;
-			gradient = new Texture2D(TextureUnit.Texture0, ResourceManager.GetImagePath("gradient.bmp"));
+			gradient = new Texture2D(TextureUnit.Texture0, ImageHelper.Get2DImage(ResourceManager.GetImagePath("gradient.bmp")));
 			program = new Program();
 			ConstructTexUniPairs();
 			texScale = new Uniform(program, "texScale");
@@ -50,14 +50,14 @@ namespace Ez.Clipmaps
 
 		private void ConstructTexUniPairs()
 		{
-			images = new Bitmap[MaxLevel + 1];
+			images = new IImage[MaxLevel + 1];
 			lastEyes = new Vector3[MaxLevel + 1];
-			Bitmap[] arrayImages = new Bitmap[MaxLevel + 1];
+			IImage[] arrayImages = new IImage[MaxLevel + 1];
 
 			for (int i = 0; i <= MaxLevel; i++)
 			{
-				arrayImages[i] = new Bitmap(257, 257, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-				images[i] = new Bitmap(ResourceManager.GetImagePath(string.Format("l{0}.bmp", i)));
+				arrayImages[i] = new Array2DImage<BGR>(i, 257, 257);
+				images[i] = ImageHelper.Get2DImage(ResourceManager.GetImagePath(string.Format("l{0}.bmp", i)));
 				lastEyes[i] = new Vector3(float.NaN, float.NaN, float.NaN);
 			}
 
@@ -298,10 +298,10 @@ namespace Ez.Clipmaps
 			lastEyes[level] = eye;
 		}
 
-		private void UpdateImage(Bitmap source, TextureArrayElement target, Rectangle rect)
+		private void UpdateImage(IImage source, TextureArrayElement target, Rectangle rect)
 		{
-			Point destinationOffset = new Point(BitmapExtensions.Repeat(rect.X, target.Bitmap.Width),
-												BitmapExtensions.Repeat(rect.Y, target.Bitmap.Height));
+			Point destinationOffset = new Point(BitmapExtensions.Repeat(rect.X, target.Image.Width()),
+												BitmapExtensions.Repeat(rect.Y, target.Image.Height()));
 			source.CopyPartsTo(target, new CopyInfo(rect.Location, destinationOffset, rect.Size));
 		}
 

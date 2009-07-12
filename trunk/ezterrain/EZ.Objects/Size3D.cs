@@ -9,18 +9,47 @@ namespace EZ.Objects
 	{
 		public Size3D(int width, int height, int depth)
 		{
-			this.width = width;
-			this.height = height;
-			this.depth = depth;
+			this.Width = width;
+			this.Height = height;
+			this.Depth = depth;
 		}
 
-		private int width;
-		public int Width { get { return width; } }
+		public int Width;
 
-		private int height;
-		public int Height { get { return height; } }
+		public int Height;
 
-		private int depth;
-		public int Depth { get { return depth; } }
+		public int Depth;
+
+		public static explicit operator Size2D(Size3D size)
+		{
+			return new Size2D(size.Width, size.Height);
+		}
+
+		public static bool operator ==(Size3D value1, Size3D value2)
+		{
+			return value1.Equals(value2);
+		}
+
+		public static bool operator !=(Size3D value1, Size3D value2)
+		{
+			return !value1.Equals(value2);
+		}
+
+		public override bool Equals(object obj)
+		{
+			return obj is Size3D && Equals((Size3D)obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return Width ^ Height ^ Depth;
+		}
+
+		public bool Equals(Size3D other)
+		{
+			return Width == other.Width
+				&& Height == other.Height
+				&& Depth == other.Depth;
+		}
 	}
 }
