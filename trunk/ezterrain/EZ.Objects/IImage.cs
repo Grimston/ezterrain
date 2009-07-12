@@ -10,11 +10,11 @@ namespace EZ.Objects
 	{
 		void Dirty();
 
-		IImageData Data { get; set; }
+		IImageData this[Region3D region] { get; set; }
 
-		IImageData GetRegion(Region3D region);
+		Size3D Size { get; }
 
-		void SetRegion(Region3D region, IImageData data);
+		void CopyTo(IImage destination, CopyInfo copyInfo);
 
 		void Update();
 	}

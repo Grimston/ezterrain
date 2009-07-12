@@ -56,6 +56,8 @@
   <ItemGroup>
     <Compile Include="Array2DImage.cs" />
     <Compile Include="BoundTexture.cs" />
+    <Compile Include="CopyInfo.cs" />
+    <Compile Include="EmptyImage.cs" />
     <Compile Include="IImageData.cs" />
     <Compile Include="Image1D.cs" />
     <Compile Include="Image2D.cs" />

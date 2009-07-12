@@ -17,7 +17,12 @@ namespace EZ.Objects
 		{
 			if (region == Bounds)
 			{
-				GL.TexImage1D(Target, 0, PixelInternalFormat, Data.Size.Width, 0, PixelFormat, PixelType, Data.Buffer);
+				GL.TexImage1D(Target, 0, PixelInternalFormat, Size.Width, 0, PixelFormat, PixelType, Buffer);
+			}
+			else
+			{
+				ImageData<TPixel> data = this[region];
+				GL.TexSubImage1D(Target, 0, region.Column, region.Width, PixelFormat, PixelType, data.Buffer);
 			}
 		}
 	}

@@ -56,7 +56,6 @@
   <ItemGroup>
     <Compile Include="BitmapExtensions.cs" />
     <Compile Include="Clipmap.cs" />
-    <Compile Include="CopyInfo.cs" />
     <Compile Include="Grid.cs" />
     <Compile Include="ImageUpdateType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

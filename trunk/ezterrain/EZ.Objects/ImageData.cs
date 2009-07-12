@@ -22,6 +22,29 @@ namespace EZ.Objects
 
 		public Size3D Size { get; private set; }
 
+		public void CopyTo(ImageData<TPixel> data, CopyInfo info)
+		{
+			for (int d = 0; d < info.Size.Depth; d++)
+			{
+				for (int r = 0; r < info.Size.Height; r++)
+				{
+					for (int c = 0; c < info.Size.Width; c++)
+					{
+						data.Buffer[c + info.Destination.Column,
+									r + info.Destination.Row,
+									d + info.Destination.Depth] = Buffer[c + info.Source.Column,
+																			  r + info.Source.Row,
+																			  d + info.Source.Depth];
+					}
+				}
+			}
+		}
+
+		void IImageData.CopyTo(IImageData data, CopyInfo info)
+		{
+			CopyTo((ImageData<TPixel>)data, info);
+		}
+
 		IImageData IImageData.this[Region3D region]
 		{
 			get { return this[region]; }

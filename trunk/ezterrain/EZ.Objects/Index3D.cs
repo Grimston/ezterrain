@@ -22,6 +22,13 @@ namespace EZ.Objects
 
 		public int Depth;
 
+		public void Offset(Index3D other)
+		{
+			Column += other.Column;
+			Row += other.Row;
+			Depth += other.Depth;
+		}
+
 		public static explicit operator Index2D(Index3D index)
 		{
 			return new Index2D(index.Column, index.Row);

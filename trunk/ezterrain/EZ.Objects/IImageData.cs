@@ -10,5 +10,7 @@ namespace EZ.Objects
 		Size3D Size { get; }
 
 		IImageData this[Region3D region] { get; set; }
+
+		void CopyTo(IImageData destination, CopyInfo copyInfo);
 	}
 }

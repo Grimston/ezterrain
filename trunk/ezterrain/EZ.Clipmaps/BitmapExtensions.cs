@@ -2,72 +2,48 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 using System.Runtime.InteropServices;
-using System.Drawing.Imaging;
 using EZ.Objects;
 
 namespace Ez.Clipmaps
 {
 	public static class BitmapExtensions
 	{
-		private static Region3D GetSourceRegion(this CopyInfo copyInfo)
-		{
-			return new Region3D(new Index3D(copyInfo.Source.X, copyInfo.Source.Y, 0),
-								new Size3D(copyInfo.Size.Width, copyInfo.Size.Height, 1));
-		}
-
-		private static Region3D GetDestinationRegion(this CopyInfo copyInfo)
-		{
-			return new Region3D(new Index3D(copyInfo.Destination.X, copyInfo.Destination.Y, 0),
-								new Size3D(copyInfo.Size.Width, copyInfo.Size.Height, 1));
-		}
-
-		public static void CopyTo(this IImage source, IImage destination, CopyInfo copyInfo)
-		{
-			IImageData data = source.GetRegion(copyInfo.GetSourceRegion());
-
-			destination.SetRegion(copyInfo.GetDestinationRegion(), data);
-		}
-
-		public static Size Size(this IImage image)
-		{
-			return new Size(image.Width(), image.Height());
-		}
-
 		public static void CopyPartsTo(this IImage source, TextureArrayElement destination, CopyInfo copyInfo)
 		{
-			foreach (CopyInfo info in GetCopyInfo(source.Size(), destination.Image.Size(), copyInfo))
+			foreach (CopyInfo info in GetCopyInfo(source.Size, destination.Image.Size, copyInfo))
 			{
 				source.CopyTo(destination.Image, info);
 			}
 		}
 
-		private static IEnumerable<CopyInfo> GetCopyInfo(Size srcBounds, Size dstBounds, CopyInfo copyInfo)
+		private static IEnumerable<CopyInfo> GetCopyInfo(Size3D srcBounds, Size3D dstBounds, CopyInfo copyInfo)
 		{
 			return from dstInfo in GetDestinationCopyInfo(dstBounds, copyInfo)
 				   from dstSrcInfo in GetSourceCopyInfo(srcBounds, dstInfo)
 				   select dstSrcInfo;
 		}
 
-		private static IEnumerable<CopyInfo> GetDestinationCopyInfo(Size dstBounds, CopyInfo copyInfo)
+		private static IEnumerable<CopyInfo> GetDestinationCopyInfo(Size3D dstBounds, CopyInfo copyInfo)
 		{
 			return from info in GetDividedCopyInfo(dstBounds, new TmpCopyInfo(copyInfo.Destination, copyInfo.Source, copyInfo.Size))
 				   select new CopyInfo(info.Offset2, info.Offset1, info.Size);
 		}
 
-		private static IEnumerable<CopyInfo> GetSourceCopyInfo(Size srcBounds, CopyInfo copyInfo)
+		private static IEnumerable<CopyInfo> GetSourceCopyInfo(Size3D srcBounds, CopyInfo copyInfo)
 		{
 			return from info in GetDividedCopyInfo(srcBounds, new TmpCopyInfo(copyInfo.Source, copyInfo.Destination, copyInfo.Size))
 				   select new CopyInfo(info.Offset1, info.Offset2, info.Size);
 		}
 
-		private static IEnumerable<TmpCopyInfo> GetDividedCopyInfo(Size bounds, TmpCopyInfo copyInfo)
+		private static IEnumerable<TmpCopyInfo> GetDividedCopyInfo(Size3D bounds, TmpCopyInfo copyInfo)
 		{
-			copyInfo.Offset1.X = Repeat(copyInfo.Offset1.X, bounds.Width);
-			copyInfo.Offset1.Y = Repeat(copyInfo.Offset1.Y, bounds.Height);
+			copyInfo.Offset1.Column = Repeat(copyInfo.Offset1.Column, bounds.Width);
+			copyInfo.Offset1.Row = Repeat(copyInfo.Offset1.Row, bounds.Height);
 
-			Point copyLowerRight = copyInfo.Offset1 + copyInfo.Size;
+			Index3D copyLowerRight = copyInfo.Offset1;
+			copyLowerRight.Column += copyInfo.Size.Width;
+			copyLowerRight.Row += copyInfo.Size.Height;
 
 			if (bounds.Contains(copyLowerRight))
 			{
@@ -91,13 +67,13 @@ namespace Ez.Clipmaps
 				 * z : copyInfo.Source + copyInfo.Size
 				 */
 
-				Point midPoint = new Point(Math.Min(bounds.Width, copyLowerRight.X),
-											Math.Min(bounds.Height, copyLowerRight.Y));
+				Index3D midPoint = new Index3D(Math.Min(bounds.Width, copyLowerRight.Column),
+												Math.Min(bounds.Height, copyLowerRight.Row), 0);
 
 				#region Region1
-				Size region1Size = new Size(midPoint.X - copyInfo.Offset1.X, midPoint.Y - copyInfo.Offset1.Y);
-				Point region1Offset1 = copyInfo.Offset1;
-				Point region1Offset2 = copyInfo.Offset2;
+				Size3D region1Size = new Size3D(midPoint.Column - copyInfo.Offset1.Column, midPoint.Row - copyInfo.Offset1.Row, 1);
+				Index3D region1Offset1 = copyInfo.Offset1;
+				Index3D region1Offset2 = copyInfo.Offset2;
 				TmpCopyInfo region1Info = new TmpCopyInfo(region1Offset1, region1Offset2, region1Size);
 
 				if (region1Size.Width > 0
@@ -108,9 +84,9 @@ namespace Ez.Clipmaps
 				#endregion
 
 				#region Region2
-				Size region2Size = new Size(copyInfo.Size.Width - region1Size.Width, region1Size.Height);
-				Point region2Offset1 = new Point(0, region1Offset1.Y);
-				Point region2Offset2 = new Point(region1Offset2.X + region1Size.Width, region1Offset2.Y);
+				Size3D region2Size = new Size3D(copyInfo.Size.Width - region1Size.Width, region1Size.Height, 1);
+				Index3D region2Offset1 = new Index3D(0, region1Offset1.Row, 0);
+				Index3D region2Offset2 = new Index3D(region1Offset2.Column + region1Size.Width, region1Offset2.Row, 0);
 				TmpCopyInfo region2Info = new TmpCopyInfo(region2Offset1, region2Offset2, region2Size);
 
 				if (region2Size.Width > 0
@@ -121,9 +97,9 @@ namespace Ez.Clipmaps
 				#endregion
 
 				#region Region3
-				Size region3Size = new Size(region1Size.Width, copyInfo.Size.Height - region1Size.Height);
-				Point region3Offset1 = new Point(region1Offset1.X, 0);
-				Point region3Offset2 = new Point(region1Offset2.X, region1Offset2.Y + region1Size.Height);
+				Size3D region3Size = new Size3D(region1Size.Width, copyInfo.Size.Height - region1Size.Height, 1);
+				Index3D region3Offset1 = new Index3D(region1Offset1.Column, 0, 0);
+				Index3D region3Offset2 = new Index3D(region1Offset2.Column, region1Offset2.Row + region1Size.Height, 0);
 				TmpCopyInfo region3Info = new TmpCopyInfo(region3Offset1, region3Offset2, region3Size);
 
 				if (region3Size.Width > 0
@@ -134,9 +110,9 @@ namespace Ez.Clipmaps
 				#endregion
 
 				#region Region4
-				Size region4Size = new Size(region2Size.Width, region3Size.Height);
-				Point region4Offset1 = new Point(region2Offset1.X, region3Offset1.Y);
-				Point region4Offset2 = new Point(region2Offset2.X, region3Offset2.Y);
+				Size3D region4Size = new Size3D(region2Size.Width, region3Size.Height, 1);
+				Index3D region4Offset1 = new Index3D(region2Offset1.Column, region3Offset1.Row, 0);
+				Index3D region4Offset2 = new Index3D(region2Offset2.Column, region3Offset2.Row, 0);
 				TmpCopyInfo region4Info = new TmpCopyInfo(region4Offset1, region4Offset2, region4Size);
 
 				if (region4Size.Width > 0
@@ -148,7 +124,7 @@ namespace Ez.Clipmaps
 			}
 		}
 
-		public static IEnumerable<Rectangle> Diff(Point oldPosition, Point newPosition, Size size)
+		public static IEnumerable<Region3D> Diff(Index3D oldPosition, Index3D newPosition, Size3D size)
 		{
 			/*
 			 * returns difference regions for two rectangles:
@@ -171,32 +147,32 @@ namespace Ez.Clipmaps
 			 *     
 			 */
 
-			Point oldBottomRight = new Point(oldPosition.X + size.Width,
-											 oldPosition.Y + size.Height);
+			Index3D oldBottomRight = new Index3D(oldPosition.Column + size.Width,
+												 oldPosition.Row + size.Height, 0);
 
-			Point newBottomRight = new Point(newPosition.X + size.Width,
-											 newPosition.Y + size.Height);
+			Index3D newBottomRight = new Index3D(newPosition.Column + size.Width,
+												 newPosition.Row + size.Height, 0);
 
-			if (oldPosition.X < newPosition.X)
+			if (oldPosition.Column < newPosition.Column)
 			{
-				if (oldPosition.Y < newPosition.Y)
+				if (oldPosition.Row < newPosition.Row)
 				{
 					#region
-					Rectangle r2 = Rectangle.FromLTRB(oldBottomRight.X, newPosition.Y, newBottomRight.X, oldBottomRight.Y);
+					Region3D r2 = Region3D.FromLTNRBF(oldBottomRight.Column, newPosition.Row, 0, newBottomRight.Column, oldBottomRight.Row, 1);
 
 					if (r2.Width > 0 && r2.Height > 0)
 					{
 						yield return r2;
 					}
 
-					Rectangle r3 = Rectangle.FromLTRB(newPosition.X, oldBottomRight.Y, oldBottomRight.X, newBottomRight.Y);
+					Region3D r3 = Region3D.FromLTNRBF(newPosition.Column, oldBottomRight.Row, 0, oldBottomRight.Column, newBottomRight.Row, 1);
 
 					if (r3.Width > 0 && r3.Height > 0)
 					{
 						yield return r3;
 					}
 
-					Rectangle r4 = new Rectangle(r2.X, r3.Y, r2.Width, r3.Height);
+					Region3D r4 = new Region3D(r2.Column, r3.Row, 0, r2.Width, r3.Height, 1);
 
 					if (r4.Width > 0 && r4.Height > 0)
 					{
@@ -207,20 +183,20 @@ namespace Ez.Clipmaps
 				else
 				{
 					#region
-					Rectangle r1 = Rectangle.FromLTRB(newPosition.X, newPosition.Y, oldBottomRight.X, oldPosition.Y);
+					Region3D r1 = Region3D.FromLTNRBF(newPosition.Column, newPosition.Row, 0, oldBottomRight.Column, oldPosition.Row, 1);
 
 					if (r1.Width > 0 && r1.Height > 0)
 					{
 						yield return r1;
 					}
 
-					Rectangle r4 = Rectangle.FromLTRB(oldBottomRight.X, oldPosition.Y, newBottomRight.X, newBottomRight.Y);
+					Region3D r4 = Region3D.FromLTNRBF(oldBottomRight.Column, oldPosition.Row, 0, newBottomRight.Column, newBottomRight.Row, 1);
 					if (r4.Width > 0 && r4.Height > 0)
 					{
 						yield return r4;
 					}
 
-					Rectangle r2 = new Rectangle(r4.X, r1.Y, r4.Width, r1.Height);
+					Region3D r2 = new Region3D(r4.Column, r1.Row, 0, r4.Width, r1.Height, 1);
 
 					if (r2.Width > 0 && r2.Height > 0)
 					{
@@ -231,24 +207,24 @@ namespace Ez.Clipmaps
 			}
 			else
 			{
-				if (oldPosition.Y < newPosition.Y)
+				if (oldPosition.Row < newPosition.Row)
 				{
 					#region
-					Rectangle r1 = Rectangle.FromLTRB(newPosition.X, newPosition.Y, oldPosition.X, oldBottomRight.Y);
+					Region3D r1 = Region3D.FromLTNRBF(newPosition.Column, newPosition.Row, 0, oldPosition.Column, oldBottomRight.Row, 1);
 
 					if (r1.Width > 0 && r1.Height > 0)
 					{
 						yield return r1;
 					}
 
-					Rectangle r4 = Rectangle.FromLTRB(oldPosition.X, oldBottomRight.Y, newBottomRight.X, newBottomRight.Y);
+					Region3D r4 = Region3D.FromLTNRBF(oldPosition.Column, oldBottomRight.Row, 0, newBottomRight.Column, newBottomRight.Row, 1);
 
 					if (r4.Width > 0 && r4.Height > 0)
 					{
 						yield return r4;
 					}
 
-					Rectangle r3 = new Rectangle(r1.X, r4.Y, r1.Width, r4.Height);
+					Region3D r3 = new Region3D(r1.Column, r4.Row, 0, r1.Width, r4.Height, 1);
 
 					if (r3.Width > 0 && r3.Height > 0)
 					{
@@ -259,21 +235,21 @@ namespace Ez.Clipmaps
 				else
 				{
 					#region
-					Rectangle r2 = Rectangle.FromLTRB(oldPosition.X, newPosition.Y, newBottomRight.X, oldPosition.Y);
+					Region3D r2 = Region3D.FromLTNRBF(oldPosition.Column, newPosition.Row, 0, newBottomRight.Column, oldPosition.Row, 1);
 
 					if (r2.Width > 0 && r2.Height > 0)
 					{
 						yield return r2;
 					}
 
-					Rectangle r3 = Rectangle.FromLTRB(newPosition.X, oldPosition.Y, oldPosition.X, newBottomRight.Y);
+					Region3D r3 = Region3D.FromLTNRBF(newPosition.Column, oldPosition.Row, 0, oldPosition.Column, newBottomRight.Row, 1);
 
 					if (r3.Width > 0 && r3.Height > 0)
 					{
 						yield return r3;
 					}
 
-					Rectangle r1 = new Rectangle(r3.X, r2.Y, r3.Width, r2.Height);
+					Region3D r1 = new Region3D(r3.Column, r2.Row, 0, r3.Width, r2.Height, 1);
 
 					if (r1.Width > 0 && r1.Height > 0)
 					{
@@ -306,28 +282,23 @@ namespace Ez.Clipmaps
 			}
 
 			//boundary check
-			return repeatedIndex == (range - 1) ? index - integralIndex 
+			return repeatedIndex == (range - 1) ? index - integralIndex
 												: repeatedIndex + integralIndex;
 		}
 
-		public static bool Contains(this Size bounds, Point point)
+		public static bool Contains(this Size3D bounds, Index3D index)
 		{
-			return point.X <= bounds.Width
-				&& point.Y <= bounds.Height
-				&& point.X >= 0
-				&& point.Y >= 0;
+			return index.Column <= bounds.Width
+				&& index.Row <= bounds.Height
+				&& index.Column >= 0
+				&& index.Row >= 0;
 		}
 
-		public static Rectangle GetBounds(this System.Drawing.Image image)
+		public static Region3D GetCenteredRegion(this Index3D center, int width)
 		{
-			return new Rectangle(0, 0, image.Width, image.Height);
-		}
-
-		public static Rectangle GetCenteredRect(this Point center, int width)
-		{
-			return new Rectangle(center.X - width / 2,
-								 center.Y - width / 2,
-								 width, width);
+			return new Region3D(center.Column - width / 2,
+								 center.Row - width / 2, 0,
+								 width, width, 1);
 		}
 	}
 }

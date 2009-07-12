@@ -36,6 +36,8 @@ namespace EZ.Objects
 			throw new ArgumentException("Given type should have " + attributeType, "type:" + type);
 		}
 
+		private ImageData<TPixel> data;
+
 		protected Image(TextureTarget target, ImageData<TPixel> data)
 		{
 			this.DirtyRegions = new List<Region3D>();
@@ -43,52 +45,27 @@ namespace EZ.Objects
 			this.data = data;
 		}
 
-		private ImageData<TPixel> data;
-		public ImageData<TPixel> Data 
+		public ImageData<TPixel> this[Region3D region]
 		{
-			get { return data; }
+			get { return data[region]; }
 			set
 			{
-				if (data != value)
-				{
-					data = value;
-					Dirty();
-				}
+				data[region] = value;
+				DirtyRegions.Add(region);
 			}
 		}
 
-		IImageData IImage.Data
+		IImageData IImage.this[Region3D region]
 		{
-			get { return Data; }
-			set { Data = (ImageData<TPixel>)value; }
-		}
-
-		public ImageData<TPixel> GetRegion(Region3D region)
-		{
-			return Data[region];
-		}
-
-		IImageData IImage.GetRegion(Region3D region)
-		{
-			return GetRegion(region);
-		}
-
-		public void SetRegion(Region3D region, ImageData<TPixel> data)
-		{
-			Data[region] = data;
-			DirtyRegions.Add(region);
-		}
-
-		void IImage.SetRegion(Region3D region, IImageData data)
-		{
-			SetRegion(region, (ImageData<TPixel>)data);
+			get { return this[region]; }
+			set { this[region] = (ImageData<TPixel>)value; }
 		}
 
 		private TextureTarget target;
-		public TextureTarget Target 
-		{ 
-			get{return target;}
-			set 
+		public TextureTarget Target
+		{
+			get { return target; }
+			set
 			{
 				if (target != value)
 				{
@@ -96,6 +73,17 @@ namespace EZ.Objects
 					Dirty();
 				}
 			}
+		}
+
+		public void CopyTo(Image<TPixel> image, CopyInfo copyInfo)
+		{
+			data.CopyTo(image.data, copyInfo);
+			image.DirtyRegions.Add(copyInfo.DestinationRegion);
+		}
+
+		void IImage.CopyTo(IImage image, CopyInfo copyInfo)
+		{
+			CopyTo((Image<TPixel>)image, copyInfo);
 		}
 
 		public ICollection<Region3D> DirtyRegions { get; private set; }
@@ -108,7 +96,17 @@ namespace EZ.Objects
 
 		public Region3D Bounds
 		{
-			get { return new Region3D(Index3D.Empty, Data.Size); }
+			get { return new Region3D(Index3D.Empty, Size); }
+		}
+
+		public Size3D Size
+		{
+			get { return data.Size; }
+		}
+
+		protected TPixel[, ,] Buffer
+		{
+			get { return data.Buffer; }
 		}
 
 		public void Update()
