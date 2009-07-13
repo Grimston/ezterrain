@@ -15,10 +15,10 @@ namespace EZ.Objects
 		public ImageData(int width, int height, int depth)
 		{
 			this.Size = new Size3D(width, height, depth);
-			this.Buffer = new TPixel[Size.Width, Size.Height, Size.Depth];
+			this.Buffer = new TPixel[Size.Depth, Size.Height, Size.Width];
 		}
 
-		public TPixel[,,] Buffer { get; private set; }
+		public TPixel[, ,] Buffer { get; private set; }
 
 		public Size3D Size { get; private set; }
 
@@ -30,11 +30,8 @@ namespace EZ.Objects
 				{
 					for (int c = 0; c < info.Size.Width; c++)
 					{
-						data.Buffer[c + info.Destination.Column,
-									r + info.Destination.Row,
-									d + info.Destination.Depth] = Buffer[c + info.Source.Column,
-																			  r + info.Source.Row,
-																			  d + info.Source.Depth];
+						TPixel pixel = Buffer.Get(c + info.Source.Column, r + info.Source.Row, d + info.Source.Depth);
+						data.Buffer.Set(c + info.Destination.Column, r + info.Destination.Row, d + info.Destination.Depth, pixel);
 					}
 				}
 			}
@@ -65,9 +62,8 @@ namespace EZ.Objects
 					{
 						for (int c = 0; c < region.Size.Width; c++)
 						{
-							data.Buffer[c, r, d] = Buffer[c + region.Index.Column,
-														  r + region.Index.Row,
-														  d + region.Index.Depth];
+							TPixel pixel = Buffer.Get(c + region.Index.Column, r + region.Index.Row, d + region.Index.Depth);
+							data.Buffer.Set(c, r, d, pixel);
 						}
 					}
 				}
@@ -83,9 +79,8 @@ namespace EZ.Objects
 					{
 						for (int c = 0; c < region.Size.Width; c++)
 						{
-							Buffer[c + region.Index.Column,
-								   r + region.Index.Row,
-								   d + region.Index.Depth] = value.Buffer[c, r, d];
+							TPixel pixel = value.Buffer.Get(c, r, d);
+							Buffer.Set(c + region.Index.Column, r + region.Index.Row, d + region.Index.Depth, pixel);
 						}
 					}
 				}
