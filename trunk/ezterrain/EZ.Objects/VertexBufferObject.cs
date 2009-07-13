@@ -3,20 +3,59 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
+using System.Runtime.InteropServices;
 
 namespace EZ.Objects
 {
 	public class VertexBufferObject<T> : Disposable where T : struct
 	{
-		public VertexBufferObject()
+		#region Vertex information
+		public static readonly int ElementSize = Marshal.SizeOf(typeof(T));
+
+		public static readonly VertexPointerInfo DefaultPointer;
+
+		static VertexBufferObject()
 		{
-			Buffer = new VertexBuffer<T>();
+			VertexAttribute attribute = GetAttribute<VertexAttribute>(typeof(T));
+
+			if (attribute != null)
+			{
+				DefaultPointer = new VertexPointerInfo(attribute.CoordinateCount, 
+														attribute.PointerType, 
+														attribute.Stride, 
+														attribute.Offset);
+			}
 		}
 
-		public VertexBufferObject(IList<T> list)
+		private static TAttribute GetAttribute<TAttribute>(Type type)
 		{
-			Buffer = new VertexBuffer<T>(list);
+			Type attributeType = typeof(TAttribute);
+			foreach (TAttribute attribute
+						in type.GetCustomAttributes(attributeType, false))
+			{
+				return attribute;
+			}
+
+			return default(TAttribute);
 		}
+		#endregion
+
+		public VertexBufferObject(EnableCap arrayType,
+									BufferTarget target,
+									BufferUsageHint usage, 
+									VertexPointerInfo pointer)
+		{
+			Buffer = new List<T>();
+
+			this.ArrayType = arrayType;
+			this.BufferTarget = target;
+			this.Pointer = pointer;
+			this.Usage = usage;
+		}
+
+		public VertexBufferObject(EnableCap arrayType, BufferTarget target, BufferUsageHint usage)
+			: this(arrayType, target, usage, DefaultPointer)
+		{ }
 
 		#region Dispose
 		protected override void Dispose(bool nongc)
@@ -50,36 +89,34 @@ namespace EZ.Objects
 
 		#endregion
 
-		public VertexBuffer<T> Buffer { get; private set; }
+		public List<T> Buffer { get; private set; }
 
-		public BufferTarget BufferTarget { get; set; }
+		public BufferTarget BufferTarget { get; private set; }
 
 		public BufferUsageHint Usage { get; set; }
 
-		public VertexPointerInfo Pointer { get; set; }
+		public VertexPointerInfo Pointer { get; private set; }
+
+		public EnableCap ArrayType { get; private set; }
 
 		public void Bind()
 		{
-			GL.Enable(EnableCap.VertexArray);
+			GL.Enable(ArrayType);
 			GL.BindBuffer(BufferTarget, Handle);
 		}
 
 		public void Upload()
 		{
-			if (Buffer.DirtyRange.IsValid
-			 && Buffer.DirtyRange.Length > 0 
-			 && Buffer.Count > 0)
+			if (Buffer.Count > 0)
 			{
 				GL.BufferData(BufferTarget,
-							  new IntPtr(Buffer.Count * VertexBuffer<T>.ElementSize),
+							  new IntPtr(Buffer.Count * ElementSize),
 							  IntPtr.Zero,
 							  Usage);
 				GL.BufferSubData(BufferTarget,
-								 (IntPtr)(Buffer.DirtyRange.Min * VertexBuffer<T>.ElementSize),
-								 (IntPtr)(Buffer.DirtyRange.Length * VertexBuffer<T>.ElementSize),
-								 Buffer.DirtyData);
-
-				Buffer.DirtyRange = EZ.Core.Range.Invalid;
+								 IntPtr.Zero,
+								 (IntPtr)(Buffer.Count * ElementSize),
+								 Buffer.ToArray());
 			}
 		}
 

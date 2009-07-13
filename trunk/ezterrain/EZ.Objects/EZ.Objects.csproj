@@ -86,7 +86,7 @@
     <Compile Include="TextureArray.cs" />
     <Compile Include="TextureArrayElement.cs" />
     <Compile Include="Uniform.cs" />
-    <Compile Include="VertexBuffer.cs" />
+    <Compile Include="VertexAttribute.cs" />
     <Compile Include="VertexBufferObject.cs" />
     <Compile Include="VertexPointerInfo.cs" />
   </ItemGroup>
