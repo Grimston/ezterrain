@@ -11,14 +11,12 @@ namespace EZ.Objects
 		public VertexPointerInfo(int coordinateCount,
 								 VertexPointerType pointerType, 
 								 int stride,
-								 int offset,
-								 EnableCap arrayType)
+								 int offset)
 		{
 			this.coordinateCount = coordinateCount;
 			this.pointerType = pointerType;
 			this.stride = stride;
 			this.offset = offset;
-			this.arrayType = arrayType;
 		}
 
 		private int coordinateCount;
@@ -43,12 +41,6 @@ namespace EZ.Objects
 		public int Offset
 		{
 			get { return offset; }
-		}
-
-		private EnableCap arrayType;
-		public EnableCap ArrayType
-		{
-			get { return arrayType; }
 		}
 	}
 }
