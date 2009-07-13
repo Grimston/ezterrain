@@ -51,5 +51,10 @@ namespace EZ.Objects
 				&& Height == other.Height
 				&& Depth == other.Depth;
 		}
+
+		public override string ToString()
+		{
+			return string.Concat(Width, ", ", Height, ", ", Depth);
+		}
 	}
 }

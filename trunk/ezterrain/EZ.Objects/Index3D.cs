@@ -60,5 +60,10 @@ namespace EZ.Objects
 				&& Row == other.Row
 				&& Depth == other.Depth;
 		}
+
+		public override string ToString()
+		{
+			return string.Concat(Column, ", ", Row, ", ", Depth);
+		}
 	}
 }

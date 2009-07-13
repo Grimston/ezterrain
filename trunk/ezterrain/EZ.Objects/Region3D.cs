@@ -93,5 +93,10 @@ namespace EZ.Objects
 		{
 			return Index.Equals(other.Index) && Size.Equals(other.Size);
 		}
+
+		public override string ToString()
+		{
+			return string.Concat('(',Index, "), (", Size, ")");
+		}
 	}
 }
