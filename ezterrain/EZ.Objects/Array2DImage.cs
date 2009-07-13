@@ -39,6 +39,7 @@ namespace EZ.Objects
 								 region.Column, region.Row, Index,
 								 region.Width, region.Height, 1,
 								 PixelFormat, PixelType, data.Buffer);
+				GC.KeepAlive(data);
 			}
 		}
 	}

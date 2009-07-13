@@ -16,33 +16,12 @@ namespace EZ.Objects
 			switch (bitmap.PixelFormat)
 			{
 				case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-					return GetImage2D<BGR>(bitmap);
+					return new Image2D<BGR>(TextureTarget.Texture2D, GetImageData<BGR>(bitmap));
 				case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-					return GetImage2D<BGRA>(bitmap);
+					return new Image2D<BGRA>(TextureTarget.Texture2D, GetImageData<BGRA>(bitmap));
 				default:
 					throw new NotImplementedException();
 			}
-		}
-
-		private static Image2D<TPixel> GetImage2D<TPixel>(Bitmap bitmap)
-			where TPixel : struct, IPixel
-		{
-			ImageData<TPixel> data = new ImageData<TPixel>(bitmap.Width, bitmap.Height, 1);
-
-			byte[] buffer;
-			int height;
-			int stride;
-			GetBytes(bitmap, out buffer, out height, out stride);
-
-			for (int row = 0, dataIndex = 0; row < height; row++, dataIndex += stride)
-			{
-				for (int column = 0; column < bitmap.Width; column++)
-				{
-					data.Buffer[column, row, 0].CopyFrom(buffer, dataIndex + column * ImageData<TPixel>.PixelSize);
-				}
-			}
-
-			return new Image2D<TPixel>(TextureTarget.Texture2D, data);
 		}
 
 		public static IImage GetArrayImage(string fileName, int index)
@@ -51,16 +30,15 @@ namespace EZ.Objects
 			switch (bitmap.PixelFormat)
 			{
 				case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-					return GetArrayImage<BGR>(bitmap, index);
+					return new Array2DImage<BGR>(index, GetImageData<BGR>(bitmap));
 				case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-					return GetArrayImage<BGRA>(bitmap, index);
+					return new Array2DImage<BGRA>(index, GetImageData<BGRA>(bitmap));
 				default:
 					throw new NotImplementedException();
 			}
 		}
 
-		private static IImage GetArrayImage<TPixel>(Bitmap bitmap, int index)
-			where TPixel : struct, IPixel
+		private static ImageData<TPixel> GetImageData<TPixel>(Bitmap bitmap) where TPixel : struct, IPixel
 		{
 			ImageData<TPixel> data = new ImageData<TPixel>(bitmap.Width, bitmap.Height, 1);
 
@@ -69,17 +47,26 @@ namespace EZ.Objects
 			int stride;
 			GetBytes(bitmap, out buffer, out height, out stride);
 
-			for (int row = 0, dataIndex = 0; row < height; row++, dataIndex += stride)
+			for (int row = 0, dataRowIndex = 0; row < height; row++, dataRowIndex += stride)
 			{
-				for (int column = 0; column < bitmap.Width; column++)
+				for (int column = 0, dataIndex = dataRowIndex; column < bitmap.Width; column++, dataIndex+=ImageData<TPixel>.PixelSize)
 				{
 					TPixel pixel = new TPixel();
-					pixel.CopyFrom(buffer, dataIndex + column * ImageData<TPixel>.PixelSize);
-					data.Buffer[column, row, 0] = pixel;
+					pixel.CopyFrom(buffer, dataIndex);
+					data.Buffer.Set(column, row, 0, pixel);
 				}
 			}
+			return data;
+		}
 
-			return new Array2DImage<TPixel>(index, data);
+		public static T Get<T>(this T[, ,] buffer, int column, int row, int depth)
+		{
+			return buffer[depth, row, column];
+		}
+
+		public static void Set<T>(this T[, ,] buffer, int column, int row, int depth, T value)
+		{
+			buffer[depth, row, column] = value;
 		}
 
 		private static void GetBytes(Bitmap bitmap, out byte[] buffer, out int height, out int stride)
