@@ -18,6 +18,7 @@ namespace EZ.Objects
 		public void Dispose()
 		{
 			Dispose(true);
+			GC.SuppressFinalize(this);
 		}
 
 		public bool Disposed { get; private set; }
