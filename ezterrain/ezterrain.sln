@@ -35,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Programs", "Programs", "{55
 	ProjectSection(SolutionItems) = preProject
 		Resources\Programs\clipmap.frag = Resources\Programs\clipmap.frag
 		Resources\Programs\clipmap.vert = Resources\Programs\clipmap.vert
+		Resources\Programs\terrain.frag = Resources\Programs\terrain.frag
+		Resources\Programs\terrain.vert = Resources\Programs\terrain.vert
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libnoise", "libnoise", "{0B725295-00A7-4ABB-881E-94F0237E3518}"

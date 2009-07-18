@@ -61,6 +61,7 @@
     <Compile Include="ImageUpdateType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TerrainGrid.cs" />
+    <Compile Include="TerrainProgram.cs" />
     <Compile Include="TmpCopyInfo.cs" />
     <Compile Include="VertexP.cs" />
     <Compile Include="VertexPT.cs" />
