@@ -22,7 +22,7 @@ namespace Ez.Application
 			using (RendererWindow renderer = new RendererWindow())
 			{
 				renderer.Renderables.Add(new FPSDisplay());
-				renderer.Renderables.Add(new Clipmap(257));
+				renderer.Renderables.Add(new BasicTerrain(257));
 				renderer.Run();
 			}
 		}

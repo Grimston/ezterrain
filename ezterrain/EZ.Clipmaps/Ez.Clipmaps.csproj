@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BasicTerrain.cs" />
     <Compile Include="BitmapExtensions.cs" />
     <Compile Include="Clipmap.cs" />
     <Compile Include="Grid.cs" />

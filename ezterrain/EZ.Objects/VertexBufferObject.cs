@@ -7,7 +7,8 @@ using System.Runtime.InteropServices;
 
 namespace EZ.Objects
 {
-	public class VertexBufferObject<T> : Disposable where T : struct
+	public class VertexBufferObject<T> : Disposable, IBound
+		where T : struct
 	{
 		#region Vertex information
 		public static readonly int ElementSize = Marshal.SizeOf(typeof(T));
