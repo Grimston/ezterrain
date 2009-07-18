@@ -53,7 +53,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="System.Deployment" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainForm.cs">
