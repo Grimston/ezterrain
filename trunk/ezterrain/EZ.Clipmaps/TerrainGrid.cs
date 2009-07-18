@@ -7,7 +7,7 @@ using OpenTK.Graphics;
 
 namespace Ez.Clipmaps
 {
-	public class TerrainGrid : Disposable
+	public class TerrainGrid : Disposable, IBound
 	{
 		private VertexBufferObject<VertexP> vertices;
 		private VertexBufferObject<uint> fullGrid;
@@ -49,7 +49,7 @@ namespace Ez.Clipmaps
 
 		public void InitializeBuffers()
 		{
-			InitializeBuffer(vertices);
+			InitializeBuffer(vertices, true);
 			InitializeBuffer(fullGrid);
 			InitializeBuffer(hollowGrid);
 		}
@@ -69,20 +69,37 @@ namespace Ez.Clipmaps
 		private void InitializeBuffer<T>(VertexBufferObject<T> buffer)
 			where T : struct
 		{
+			InitializeBuffer(buffer, false);
+		}
+
+		private void InitializeBuffer<T>(VertexBufferObject<T> buffer, bool setPointer)
+			where T : struct
+		{
 			buffer.Create();
-			buffer.Bind();
-			buffer.Upload();
-			buffer.Unbind();
+			using (buffer.Use())
+			{
+				buffer.Upload();
+				if (setPointer)
+				{
+					buffer.SetPointer();
+				}
+			}
 		}
 
 		public void Bind()
 		{
 			vertices.Bind();
+			vertices.SetPointer();
 		}
 
-		public void Draw(int level)
+		public void Unbind()
 		{
-			if (level == 0)
+			vertices.Unbind();
+		}
+
+		public void Draw(bool useFullGrid)
+		{
+			if (useFullGrid)
 			{
 				Draw(fullGrid);
 			}
@@ -94,12 +111,13 @@ namespace Ez.Clipmaps
 
 		private void Draw(VertexBufferObject<uint> elements)
 		{
-			elements.Bind();
-			GL.DrawElements(BeginMode.Triangles,
-							elements.Buffer.Count,
-							DrawElementsType.UnsignedInt,
-							IntPtr.Zero);
-			elements.Unbind();
+			using (elements.Use())
+			{
+				GL.DrawElements(BeginMode.Triangles,
+								elements.Buffer.Count,
+								DrawElementsType.UnsignedInt,
+								IntPtr.Zero);
+			}
 		}
 	}
 }
