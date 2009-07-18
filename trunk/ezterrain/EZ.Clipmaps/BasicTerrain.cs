@@ -14,11 +14,13 @@ namespace Ez.Clipmaps
 
 		private TerrainGrid grid;
 		private Texture2D texture;
-		
+		private TerrainProgram program;
+
 		public BasicTerrain(int sideVertexCount)
 		{
 			grid = new TerrainGrid(sideVertexCount);
 			texture = new Texture2D(TextureUnit.Texture0, ImageHelper.Get2DImage(ResourceManager.GetImagePath("noise.bmp")));
+			program = new TerrainProgram();
 		}
 
 		public RenderGroup RenderGroup
@@ -33,11 +35,17 @@ namespace Ez.Clipmaps
 			grid.InitializeBuffers();
 			texture.Initialize();
 
+			program.Initialize();
+			program.SetNoise(0);
+			program.SetTexScale(1f/grid.SideVertexCount);
+
 			Initialized = true;
 		}
 
 		public bool Update(RenderInfo info)
 		{
+			texture.Update();
+
 			return true;
 		}
 
@@ -46,6 +54,7 @@ namespace Ez.Clipmaps
 			get
 			{
 				yield return texture;
+				yield return program;
 			}
 		}
 		
@@ -58,8 +67,11 @@ namespace Ez.Clipmaps
 
 				using (grid.Use())
 				{
+					program.IsCenter = true;
 					grid.DrawCenter();
-					grid.DrawOuter(MaxLevels-2);
+
+					program.IsCenter = false;
+					grid.DrawOuter(MaxLevels-1);
 				}
 				
 				GL.PopAttrib();
