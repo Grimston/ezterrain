@@ -37,12 +37,15 @@ namespace Ez.Clipmaps
 
 		public void Render(RenderInfo info)
 		{
-			GL.PolygonMode(MaterialFace.FrontAndBack, PolygonMode.Line);
+			GL.PushAttrib(AttribMask.PolygonBit);
+			GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
 
 			using (grid.Use())
 			{
 				grid.Draw(true);
 			}
+			
+			GL.PopAttrib();
 		}
 	}
 }

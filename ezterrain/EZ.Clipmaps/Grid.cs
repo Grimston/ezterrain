@@ -83,12 +83,12 @@ namespace Ez.Clipmaps
 				for (uint j = columnIndex; j < columnEndIndex; j++)
 				{
 					indices.Add(i * sideVertexCount + j);
-					indices.Add(i * sideVertexCount + j + 1);
 					indices.Add((i + 1) * sideVertexCount + j);
+					indices.Add(i * sideVertexCount + j + 1);
 
 					indices.Add((i + 1) * sideVertexCount + j);
-					indices.Add(i * sideVertexCount + j + 1);
 					indices.Add((i + 1) * sideVertexCount + j + 1);
+					indices.Add(i * sideVertexCount + j + 1);
 				}
 			}
 		}
