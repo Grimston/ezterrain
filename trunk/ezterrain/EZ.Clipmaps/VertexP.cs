@@ -5,9 +5,12 @@ using System.Text;
 using OpenTK.Math;
 using System.Runtime.InteropServices;
 using EZ.Core;
+using EZ.Objects;
+using OpenTK.Graphics;
 
 namespace Ez.Clipmaps
 {
+	[Vertex(3, VertexPointerType.Float)]
 	[StructLayout(LayoutKind.Sequential)]
 	public struct VertexP
 	{
