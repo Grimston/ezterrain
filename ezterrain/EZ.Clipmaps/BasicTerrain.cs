@@ -10,11 +10,15 @@ namespace Ez.Clipmaps
 {
 	public class BasicTerrain : IRenderable
 	{
-		private TerrainGrid grid;
+		public const int MaxLevels = 4;
 
+		private TerrainGrid grid;
+		private Texture2D texture;
+		
 		public BasicTerrain(int sideVertexCount)
 		{
 			grid = new TerrainGrid(sideVertexCount);
+			texture = new Texture2D(TextureUnit.Texture0, ImageHelper.Get2DImage(ResourceManager.GetImagePath("noise.bmp")));
 		}
 
 		public RenderGroup RenderGroup
@@ -27,6 +31,8 @@ namespace Ez.Clipmaps
 		public void Initialize()
 		{
 			grid.InitializeBuffers();
+			texture.Initialize();
+
 			Initialized = true;
 		}
 
@@ -35,17 +41,29 @@ namespace Ez.Clipmaps
 			return true;
 		}
 
+		private IEnumerable<IBound> BoundObjects
+		{
+			get
+			{
+				yield return texture;
+			}
+		}
+		
 		public void Render(RenderInfo info)
 		{
-			GL.PushAttrib(AttribMask.PolygonBit);
-			GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
-
-			using (grid.Use())
+			using(BoundObjects.Use())
 			{
-				grid.Draw(true);
+				GL.PushAttrib(AttribMask.PolygonBit);
+				GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
+
+				using (grid.Use())
+				{
+					grid.DrawCenter();
+					grid.DrawOuter(MaxLevels-2);
+				}
+				
+				GL.PopAttrib();
 			}
-			
-			GL.PopAttrib();
 		}
 	}
 }

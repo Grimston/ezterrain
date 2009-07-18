@@ -97,26 +97,26 @@ namespace Ez.Clipmaps
 			vertices.Unbind();
 		}
 
-		public void Draw(bool useFullGrid)
+		public void DrawCenter()
 		{
-			if (useFullGrid)
+			using(fullGrid.Use())
 			{
-				Draw(fullGrid);
-			}
-			else
-			{
-				Draw(hollowGrid);
+				GL.DrawElements(BeginMode.Triangles,
+								fullGrid.Buffer.Count,
+								DrawElementsType.UnsignedInt,
+								IntPtr.Zero);
 			}
 		}
 
-		private void Draw(VertexBufferObject<uint> elements)
-		{
-			using (elements.Use())
+		public void DrawOuter(int numLevels)
+		{	
+			using(hollowGrid.Use())
 			{
-				GL.DrawElements(BeginMode.Triangles,
-								elements.Buffer.Count,
-								DrawElementsType.UnsignedInt,
-								IntPtr.Zero);
+				GL.Ext.DrawElementsInstanced(BeginMode.Triangles,
+				                         	 hollowGrid.Buffer.Count,
+				                         	 DrawElementsType.UnsignedInt,
+				                         	 IntPtr.Zero,
+				                         	 numLevels);
 			}
 		}
 	}
