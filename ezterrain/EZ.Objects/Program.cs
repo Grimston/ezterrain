@@ -6,7 +6,7 @@ using OpenTK.Graphics;
 
 namespace EZ.Objects
 {
-	public class Program : Disposable
+	public class Program : Disposable, IBound
 	{
 		public bool Initialized { get; private set; }
 

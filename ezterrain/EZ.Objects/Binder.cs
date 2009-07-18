@@ -21,4 +21,20 @@ namespace EZ.Objects
 			bound.Unbind();
 		}
 	}
+
+	public struct EnumerableBinder : IDisposable
+	{
+		private IEnumerable<IBound> bound;
+
+		public EnumerableBinder(IEnumerable<IBound> bound)
+		{
+			this.bound = bound;
+			this.bound.Bind();
+		}
+
+		public void Dispose()
+		{
+			bound.Unbind();
+		}
+	}
 }

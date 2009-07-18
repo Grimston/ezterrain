@@ -7,7 +7,7 @@ using System.IO;
 
 namespace EZ.Objects
 {
-	public abstract class BoundTexture : Texture
+	public abstract class BoundTexture : Texture, IBound
 	{
 		protected BoundTexture(TextureUnit unit, IImage image)
 			: base(image)
