@@ -25,5 +25,10 @@ namespace EZ.Objects
 				GL.TexSubImage1D(Target, 0, region.Column, region.Width, PixelFormat, PixelType, data.Buffer);
 			}
 		}
+
+		protected override Image<TPixel> NewImage(Size3D size)
+		{
+			return new Image1D<TPixel>(Target, size.Width);
+		}
 	}
 }

@@ -120,5 +120,12 @@ namespace EZ.Objects
 		}
 
 		protected abstract void Upload(Region3D region);
+
+		IImage IImage.NewImage(Size3D size)
+		{
+			return NewImage(size);
+		}
+
+		protected abstract Image<TPixel> NewImage(Size3D size);
 	}
 }

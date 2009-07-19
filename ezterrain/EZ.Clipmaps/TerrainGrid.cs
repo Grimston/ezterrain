@@ -7,7 +7,7 @@ using OpenTK.Graphics;
 
 namespace Ez.Clipmaps
 {
-	public class TerrainGrid : Disposable, IBound
+	class TerrainGrid : Disposable, IBound
 	{
 		private VertexBufferObject<VertexP> vertices;
 		private VertexBufferObject<uint> fullGrid;

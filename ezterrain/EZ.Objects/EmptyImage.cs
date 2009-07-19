@@ -31,6 +31,12 @@ namespace EZ.Objects
 			get { throw new NotImplementedException(); }
 		}
 
+
+		public IImage NewImage(Size3D size)
+		{
+			throw new NotImplementedException();
+		}
+
 		public void CopyTo(IImage destination, CopyInfo copyInfo)
 		{
 			//do nothing
