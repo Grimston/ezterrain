@@ -8,6 +8,8 @@ namespace EZ.Objects
 {
 	public interface IImage
 	{
+		IImage NewImage(Size3D size);
+
 		void Dirty();
 
 		IImageData this[Region3D region] { get; set; }

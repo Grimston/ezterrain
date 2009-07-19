@@ -8,7 +8,7 @@ using EZ.Core;
 
 namespace Ez.Clipmaps
 {
-	public class TerrainProgram : Program
+	class TerrainProgram : Program
 	{
 		private static readonly string VertexFile = ResourceManager.GetProgramPath("terrain.vert");
 		private static readonly string FragmentFile = ResourceManager.GetProgramPath("terrain.frag");

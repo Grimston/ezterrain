@@ -42,5 +42,10 @@ namespace EZ.Objects
 				GC.KeepAlive(data);
 			}
 		}
+
+		protected override Image<TPixel> NewImage(Size3D size)
+		{
+			return new Array2DImage<TPixel>(Index, size.Width, size.Height);
+		}
 	}
 }

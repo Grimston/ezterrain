@@ -30,5 +30,10 @@ namespace EZ.Objects
 								 PixelFormat, PixelType, data.Buffer);
 			}
 		}
+
+		protected override Image<TPixel> NewImage(Size3D size)
+		{
+			return new Image3D<TPixel>(Target, size.Width, size.Height, size.Depth);
+		}
 	}
 }
