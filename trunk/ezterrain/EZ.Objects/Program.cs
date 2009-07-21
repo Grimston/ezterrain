@@ -49,6 +49,23 @@ namespace EZ.Objects
 
 				GL.LinkProgram(Handle);
 
+				int status;
+				GL.GetProgram(Handle, ProgramParameter.LinkStatus, out status);
+
+				string info;
+				GL.GetProgramInfoLog(Handle, out info);
+
+				string message = string.IsNullOrEmpty(info) ? "Program linked succesfully"
+															: string.Format("Program link result:{0}{1}",
+																			Environment.NewLine, info);
+
+				System.Diagnostics.Debug.WriteLine(message);
+
+				if (status == 0)
+				{
+					throw new GraphicsException(message);
+				}
+
 				Initialized = true;
 			}
 		}

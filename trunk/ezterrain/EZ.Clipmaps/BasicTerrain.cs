@@ -13,13 +13,13 @@ namespace Ez.Clipmaps
 		public const int MaxLevels = 4;
 
 		private TerrainGrid grid;
-		private Texture2D texture;
+		private TerrainTexture texture;
 		private TerrainProgram program;
 
 		public BasicTerrain(int sideVertexCount)
 		{
 			grid = new TerrainGrid(sideVertexCount);
-			texture = new Texture2D(TextureUnit.Texture0, ImageHelper.Get2DImage(ResourceManager.GetImagePath("noise.bmp")));
+			texture = new TerrainTexture(TextureUnit.Texture0, sideVertexCount, "l{0}.bmp", MaxLevels);
 			program = new TerrainProgram();
 		}
 
@@ -36,7 +36,7 @@ namespace Ez.Clipmaps
 			texture.Initialize();
 
 			program.Initialize();
-			program.SetNoise(0);
+			program.SetHeightMaps(texture.Unit);
 			program.SetTexScale(1f/grid.SideVertexCount);
 
 			Initialized = true;
@@ -62,8 +62,8 @@ namespace Ez.Clipmaps
 		{
 			using(BoundObjects.Use())
 			{
-				GL.PushAttrib(AttribMask.PolygonBit);
-				GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
+				//GL.PushAttrib(AttribMask.PolygonBit);
+				//GL.PolygonMode(MaterialFace.Front, PolygonMode.Line);
 
 				using (grid.Use())
 				{
@@ -74,7 +74,7 @@ namespace Ez.Clipmaps
 					grid.DrawOuter(MaxLevels-1);
 				}
 				
-				GL.PopAttrib();
+				//GL.PopAttrib();
 			}
 		}
 	}

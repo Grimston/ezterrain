@@ -13,14 +13,14 @@ namespace Ez.Clipmaps
 		private static readonly string VertexFile = ResourceManager.GetProgramPath("terrain.vert");
 		private static readonly string FragmentFile = ResourceManager.GetProgramPath("terrain.frag");
 
-		private Uniform noise;
+		private Uniform heightMaps;
 		private Uniform texScale;
 		private Uniform outer;
 
 		public TerrainProgram()
 			: base()
 		{
-			noise = new Uniform(this, "noise");
+			heightMaps = new Uniform(this, "heightMaps");
 			texScale = new Uniform(this, "texScale");
 			outer = new Uniform(this, "outer");
 		}
@@ -33,9 +33,9 @@ namespace Ez.Clipmaps
 			base.Initialize(vertexShader, fragmentShader);							
 		}
 
-		public void SetNoise(int unit)
+		public void SetHeightMaps(TextureUnit unit)
 		{
-			noise.SetValue(unit);
+			heightMaps.SetValue(unit - TextureUnit.Texture0);
 		}
 
 		public void SetTexScale(float scale)

@@ -154,6 +154,8 @@ namespace EZ.Renderer
 			GL.ClearColor(ClearColor);
 			GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 			GL.Enable(EnableCap.DepthTest);
+			GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1); 
+
 			UpdateProjection();
 
 			#region Modelview

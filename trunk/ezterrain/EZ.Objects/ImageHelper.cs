@@ -47,13 +47,15 @@ namespace EZ.Objects
 			int stride;
 			GetBytes(bitmap, out buffer, out height, out stride);
 
+			int width = stride/ImageData<TPixel>.PixelSize;
+
 			for (int row = 0, dataRowIndex = 0; row < height; row++, dataRowIndex += stride)
 			{
-				for (int column = 0, dataIndex = dataRowIndex; column < bitmap.Width; column++, dataIndex+=ImageData<TPixel>.PixelSize)
+				for (int column = 0, dataIndex = dataRowIndex;
+					column < width;
+					column++, dataIndex+=ImageData<TPixel>.PixelSize)
 				{
-					TPixel pixel = new TPixel();
-					pixel.CopyFrom(buffer, dataIndex);
-					data.Buffer.Set(column, row, 0, pixel);
+					data.Buffer[0, row, column].CopyFrom(buffer, dataIndex);
 				}
 			}
 			return data;
