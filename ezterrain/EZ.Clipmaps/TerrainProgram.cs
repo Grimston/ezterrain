@@ -5,6 +5,7 @@ using System.Text;
 using EZ.Objects;
 using OpenTK.Graphics;
 using EZ.Core;
+using OpenTK.Math;
 
 namespace Ez.Clipmaps
 {
@@ -16,6 +17,7 @@ namespace Ez.Clipmaps
 		private Uniform heightMaps;
 		private Uniform texScale;
 		private Uniform outer;
+		private Uniform eyeOffset;
 
 		public TerrainProgram()
 			: base()
@@ -23,6 +25,7 @@ namespace Ez.Clipmaps
 			heightMaps = new Uniform(this, "heightMaps");
 			texScale = new Uniform(this, "texScale");
 			outer = new Uniform(this, "outer");
+			eyeOffset = new Uniform(this, "eyeOffset");
 		}
 
 		public void Initialize()
@@ -41,6 +44,11 @@ namespace Ez.Clipmaps
 		public void SetTexScale(float scale)
 		{
 			texScale.SetValue(scale);
+		}
+
+		public void SetEyeOffset(Vector2 offset)
+		{
+			eyeOffset.SetValue(offset);
 		}
 
 		public bool IsCenter

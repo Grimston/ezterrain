@@ -3,6 +3,7 @@
 
 uniform float texScale;
 uniform float outer;
+uniform vec2 eyeOffset;
 
 in vec4 glVertex;
 
@@ -14,10 +15,10 @@ void main()
 	level = outer + float(gl_InstanceID);
 	float levelScale = pow(2.0, level);
 
-	texCoord = glVertex.xy * texScale + 0.5;
+	texCoord = (glVertex.xy * texScale + 0.5) / 2.0 + 0.25;
 
 	vec4 vertex = glVertex;
-	vertex.xy = vertex.xy * levelScale;
+	vertex.xy = vertex.xy * levelScale + eyeOffset;
 
 	gl_Position = gl_ModelViewProjectionMatrix * vertex;
 }
