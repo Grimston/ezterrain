@@ -44,7 +44,10 @@ namespace Ez.Clipmaps
 
 		public bool Update(RenderInfo info)
 		{
+			texture.SetEye(info.Viewer.Position);
 			texture.Update();
+
+			program.SetEyeOffset(info.Viewer.Position.Xy);
 
 			return true;
 		}
