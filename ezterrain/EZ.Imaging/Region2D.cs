@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace EZ.Objects
+
+namespace EZ.Imaging
 {
 	public struct Region2D: IEquatable<Region2D>
 	{
@@ -45,6 +43,11 @@ namespace EZ.Objects
 		public bool Equals(Region2D other)
 		{
 			return Index.Equals(other.Index) && Size.Equals(other.Size);
+		}
+
+		public override string ToString()
+		{
+			return string.Concat('(',Index, "), (", Size, ")");
 		}
 	}
 }

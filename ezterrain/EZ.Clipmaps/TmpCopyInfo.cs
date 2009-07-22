@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using EZ.Objects;
+using EZ.Imaging;
 
 namespace Ez.Clipmaps
 {

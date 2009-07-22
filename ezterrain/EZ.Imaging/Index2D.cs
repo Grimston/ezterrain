@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EZ.Objects
+namespace EZ.Imaging
 {
 	public struct Index2D : IEquatable<Index2D>
 	{
+		public static readonly Index2D Empty = new Index2D(0, 0);
+		
 		public Index2D(int column, int row)
 		{
 			this.Column = column;
@@ -41,6 +43,11 @@ namespace EZ.Objects
 		{
 			return Column == other.Column
 				&& Row == other.Row;
+		}
+		
+		public override string ToString()
+		{
+			return string.Concat(Column, ", ", Row);
 		}
 	}
 }

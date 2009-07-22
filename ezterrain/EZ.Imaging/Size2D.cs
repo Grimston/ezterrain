@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EZ.Objects
+namespace EZ.Imaging
 {
 	public struct Size2D : IEquatable<Size2D>
 	{
@@ -41,6 +41,11 @@ namespace EZ.Objects
 		{
 			return Width == other.Width
 				&& Height == other.Height;
+		}
+
+		public override string ToString()
+		{
+			return string.Concat(Width, ", ", Height);
 		}
 	}
 }
