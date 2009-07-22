@@ -38,7 +38,7 @@
   <ItemGroup>
     <Compile Include="Image.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="PinnedImage.cs" />
+    <Compile Include="PinnedData.cs" />
     <Compile Include="Index2D.cs" />
     <Compile Include="Index3D.cs" />
     <Compile Include="Region1D.cs" />
@@ -46,6 +46,10 @@
     <Compile Include="Region3D.cs" />
     <Compile Include="Size2D.cs" />
     <Compile Include="Size3D.cs" />
+    <Compile Include="Image2D.cs" />
+    <Compile Include="CopyInfo.cs" />
+    <Compile Include="IImageData.cs" />
+    <Compile Include="ImageArray.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EZ.Core\EZ.Core.csproj">

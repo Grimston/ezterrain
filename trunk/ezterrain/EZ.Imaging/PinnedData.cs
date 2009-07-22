@@ -3,18 +3,18 @@ using System.Runtime.InteropServices;
 
 namespace EZ.Imaging
 {
-	public class PinnedImage : IDisposable
+	public class PinnedData : IDisposable
 	{
 		private Image owner;
 		private GCHandle handle;
 		
-		internal PinnedImage(Image owner, GCHandle handle)
+		internal PinnedData(Image owner, GCHandle handle)
 		{
 			this.owner = owner;
 		}
 		
 		#region Disposal
-		~PinnedImage()
+		~PinnedData()
 		{
 			Dispose(false);
 		}
