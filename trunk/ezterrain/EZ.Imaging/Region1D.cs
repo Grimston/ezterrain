@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EZ.Objects
+namespace EZ.Imaging
 {
 	public struct Region1D : IEquatable<Region1D>
 	{
@@ -40,6 +40,11 @@ namespace EZ.Objects
 		public bool Equals(Region1D other)
 		{
 			return Column == other.Column && Width == other.Width;
+		}
+
+		public override string ToString()
+		{
+			return string.Concat(Column, ", ", Width);
 		}
 	}
 }

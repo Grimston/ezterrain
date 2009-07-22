@@ -5,6 +5,7 @@ using System.Text;
 using EZ.Objects;
 using OpenTK.Graphics;
 using EZ.Core;
+using EZ.Imaging;
 using OpenTK.Math;
 
 namespace Ez.Clipmaps

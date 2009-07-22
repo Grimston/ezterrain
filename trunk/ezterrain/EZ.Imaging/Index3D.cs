@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EZ.Objects
+namespace EZ.Imaging
 {
 	public struct Index3D : IEquatable<Index3D>
 	{

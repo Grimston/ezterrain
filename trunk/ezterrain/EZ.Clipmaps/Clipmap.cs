@@ -6,6 +6,7 @@ using EZ.Core;
 using OpenTK.Math;
 using OpenTK.Graphics;
 using EZ.Objects;
+using EZ.Imaging;
 using System.Runtime.InteropServices;
 
 namespace Ez.Clipmaps

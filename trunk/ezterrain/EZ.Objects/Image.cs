@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.ComponentModel;
+using EZ.Imaging;
+
 using OpenTK.Graphics;
 
 namespace EZ.Objects
