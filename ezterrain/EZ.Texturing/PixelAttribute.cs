@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
 
-namespace EZ.Objects
+namespace EZ.Texturing
 {
 	[global::System.AttributeUsage(AttributeTargets.Struct, Inherited = false, AllowMultiple = false)]
 	sealed class PixelAttribute : Attribute

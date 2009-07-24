@@ -4,71 +4,76 @@ using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
 using System.Runtime.InteropServices;
+using EZ.Imaging;
 using System.Drawing;
 
-namespace EZ.Objects
+namespace EZ.Texturing
 {
-	public static class ImageHelper
+	public static class TextureHelper
 	{
-		public static IImage Get2DImage(string fileName)
+		public static EZ.Imaging.Image Get2DImage(string fileName)
 		{
 			Bitmap bitmap = (Bitmap)Bitmap.FromFile(fileName);
 			switch (bitmap.PixelFormat)
 			{
 				case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-					return new Image2D<BGR>(TextureTarget.Texture2D, GetImageData<BGR>(bitmap));
+					return new TexImage2D<BGR>(GetImageData<BGR>(bitmap));
 				case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-					return new Image2D<BGRA>(TextureTarget.Texture2D, GetImageData<BGRA>(bitmap));
+					return new TexImage2D<BGRA>(GetImageData<BGRA>(bitmap));
 				default:
 					throw new NotImplementedException();
 			}
 		}
 
-		public static IImage GetArrayImage(string fileName, int index)
+		public static TexImageArray GetImageArray(string fileNameFormat, int count, Size2D size)
+		{
+			EZ.Imaging.Image[] images = new EZ.Imaging.Image[count];
+
+			for (int i = 0; i < images.Length; i++)
+			{
+				images[i] = GetArrayImage(string.Format(fileNameFormat, i), i);
+				images[i].Bounds = new Region2D(Index2D.Empty, size);
+			}
+
+			return new TexImageArray(size, images);
+		}
+
+		private static EZ.Imaging.Image GetArrayImage(string fileName, int index)
 		{
 			Bitmap bitmap = (Bitmap)Bitmap.FromFile(fileName);
 			switch (bitmap.PixelFormat)
 			{
 				case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-					return new Array2DImage<BGR>(index, GetImageData<BGR>(bitmap));
+					return new TexArrayImage2D<BGR>(index, GetImageData<BGR>(bitmap));
 				case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-					return new Array2DImage<BGRA>(index, GetImageData<BGRA>(bitmap));
+					return new TexArrayImage2D<BGRA>(index, GetImageData<BGRA>(bitmap));
 				default:
 					throw new NotImplementedException();
 			}
 		}
 
-		private static ImageData<TPixel> GetImageData<TPixel>(Bitmap bitmap) where TPixel : struct, IPixel
+		private static TPixel[,] GetImageData<TPixel>(Bitmap bitmap) where TPixel : struct, IPixel
 		{
-			ImageData<TPixel> data = new ImageData<TPixel>(bitmap.Width, bitmap.Height, 1);
+			TPixel[,] data = new TPixel[bitmap.Height, bitmap.Width];
 
 			byte[] buffer;
 			int height;
 			int stride;
 			GetBytes(bitmap, out buffer, out height, out stride);
 
-			int width = stride/ImageData<TPixel>.PixelSize;
+			int pixelSize = Marshal.SizeOf(typeof(TPixel));
+			int width = stride / pixelSize;
 
 			for (int row = 0, dataRowIndex = 0; row < height; row++, dataRowIndex += stride)
 			{
 				for (int column = 0, dataIndex = dataRowIndex;
 					column < width;
-					column++, dataIndex+=ImageData<TPixel>.PixelSize)
+					column++, dataIndex += pixelSize)
 				{
-					data.Buffer[0, row, column].CopyFrom(buffer, dataIndex);
+					data[row, column].CopyFrom(buffer, dataIndex);
 				}
 			}
 			return data;
-		}
-
-		public static T Get<T>(this T[, ,] buffer, int column, int row, int depth)
-		{
-			return buffer[depth, row, column];
-		}
-
-		public static void Set<T>(this T[, ,] buffer, int column, int row, int depth, T value)
-		{
-			buffer[depth, row, column] = value;
 		}
 
 		private static void GetBytes(Bitmap bitmap, out byte[] buffer, out int height, out int stride)
@@ -81,21 +86,6 @@ namespace EZ.Objects
 			buffer = new byte[data.Height * data.Stride];
 			Marshal.Copy(data.Scan0, buffer, 0, buffer.Length);
 			bitmap.UnlockBits(data);
-		}
-
-		public static int Width(this IImage image)
-		{
-			return image.Size.Width;
-		}
-
-		public static int Height(this IImage image)
-		{
-			return image.Size.Height;
-		}
-
-		public static int Depth(this IImage image)
-		{
-			return image.Size.Depth;
 		}
 	}
 }

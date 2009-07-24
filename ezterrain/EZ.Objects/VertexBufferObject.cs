@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
 using System.Runtime.InteropServices;
+using EZ.Core;
 
 namespace EZ.Objects
 {

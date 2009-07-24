@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -61,7 +61,6 @@
     <Compile Include="ImageUpdateType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TerrainGrid.cs" />
-    <Compile Include="TerrainImageHelper.cs" />
     <Compile Include="TerrainProgram.cs" />
     <Compile Include="TerrainTexture.cs" />
     <Compile Include="TmpCopyInfo.cs" />
@@ -80,6 +79,10 @@
     <ProjectReference Include="..\EZ.Imaging\EZ.Imaging.csproj">
       <Project>{D8DB7AB7-D288-4062-813E-E857064CC4DE}</Project>
       <Name>EZ.Imaging</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EZ.Texturing\EZ.Texturing.csproj">
+      <Project>{40C2A3D1-4268-44C9-9D09-3EA8734E5C4A}</Project>
+      <Name>EZ.Texturing</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

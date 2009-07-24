@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using EZ.Objects;
 using OpenTK.Graphics;
+using EZ.Core;
 
 namespace Ez.Clipmaps
 {

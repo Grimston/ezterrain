@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
 using System.Runtime.InteropServices;
+using EZ.Imaging;
 
-namespace EZ.Objects
+namespace EZ.Texturing
 {
 	#region RGBA
 	[Pixel(PixelInternalFormat.Rgba,PixelFormat.Rgba,PixelType.UnsignedByte)]
