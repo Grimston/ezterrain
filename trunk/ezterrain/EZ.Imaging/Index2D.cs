@@ -19,6 +19,18 @@ namespace EZ.Imaging
 
 		public int Row;
 
+		public void Offset(Index2D other)
+		{
+			Column += other.Column;
+			Row += other.Row;
+		}
+
+		public void Offset(int column, int row)
+		{
+			Column += column;
+			Row += row;
+		}
+
 		public static bool operator ==(Index2D value1, Index2D value2)
 		{
 			return value1.Equals(value2);

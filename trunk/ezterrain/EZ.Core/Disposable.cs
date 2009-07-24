@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace EZ.Objects
+namespace EZ.Core
 {
 	public abstract class Disposable : IDisposable
 	{

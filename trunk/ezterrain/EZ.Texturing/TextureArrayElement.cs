@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
+using EZ.Imaging;
 
-namespace EZ.Objects
+namespace EZ.Texturing
 {
 	public class TextureArrayElement : Texture, IComparable<TextureArrayElement>
 	{
-		internal TextureArrayElement(int index, IImage image)
+		internal TextureArrayElement(int index, Image image)
 			: base(image)
 		{
 			this.Index = index;
@@ -20,9 +21,13 @@ namespace EZ.Objects
 		{
 			if (!Initialized)
 			{
-				Image.Dirty();
 				Initialized = true;
 			}
+		}
+
+		public override void Update()
+		{
+			throw new NotImplementedException();
 		}
 
 		//protected override void Upload(Rectangle region, BitmapData data)

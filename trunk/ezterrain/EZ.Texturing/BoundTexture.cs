@@ -4,12 +4,14 @@ using System.Linq;
 using System.Text;
 using OpenTK.Graphics;
 using System.IO;
+using EZ.Core;
+using EZ.Imaging;
 
-namespace EZ.Objects
+namespace EZ.Texturing
 {
 	public abstract class BoundTexture : Texture, IBound
 	{
-		protected BoundTexture(TextureUnit unit, IImage image)
+		protected BoundTexture(TextureUnit unit, Image image)
 			: base(image)
 		{
 			Initialize(unit);
@@ -49,24 +51,30 @@ namespace EZ.Objects
 			{
 				Handle = GL.GenTexture();
 
-				Image.Dirty();
+				Update();
 
 				Initialized = true;
 			}
+		}
+
+		private void SetParameters()
+		{
+			GL.TexParameter(Target, TextureParameterName.TextureMagFilter, (int)MagFilter);
+			GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)MinFilter);
+			GL.TexParameter(Target, TextureParameterName.TextureWrapS, (int)WrapS);
+			GL.TexParameter(Target, TextureParameterName.TextureWrapT, (int)WrapT);
 		}
 
 		public override void Update()
 		{
 			Bind();
 
-			GL.TexParameter(Target, TextureParameterName.TextureMagFilter, (int)MagFilter);
-			GL.TexParameter(Target, TextureParameterName.TextureMinFilter, (int)MinFilter);
-			GL.TexParameter(Target, TextureParameterName.TextureWrapS, (int)WrapS);
-			GL.TexParameter(Target, TextureParameterName.TextureWrapT, (int)WrapT);
-
-			base.Update();
+			SetParameters();
 		}
 
+		#region Binding
+
+		#region EnableCap
 		protected virtual EnableCap? EnableCap { get { return null; } }
 
 		private void Enable()
@@ -86,6 +94,7 @@ namespace EZ.Objects
 				GL.Disable(enableCap.Value);
 			}
 		}
+		#endregion
 
 		public void Bind()
 		{
@@ -100,7 +109,9 @@ namespace EZ.Objects
 			GL.BindTexture(Target, 0);
 			Disable();
 		}
+		#endregion
 
+		#region Disposal
 		protected override void Dispose(bool nongc)
 		{
 			if (nongc && Initialized)
@@ -113,5 +124,6 @@ namespace EZ.Objects
 
 			base.Dispose(nongc);
 		}
+		#endregion
 	}
 }

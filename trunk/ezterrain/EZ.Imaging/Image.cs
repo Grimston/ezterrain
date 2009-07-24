@@ -9,13 +9,11 @@ namespace EZ.Imaging
 		protected Image(Size2D size)
 		{
 			this.Size = size;
+			this.Bounds = new Region2D(Index2D.Empty, this.Size);
 		}
-		
+
 		public Size2D Size { get; private set; }
-		
-		protected Region2D Bounds
-		{
-			get { return new Region2D(Index2D.Empty, Size); }
-		}
+
+		public Region2D Bounds { get; set; }
 	}
 }
