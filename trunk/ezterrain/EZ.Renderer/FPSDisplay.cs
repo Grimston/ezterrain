@@ -19,7 +19,7 @@ namespace EZ.Renderer
 		{
 			textPrinter = new TextPrinter(TextQuality.High);
 			this.Color = Color.Black;
-			AccumCount = 10;
+			AccumCount = 100;
 			accumTime = 0;
 			timeBuffer = new LinkedList<double>();
 		}
