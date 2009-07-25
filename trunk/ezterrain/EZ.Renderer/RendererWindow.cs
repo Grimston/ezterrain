@@ -25,6 +25,7 @@ namespace EZ.Renderer
 			: base(800, 600, GraphicsMode.Default, "EZ Terrain")
 		{
 			Context.ErrorChecking = true;
+			VSync = VSyncMode.Off;
 			ClearColor = Color.LightBlue;
 
 			lapWatch = new Stopwatch();
