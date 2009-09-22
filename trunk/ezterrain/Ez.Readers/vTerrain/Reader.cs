@@ -11,6 +11,10 @@ namespace Ez.Readers.vTerrain
 		private BinaryReader reader;
 		private IDataReader dataReader;
 		
+		public Reader (string fileName)
+			: this(File.OpenRead(fileName))
+		{ }
+		
 		public Reader(Stream stream)
 		{
 			this.reader = new BinaryReader(stream, Encoding.ASCII);
