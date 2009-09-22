@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +19,8 @@ namespace Ez.Clipmaps
 		public BasicTerrain(int sideVertexCount)
 		{
 			grid = new TerrainGrid(sideVertexCount);
-			texture = new TerrainTexture(TextureUnit.Texture0, sideVertexCount, "l{0}.bmp", MaxLevels);
+			//texture = new TerrainTexture(TextureUnit.Texture0, sideVertexCount, "l{0}.bmp", MaxLevels);
+			texture = new TerrainTexture(TextureUnit.Texture0, sideVertexCount, "island{0}.bt", MaxLevels);
 			program = new TerrainProgram();
 		}
 

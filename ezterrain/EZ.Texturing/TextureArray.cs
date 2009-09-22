@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -67,10 +67,14 @@ namespace EZ.Texturing
 			}
 			else
 			{
-				GL.TexImage3D(Target, 0, PixelInternalFormat.Rgb,
+//				GL.TexImage3D(Target, 0, PixelInternalFormat.Rgb,
+//								Image.Size.Width, Image.Size.Height, ((ImageArray)Image).Depth,
+//								0, OpenTK.Graphics.PixelFormat.Bgr,
+//								PixelType.UnsignedByte, IntPtr.Zero);
+				GL.TexImage3D(Target, 0, PixelInternalFormat.R32f,
 								Image.Size.Width, Image.Size.Height, ((ImageArray)Image).Depth,
-								0, OpenTK.Graphics.PixelFormat.Bgr,
-								PixelType.UnsignedByte, IntPtr.Zero);
+								0, OpenTK.Graphics.PixelFormat.Red,
+								PixelType.Float, IntPtr.Zero);
 			}
 		}
 

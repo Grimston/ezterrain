@@ -70,6 +70,10 @@
       <Project>{D8DB7AB7-D288-4062-813E-E857064CC4DE}</Project>
       <Name>EZ.Imaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ez.Readers\Ez.Readers.csproj">
+      <Project>{1D8996D8-5E1D-401A-A325-86284A57F268}</Project>
+      <Name>Ez.Readers</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

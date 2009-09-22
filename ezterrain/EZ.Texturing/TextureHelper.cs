@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +29,7 @@ namespace EZ.Texturing
 		{
 			EZ.Imaging.Image[] images = new EZ.Imaging.Image[count];
 
-			for (int i = 0; i < images.Length; i++)
+			for (int i = images.Length - 1; i >= 0; --i)
 			{
 				images[i] = GetArrayImage(string.Format(fileNameFormat, i), i);
 				images[i].Bounds = new Region2D(Index2D.Empty, size);
@@ -40,15 +40,37 @@ namespace EZ.Texturing
 
 		private static EZ.Imaging.Image GetArrayImage(string fileName, int index)
 		{
-			Bitmap bitmap = (Bitmap)Bitmap.FromFile(fileName);
-			switch (bitmap.PixelFormat)
+			if(fileName.EndsWith(".bt", StringComparison.InvariantCultureIgnoreCase))
 			{
-				case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
-					return new TexArrayImage2D<BGR>(index, GetImageData<BGR>(bitmap));
-				case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
-					return new TexArrayImage2D<BGRA>(index, GetImageData<BGRA>(bitmap));
-				default:
-					throw new NotImplementedException();
+				using(Ez.Readers.vTerrain.Reader reader = new Ez.Readers.vTerrain.Reader(fileName))
+				{
+					FloatPixel[,] pixels = new FloatPixel[reader.Header.Rows, reader.Header.Columns];
+					GCHandle handle = GCHandle.Alloc(pixels, GCHandleType.Pinned);
+					try
+					{
+						reader.Read(0,0, reader.Header.Rows, reader.Header.Columns, 
+						            handle.AddrOfPinnedObject(),
+						            0,0, reader.Header.Rows, reader.Header.Columns);
+						return new TexArrayImage2D<FloatPixel>(index, pixels);
+					}
+					finally
+					{
+						handle.Free();
+					}
+				}
+			}
+			else
+			{
+				Bitmap bitmap = (Bitmap)Bitmap.FromFile(fileName);
+				switch (bitmap.PixelFormat)
+				{
+					case System.Drawing.Imaging.PixelFormat.Format24bppRgb:
+						return new TexArrayImage2D<BGR>(index, GetImageData<BGR>(bitmap));
+					case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+						return new TexArrayImage2D<BGRA>(index, GetImageData<BGRA>(bitmap));
+					default:
+						throw new NotImplementedException();
+				}
 			}
 		}
 
