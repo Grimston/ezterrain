@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -128,6 +128,35 @@ namespace EZ.Texturing
 			data[index] = B;
 			data[index + 1] = G;
 			data[index + 2] = R;
+		}
+
+		#endregion
+	}
+	#endregion
+	
+	#region FloatPixel
+	[Pixel(PixelInternalFormat.R32f,PixelFormat.Red, PixelType.Float)]
+	[StructLayout(LayoutKind.Sequential)]
+	public struct FloatPixel : IPixel
+	{
+		public float Value;
+
+		#region IPixel Members
+
+		public unsafe void CopyFrom(byte[] data, int index)
+		{
+			fixed(byte* ptr = data)
+			{
+				Value = *(float*)(ptr + index);
+			}
+		}
+
+		public unsafe void CopyTo(byte[] data, int index)
+		{
+			fixed(byte* ptr = data)
+			{
+				*(float*)(ptr + index) = Value;
+			}
 		}
 
 		#endregion
