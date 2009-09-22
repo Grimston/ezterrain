@@ -97,7 +97,7 @@
       <Name>EZ.Renderer</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -110,7 +110,7 @@
       <Properties>
         <Policies>
           <StandardHeader Text="" IncludeInNewFiles="False" inheritsSet="MITX11License" />
-          <TextStylePolicy FileWidth="120" TabWidth="4" TabsToSpaces="False" NoTabsAfterNonTabs="False" RemoveTrailingWhitespace="True" EolMarker="Windows" />
+          <TextStylePolicy FileWidth="120" TabWidth="4" RemoveTrailingWhitespace="True" EolMarker="Windows" inheritsSet="Mono" inheritsScope="text/plain" />
         </Policies>
       </Properties>
     </MonoDevelop>
