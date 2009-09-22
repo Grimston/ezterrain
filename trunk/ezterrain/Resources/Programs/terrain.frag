@@ -11,5 +11,5 @@ varying in vec2 texCoord;
 
 void main()
 {
-	gl_FragColor = texture2DArray(heightMaps, vec3(texCoord, level));
+	gl_FragColor = texture2DArray(heightMaps, vec3(texCoord, level)) / 2000.0;
 }

@@ -4,6 +4,7 @@
 uniform float texScale;
 uniform float outer;
 uniform vec2 eyeOffset;
+uniform sampler2DArray heightMaps;
 
 in vec4 glVertex;
 
@@ -19,6 +20,7 @@ void main()
 
 	vec4 vertex = glVertex;
 	vertex.xy = vertex.xy * levelScale + eyeOffset;
+	vertex.z = texture2DArray(heightMaps, vec3(texCoord, level)).r;
 
 	gl_Position = gl_ModelViewProjectionMatrix * vertex;
 }
